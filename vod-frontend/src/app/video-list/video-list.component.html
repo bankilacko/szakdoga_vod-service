@@ -1,0 +1,30 @@
+<div *ngIf="!isLoggedIn">
+  <h2>{{ errorMessage }}</h2>
+  <a routerLink="/login">Bejelentkezés</a>
+</div>
+
+<div *ngIf="isLoggedIn">
+  <button (click)="loadVideos()">Frissítés</button> <!-- Frissítés gomb -->
+  <div *ngIf="errorMessage">
+    <h2>{{ errorMessage }}</h2>
+  </div>
+  <div *ngIf="!errorMessage && videos.length > 0" class="video-list">
+    <div class="video-list-container">
+      <mat-card *ngFor="let video of videos" class="video-card">
+        <mat-card-header>
+          <mat-card-title>{{ video.title }}</mat-card-title>
+          <mat-card-subtitle>{{ video.subtitle }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ video.description }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="accent">Megnézem</button>
+        </mat-card-actions>
+      </mat-card>
+    </div> 
+  </div>
+  <div *ngIf="videos.length === 0">
+    <h2>Nincsenek elérhető videók.</h2>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+.video-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    padding: 16px;
+    background-color: #f5f5f5; /* Világos háttér */
+  }
+  
+  .video-card {
+    width: 300px;
+    max-width: 100%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Finom árnyék */
+    border-radius: 8px; /* Kerekített sarkok */
+  }
+  
+  mat-card-title {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  mat-card-subtitle {
+    color: gray;
+    font-size: 14px;
+  }
+  
+  mat-card-content {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end; /* Gomb jobb oldalra igazítása */
+  }  

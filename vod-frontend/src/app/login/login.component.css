@@ -1,0 +1,58 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5; /* Világosszürke háttér */
+}
+
+mat-card {
+  width: 400px;
+  padding: 24px;
+  background-color: black;
+}
+
+mat-card-header {
+  text-align: center; /* Középre igazítás az egész headerre */
+  display: flex;
+  flex-direction: column; /* Függőleges igazítás a címek között */
+  align-items: center; /* Középre igazít minden elemet */
+  margin-bottom: 16px; /* Extra térköz a tartalom előtt */
+}
+
+mat-card-title {
+  font-size: 24px; /* Nagyobb betűméret a címsorhoz */
+  font-weight: bold;
+  color: #f5f5f5;
+  display: block;
+  text-align: center;
+  margin-bottom: 15px; /* Kis térköz a cím után*/
+}
+
+mat-card-subtitle {
+  font-size: 14px;
+  color: gray;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Gomb igazítása középre*/
+  margin-top: 16px; /* Térköz a gomb felett */
+}
+
+.custom-button {
+  background-color: black !important;;  /* Fehér háttér */
+  color: white !important;; /* Fekete szöveg */
+  border: 1px solid white !important;; /* Opcionális: világosszürke keret */
+  font-weight: bold !important;; /* Kiemelt szöveg */
+}
+
+.custom-button:hover {
+  background-color: #f5f5f5 !important;; /* Halvány szürke háttér, ha fölé viszed az egeret */
+  color: black !important;;
+}

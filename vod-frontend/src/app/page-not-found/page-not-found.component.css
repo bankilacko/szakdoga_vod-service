@@ -1,0 +1,28 @@
+.not-found-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fce4ec; /* Halvány rózsaszín háttér */
+}
+  
+mat-card {
+    width: 400px;
+    padding: 24px;
+    text-align: center;
+}
+  
+mat-card-title {
+    font-weight: bold;
+    font-size: 24px;
+    color: #d32f2f; /* Piros szín a figyelem felkeltéséhez */
+}
+  
+mat-card-content {
+    font-size: 16px;
+    color: #333;
+}
+  
+mat-card-actions {
+    margin-top: 16px;
+}  
