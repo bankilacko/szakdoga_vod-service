@@ -47,6 +47,10 @@ def login(input: LoginInput, db: Session = Depends(get_db)):
     print(f"Token created: {token}")
     return {"access_token": token}
 
+@router.get("/users")
+def get_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()  # Lekéri az összes felhasználót
+    return users
 
 @router.get("/me")
 def get_current_user(payload: dict = Depends(verify_token)):
