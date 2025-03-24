@@ -7,3 +7,5 @@ bcrypt>=4.0.0
 pyjwt
 requests
 beautifulsoup4
+flask
+flask-cors
