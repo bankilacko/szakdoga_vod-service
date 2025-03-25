@@ -1,0 +1,39 @@
+<mat-toolbar color="primary" class="toolbar">
+    <!-- Alkalmazás címe -->
+    <span class="app-title">Az Alkalmazás Címe</span>
+  
+    <!-- Középen a keresősáv -->
+    <div class="search-bar">
+      <mat-form-field appearance="outline">
+        <mat-label>Keresés</mat-label>
+        <input matInput placeholder="Videók keresése...">
+        <button mat-icon-button matSuffix>
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  
+    <!-- Navigációs gombok -->
+    <span class="nav-buttons">
+      <button mat-button routerLink="/login">Bejelentkezés</button>
+      <button mat-button routerLink="/register">Regisztráció</button>
+    </span>
+  </mat-toolbar>
+  
+  <!-- Köszöntő szöveg vagy videók bemutatása -->
+  <div class="home-content">
+    <h1>Üdvözlünk az Alkalmazásban!</h1>
+    <p>Fedezd fel a legjobb videókat, és csatlakozz közösségünkhöz.</p>
+  
+    <!-- Videó kártyák bemutatása -->
+    <div class="video-cards" *ngIf="videos.length > 0; else noVideos">
+      <mat-card *ngFor="let video of videos" class="video-card" (click)="onVideoClick(video)">
+        <mat-card-title>{{ video.title }}</mat-card-title>
+        <mat-card-content>{{ video.description }}</mat-card-content>
+      </mat-card>
+    </div>
+  
+    <ng-template #noVideos>
+      <p>Jelenleg nincsenek bemutatott videók.</p>
+    </ng-template>
+</div>  

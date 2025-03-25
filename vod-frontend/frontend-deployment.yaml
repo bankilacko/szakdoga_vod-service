@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vod-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vod-frontend
+  template:
+    metadata:
+      labels:
+        app: vod-frontend
+    spec:
+      containers:
+        - name: vod-frontend
+          image: bankilacko11/vod-frontend:latest # Docker Image neve
+          ports:
+            - containerPort: 80

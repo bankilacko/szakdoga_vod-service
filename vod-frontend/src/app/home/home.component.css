@@ -1,0 +1,44 @@
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    background-color: lightblue;
+  }
+  
+.app-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+  
+.search-bar {
+    flex-grow: 2;
+    margin: 20px 0px 0px 20px;
+}
+ 
+.mat-form-field {
+    width: 100%;
+}
+  
+.nav-buttons button {
+    margin-left: 10px;
+}
+  
+.home-content {
+    text-align: center;
+    margin: 20px;
+}
+  
+.video-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+}
+  
+.video-card {
+    width: 300px;
+    cursor: pointer;
+}
+  
