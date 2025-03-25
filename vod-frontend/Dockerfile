@@ -10,3 +10,13 @@ RUN npm install
 COPY . .
 RUN npm run build --prod
 
+# 2. Nginx szakasz
+FROM nginx:stable-alpine
+
+# Opciós Nginx konfiguráció
+COPY nginx.conf /etc/nginx/nginx.conf
+
+COPY --from=build app/dist/vod-frontend/browser /usr/share/nginx/html
+
+# Konténer folyamatos futtatása
+CMD ["nginx", "-g", "daemon off;"]
