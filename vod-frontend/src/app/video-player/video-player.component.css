@@ -1,0 +1,11 @@
+.video-card {
+    margin: 20px;
+}
+  
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    background: black;
+}  

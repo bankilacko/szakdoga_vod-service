@@ -5,6 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { VodManagementService } from '../vod-management.service';
 import { UserService } from '../user.service';
+import { MatIconModule } from '@angular/material/icon';
+import { VideoPlayerComponent } from '../video-player/video-player.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-video-list',
@@ -14,6 +17,8 @@ import { UserService } from '../user.service';
     MatButtonModule,
     NgForOf,
     CommonModule,
+    MatIconModule,
+    //VideoPlayerComponent,
   ],
   templateUrl: './video-list.component.html',
   styleUrls: ['./video-list.component.css']
@@ -22,10 +27,13 @@ export class VideoListComponent {
   videos: any[] = [];
   isLoggedIn = false;
   errorMessage: string | null = null;
+  selectedVideoUrl: string = ''; // Kiválasztott videó URL
+  private baseUrl = 'http://localhost:32006/vod'; // ÚJ – Alap URL a videókhoz
 
   constructor(
     private vodService: VodManagementService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -33,25 +41,22 @@ export class VideoListComponent {
   }
 
   checkLoginStatus(): void {
-    console.log('Login check1');
-    console.log('TOKEN');
-    console.log(this.userService.getToken());
     this.isLoggedIn = this.userService.isAuthenticated();
     if (this.isLoggedIn) {
-      console.log('Login check2');
       this.loadVideos(); // Ha be van jelentkezve, azonnal töltsük le a videókat
     } else {
-      console.log('Login check3');
       this.errorMessage = 'Kérjük, jelentkezzen be a videók megtekintéséhez!';
     }
   }
 
   loadVideos(): void {
-    console.log('loadvideos');
     this.errorMessage = null; // Hibák törlése az új kérés előtt
     this.vodService.getVideos().subscribe({
-      next: (response) => {
-        this.videos = response;
+      next: (response: any[]) => {
+        this.videos = response.map(video => ({
+          ...video,
+          fullUrl: `${this.baseUrl}${video.path}` // Dinamikus URL
+        }));
         console.log('Videók betöltve:', this.videos);
       },
       error: (err) => {
@@ -61,21 +66,8 @@ export class VideoListComponent {
     });
   }
 
-  // videos = [
-  //   {
-  //     title: 'Hogyan használd az Angular-t?',
-  //     subtitle: 'Angular oktatóvideó',
-  //     description: 'Ebben a videóban megtudhatod, hogyan kezdj hozzá az Angular keretrendszer használatához.',
-  //   },
-  //   {
-  //     title: 'Material Design alapok',
-  //     subtitle: 'Dizájn tippek és trükkök',
-  //     description: 'Ismerd meg a Material Design alapjait, és hogyan alkalmazhatod őket az Angular projektjeidben.',
-  //   },
-  //   {
-  //     title: 'Modern Webfejlesztés',
-  //     subtitle: 'HTML, CSS és JavaScript',
-  //     description: 'A modern webfejlesztés legjobb gyakorlatai egy izgalmas videóban bemutatva.',
-  //   },
-  // ];
+  // Videó kiválasztása a lejátszáshoz
+  onSelectVideo(videoUrl: string): void {
+    this.router.navigate(['/video-player'], { queryParams: { url: videoUrl } }); // Navigáció a lejátszó oldalra
+  }
 }

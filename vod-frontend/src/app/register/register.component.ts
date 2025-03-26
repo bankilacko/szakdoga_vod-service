@@ -5,8 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -24,7 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private userService: UserService) {
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required]],
@@ -37,6 +36,7 @@ export class RegisterComponent {
       this.userService.register(this.registerForm.value).subscribe({
         next: (response) => {
           console.log('Sikeres regisztráció:', response);
+          this.router.navigate(['/login']);
         },
         error: (err) => {
           console.error('Regisztrációs hiba:', err);
