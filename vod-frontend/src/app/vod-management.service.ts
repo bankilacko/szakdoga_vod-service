@@ -7,7 +7,7 @@ import { UserService } from './user.service';
   providedIn: 'root' // Globálisan elérhető szerviz
 })
 export class VodManagementService {
-  private apiUrl = 'http://vod-management-service:80'; // Állítsd be az API URL-t
+  private apiUrl = 'http://localhost:30087/vod-management-service'; // Állítsd be az API URL-t
 
   constructor(private http: HttpClient, private userService: UserService) {}
 

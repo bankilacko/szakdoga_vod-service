@@ -6,7 +6,7 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root', // Globálisan elérhető szerviz
 })
 export class UserService {
-  private apiUrl = 'http://user-service:80'; // API URL
+  private apiUrl = 'http://localhost:30087/user-service'; // API URL
 
   private jwtToken: string | null = null; // Token tárolása
 
