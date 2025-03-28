@@ -8,7 +8,7 @@ app = FastAPI()
 # CORS konfiguráció
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],  # Frontend URL
+    allow_origins=["http://localhost:32075", "http://localhost:4200"],  # Frontend URL
     allow_credentials=True,
     allow_methods=["*"],  # Engedélyezett metódusok
     allow_headers=["*"],  # Engedélyezett headerek

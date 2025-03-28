@@ -12,3 +12,4 @@ class Video(Base):
     category = Column(String, nullable=True)  # Kategória, pl. "Film", "Sport"
     duration = Column(Integer, nullable=False)  # Videó hossza másodpercben
     created_at = Column(DateTime, default=datetime.utcnow)  # Létrehozás ideje
+

@@ -21,49 +21,42 @@ VOD_SERVER_URL_GLOBAL = "http://localhost:8080/vod/"
 @router.on_event("startup")
 def startup_sync_videos():
     print("Videószinkronizáció indítása...")
-    db = next(get_db())  # Manuális adatbázis-kapcsolat létrehozása
-    max_retries = 5  # Maximális próbálkozások száma
-    retry_delay = 5  # Várakozási idő újrapróbálkozások között (másodpercben)
+    db = next(get_db())
+    max_retries = 5
+    retry_delay = 5
 
     try:
         for attempt in range(max_retries):
             try:
-                print(f"{attempt + 1}/{max_retries} próbálkozás: Kapcsolódás az NGINX szerverhez...")
+                print(f"{attempt + 1}/{max_retries} próbálkozás az NGINX-hez...")
                 response = requests.get(VOD_SERVER_URL)
                 response.raise_for_status()
-                print("Kapcsolat sikeres. Videók szinkronizálása...")
-
-                # Videófájlnevek kinyerése (csak .m3u8 fájlokat keresünk)
                 video_files = extract_video_filenames(response.text)
 
                 for file in video_files:
-                    # Ellenőrizzük, hogy a fájl szerepel-e már az adatbázisban
-                    existing_video = db.query(Video).filter(Video.path == f"/{file}").first()
-                    if not existing_video:
-                        # Új videó hozzáadása az adatbázishoz
+                    if not db.query(Video).filter(Video.path == f"/{file}").first():
                         new_video = Video(
-                            title=file.split(".")[0],  # Fájlnév (kiterjesztés nélkül) lesz a cím
+                            title=file.split(".")[0],
                             description="Automatikusan szinkronizálva az NGINX-ből",
                             path=f"/{file}",
                             category="Synced",
-                            duration=0,  # Az időtartamot itt nem ismerjük
                             created_at=datetime.utcnow()
                         )
                         db.add(new_video)
                         db.commit()
-                        print(f"Videó hozzáadva az adatbázishoz: {new_video.title}")
-                print("Videószinkronizáció befejezve.")
-                return
+                        print(f"Videó hozzáadva: {new_video.title}")
+                break  # Ha sikeres, kilépünk a próbálkozások ciklusából
             except requests.RequestException as e:
-                print(f"{attempt + 1}. próbálkozás sikertelen: {e}")
-                if attempt + 1 == max_retries:
-                    print("Maximális próbálkozások száma elérve. A szinkronizálás sikertelen.")
-                else:
-                    print(f"Újrapróbálkozás {retry_delay} másodperc múlva...")
-                    time.sleep(retry_delay)
+                print(f"Sikertelen próbálkozás: {e}")
+                time.sleep(retry_delay)
+        else:
+            print("Maximális próbálkozások száma elérve.")
+    except Exception as e:
+        print(f"Hiba történt a szinkronizáció során: {e}")
     finally:
         db.close()
         print("Adatbázis-kapcsolat lezárva.")
+
 
 # Segédfüggvény: HTML tartalom feldolgozása .m3u8 fájlok kinyerésére
 def extract_video_filenames(html_content):
@@ -82,7 +75,7 @@ def extract_video_filenames(html_content):
     return video_files
 
 # Végpont: Videó elérése .m3u8 fájlnév alapján
-@router.get("/videos/{filename}")
+@router.get("/videos/{filename}", dependencies=[Depends(verify_token)])
 def get_video_by_filename(filename: str, db: Session = Depends(get_db)):
     """
     Egy videófájl teljes URL-jének lekérése az NGINX szerverről.
@@ -98,39 +91,39 @@ def get_video_by_filename(filename: str, db: Session = Depends(get_db)):
     print(f"Videó URL generálva: {video_url}")
     return {"video_url": video_url}
 
-# Végpont: Videók listázása
-'''
-@router.get("/videos", response_model=List[VideoResponse])
-def list_videos(db: Session = Depends(get_db)):
-    """
-    Az adatbázisban tárolt összes videó listázása.
-    """
-    videos = db.query(Video).all()
-    print(f"{len(videos)} videó található az adatbázisban.")
-    return videos'
-    
-'''
-
 # Titkosított végpont: Videók listázása
-@router.get("/videos", response_model=List[VideoResponse], dependencies=[Depends(verify_token)])
+@router.get("/videos", response_model=List[VideoResponse]) #, dependencies=[Depends(verify_token)]
 def list_videos(db: Session = Depends(get_db)):
     """
-    Az adatbázisban tárolt összes videó listázása.
-    Csak bejelentkezett felhasználók férhetnek hozzá.
+    Az NGINX szerverről dinamikusan lekéri az aktuális videókat,
+    és az adatbázist frissíti az új videók szerint.
     """
-    videos = db.query(Video).all()
-    print(f"{len(videos)} videó található az adatbázisban.")
-    return videos
+    try:
+        # Lekérdezés az NGINX szerverről
+        print("Lekérdezés az NGINX szerverről")
+        response = requests.get(VOD_SERVER_URL)
+        response.raise_for_status()
+        video_files = extract_video_filenames(response.text)
 
-# Végpont: Videó manuális hozzáadása
-@router.post("/videos", response_model=VideoResponse)
-def create_video(video: VideoCreate, db: Session = Depends(get_db)):
-    """
-    Új videó manuális hozzáadása az adatbázishoz.
-    """
-    db_video = Video(**video.dict())  # Pydantic modell -> SQLAlchemy modell átalakítás
-    db.add(db_video)
-    db.commit()
-    db.refresh(db_video)
-    print(f"Manuálisan hozzáadott videó: {db_video.title}")
-    return db_video
+        # Az adatbázis frissítése az új videókkal
+        for file in video_files:
+            existing_video = db.query(Video).filter(Video.path == f"/{file}").first()
+            if not existing_video:
+                new_video = Video(
+                    title=file.split(".")[0],
+                    description="Automatikusan szinkronizálva az NGINX-ből",
+                    path=f"/{file}",
+                    category="Synced",
+                    duration=0,
+                    created_at=datetime.utcnow()
+                )
+                db.add(new_video)
+                db.commit()
+        
+        # Az aktuális videók listája az adatbázisból
+        videos = db.query(Video).all()
+        print(f"{len(videos)} videó található az adatbázisban.")
+        return videos
+
+    except requests.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Nem sikerült elérni az NGINX szervert: {str(e)}")
