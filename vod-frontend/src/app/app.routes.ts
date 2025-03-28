@@ -7,14 +7,16 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { HomeComponent } from './home/home.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { NgModule } from '@angular/core';
+import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'video-list', component: VideoListComponent }, // Videók listája
   { path: 'login', component: LoginComponent }, // Bejelentkezés
   { path: 'register', component: RegisterComponent }, // Regisztráció
+  { path: 'profile', component: ProfileComponent }, // Profil
   { path: 'video/:id', component: VideoDetailsComponent }, // Videó részletei
-  { path: 'video-player', component: VideoPlayerComponent }, // Videó részletei
+  { path: 'video-player', component: VideoPlayerComponent }, // Videó lejátszása
   { path: '**', component: PageNotFoundComponent } // Hibaoldal
 ];
 

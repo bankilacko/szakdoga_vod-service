@@ -1,14 +1,26 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, Input, SimpleChanges } from '@angular/core';
 import Hls from 'hls.js';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { UserService } from '../user.service';
+import { Subscription } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-video-player',
   imports: [
+    RouterModule, // A RouterModule biztosítja a routerLink működését
     MatCardModule,
+    MatButtonModule,
+    NgIf,
+    CommonModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatInputModule,
   ],
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.css']
@@ -16,16 +28,26 @@ import { ActivatedRoute } from '@angular/router';
 export class VideoPlayerComponent implements AfterViewInit {
   @ViewChild('videoPlayer', { static: false }) videoElement!: ElementRef;
   @Input() videoSrc!: string; // Videó URL bemenete
+  isLoggedIn = false;
+  private logoutSubscription!: Subscription;
 
-  //videoSrc: string = 'http://localhost:32006/vod'; // m3u8 URL
-
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private router: Router,
+  ) {}
 
   ngAfterViewInit(): void {
     this.initVideoPlayer();
   }
 
   ngOnInit(): void {
+    this.checkLoginStatus();
+    // Feliratkozás a kijelentkezési eseményre
+    this.logoutSubscription = this.userService.onLogout().subscribe(() => {
+      console.log('Kijelentkezési esemény érkezett');
+      this.onLogout();
+    });
     this.route.queryParams.subscribe(params => {
       if (params['url']) { // Ellenőrizd, hogy a 'url' paraméter létezik
         this.videoSrc = params['url'].trim(); // Trim csak akkor hívódik meg, ha az érték definiált
@@ -34,6 +56,10 @@ export class VideoPlayerComponent implements AfterViewInit {
         console.error('A videó URL nem érkezett meg.');
       }
     });
+  }
+
+  checkLoginStatus(): void {
+    this.isLoggedIn = this.userService.isAuthenticated();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -68,6 +94,16 @@ export class VideoPlayerComponent implements AfterViewInit {
     } else {
       console.error('HLS not supported in this browser.');
     }
+  }
+
+  onLogout(): void {
+    // Kijelentkezési logika
+    this.isLoggedIn = false;
+    this.router.navigate(['/']);
+  }
+
+  logout(): void {
+    this.userService.logout();
   }
 }
 

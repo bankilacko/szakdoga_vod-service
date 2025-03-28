@@ -1,35 +1,139 @@
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  background-color: rgb(97, 189, 220);
+  height: 80px;
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0px 0px 0px 10px;
+}
+
+.search-bar {
+  flex-grow: 1;
+  margin-left: 20px;
+  margin-top: 20px;
+  color: rgb(19, 19, 19) !important;
+  border-color: rgb(19, 19, 19) !important;
+}
+
+mat-form-field {
+  width: 50%;
+}
+
+.nav-buttons button {
+  margin-left: 10px;
+}
+
+.custom-button:hover{
+  color: rgb(97, 189, 220) !important;
+  background-color: rgb(19, 19, 19) !important;
+}
+
+.custom-button{
+  background-color: rgb(97, 189, 220) !important;
+  color: rgb(19, 19, 19) !important;
+  border: 1px solid rgb(19, 19, 19) !important;
+}
+
 .video-list-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
-    padding: 16px;
-    background-color: #f5f5f5; /* Világos háttér */
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgb(19, 19, 19); 
+}
+
+.video-container{
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  height: 85vh;
+  background-color: rgb(19, 19, 19);
+}
+
+.error{
+  color: rgb(148, 17, 17);
+}
+
   
-  .video-card {
-    width: 300px;
-    max-width: 100%;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Finom árnyék */
-    border-radius: 8px; /* Kerekített sarkok */
-  }
-  
-  mat-card-title {
-    font-weight: bold;
-    font-size: 18px;
-  }
-  
-  mat-card-subtitle {
-    color: gray;
-    font-size: 14px;
-  }
-  
-  mat-card-content {
-    font-size: 14px;
-    color: #333;
-  }
-  
-  mat-card-actions {
-    display: flex;
-    justify-content: flex-end; /* Gomb jobb oldalra igazítása */
-  }  
+.video-card {
+  width: 300px;
+  max-width: 100%;
+  margin-top:40px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Finom árnyék */
+  border-radius: 8px; /* Kerekített sarkok */
+  margin: 10px auto; /* Távolság a kártyák között és középre igazítás */
+  background-color: rgb(97, 189, 220);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  display: flex;
+  cursor: pointer;
+}
+
+mat-card-header {
+  display: flex;
+  align-items: center; /* Függőleges középre igazítás */
+  gap: 10px; /* Távolság az elemek között */
+}
+
+mat-icon {
+  font-size: 24px; /* Ikon mérete */
+  margin-right: 8px; /* Távolság a szövegtől */
+}
+
+mat-card-content{
+  font-size: medium;
+  color:rgb(19, 19, 19);
+}
+
+mat-card-title{
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0px 0px 0px 0px;
+  color: rgb(19, 19, 19);
+}
+
+mat-card.error {
+  display: flex;
+  flex-direction: column; /* Függőleges irányú elrendezés */
+  justify-content: center; /* Középre igazítás függőlegesen */
+  align-items: center; /* Középre igazítás vízszintesen */
+  width: 600px;
+  height: 250px;
+  padding: 24px;
+  text-align: center;
+  background-color: lightgray;
+  margin-top: 80px;
+}
+
+mat-card-title.error {
+  font-weight: bold;
+  font-size: 50px;
+  margin: 0px 0px 30px 0px;
+  color: #a70808; /* Piros szín a figyelem felkeltéséhez */
+}
+
+mat-card-content.error {
+  font-size: 20px;
+  color: #a70808;
+}
+
+mat-icon.home{
+  transform: scale(1.5);
+  color: rgb(19, 19, 19);
+}
+
+mat-icon.search{
+  transform: scale(1.1);
+  color: rgb(19, 19, 19);
+}
+
+mat-icon.basic{
+  transform: scale(1);
+}

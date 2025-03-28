@@ -1,15 +1,20 @@
 .register-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   height: 100vh;
-  background-color: #f5f5f5; 
+  background-color: rgb(19, 19, 19);
 }
 
 mat-card {
-  width: 400px;
-  padding: 24px; /* Extra padding a kártyában */
-  background-color: black;
+  margin-top: 30px;
+  width: 500px;
+  height: 490px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: rgb(97, 189, 220);
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 
 mat-card-header {
@@ -25,16 +30,11 @@ mat-card-header {
   margin-bottom: 24px; /* Nagyobb térköz az egyes mezők között */
 }
 
-mat-card-title {
-  font-size: 24px; /* Nagyobb betűméret a címsorhoz */
+mat-card-title{
+  font-size: 1.5rem;
   font-weight: bold;
-  color: #f5f5f5;
-  margin-bottom: 15px; /* Kis térköz a cím után*/
-}
-
-mat-card-subtitle {
-  font-size: 14px;
-  color: gray;
+  color: rgb(19, 19, 19);
+  margin-top: 18px;
 }
 
 .button-container {
@@ -43,14 +43,13 @@ mat-card-subtitle {
   margin-top: 16px; /* Térköz a gomb felett */
 }
 
-.custom-button {
-  background-color: black !important;;  /* Fehér háttér */
-  color: white !important;; /* Fekete szöveg */
-  border: 1px solid white !important;; /* Opcionális: világosszürke keret */
-  font-weight: bold !important;; /* Kiemelt szöveg */
+.custom-button:hover{
+  color: rgb(97, 189, 220) !important;
+  background-color: rgb(19, 19, 19) !important;
 }
 
-.custom-button:hover {
-  background-color: #f5f5f5 !important;; /* Halvány szürke háttér, ha fölé viszed az egeret */
-  color: black !important;;
+.custom-button{
+  background-color: rgb(97, 189, 220) !important;
+  color: rgb(19, 19, 19) !important;
+  border: 1px solid rgb(19, 19, 19) !important;
 }

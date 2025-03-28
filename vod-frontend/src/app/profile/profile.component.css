@@ -1,0 +1,121 @@
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    background-color: rgb(97, 189, 220);
+    height: 80px;
+}
+  
+.app-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0px 0px 0px 10px;
+}
+  
+.search-bar {
+    flex-grow: 1;
+    margin-left: 20px;
+    margin-top: 20px;
+    color: rgb(19, 19, 19) !important;
+    border-color: rgb(19, 19, 19) !important;
+}
+ 
+mat-form-field {
+    width: 50%;
+}
+
+.nav-buttons button {
+    margin-left: 10px;
+}
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    height: 85vh;
+    background-color: rgb(19, 19, 19);
+}
+  
+mat-card {
+    margin-top: 60px;
+    width: 500px;
+    height: 350px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: rgb(97, 189, 220);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+mat-card-content{
+    font-size: large;
+}
+
+mat-card-title{
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0px 0px 0px 20px;
+    color: rgb(19, 19, 19);
+    margin-top: 18px;
+}
+
+mat-card-actions{
+    display: flex;
+    justify-content: space-between;
+}
+
+mat-card.error {
+    display: flex;
+    flex-direction: column; /* Függőleges irányú elrendezés */
+    justify-content: center; /* Középre igazítás függőlegesen */
+    align-items: center; /* Középre igazítás vízszintesen */
+    width: 650px;
+    height: 250px;
+    padding: 24px;
+    text-align: center;
+    background-color: lightgray;
+    margin-top: 80px;
+}
+  
+mat-card-title.error {
+    font-weight: bold;
+    font-size: 50px;
+    margin: 0px 0px 30px 0px;
+    color: #a70808; /* Piros szín a figyelem felkeltéséhez */
+}
+  
+mat-card-content.error {
+    font-size: 20px;
+    color: #a70808;
+}
+
+.custom-button:hover{
+    color: rgb(97, 189, 220) !important;
+    background-color: rgb(19, 19, 19) !important;
+}
+
+.custom-button{
+    background-color: rgb(97, 189, 220) !important;
+    color: rgb(19, 19, 19) !important;
+    border: 1px solid rgb(19, 19, 19) !important;
+}
+
+mat-icon.profile{
+    transform: scale(3);
+    margin: 18px;
+}
+
+mat-icon.home{
+    transform: scale(1.5);
+    color: rgb(19, 19, 19);
+}
+
+mat-icon.search{
+    transform: scale(1.1);
+    color: rgb(19, 19, 19);
+}
+
+mat-icon.basic{
+    transform: scale(1);
+}

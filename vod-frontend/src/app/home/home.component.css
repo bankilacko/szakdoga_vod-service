@@ -3,42 +3,107 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 16px;
-    background-color: lightblue;
-  }
+    background-color: rgb(97, 189, 220);
+    height: 80px;
+}
   
 .app-title {
     font-size: 1.5rem;
     font-weight: bold;
-    color: white;
+    margin: 0px 0px 0px 10px;
 }
   
 .search-bar {
-    flex-grow: 2;
-    margin: 20px 0px 0px 20px;
+    flex-grow: 1;
+    margin-left: 20px;
+    margin-top: 20px;
+    color: rgb(19, 19, 19) !important;
+    border-color: rgb(19, 19, 19) !important;
 }
  
-.mat-form-field {
-    width: 100%;
+mat-form-field {
+    width: 50%;
 }
-  
+
 .nav-buttons button {
     margin-left: 10px;
+}
+
+.custom-button:hover{
+    color: rgb(97, 189, 220) !important;
+    background-color: rgb(19, 19, 19) !important;
+}
+
+.custom-button{
+    background-color: rgb(97, 189, 220) !important;
+    color: rgb(19, 19, 19) !important;
+    border: 1px solid rgb(19, 19, 19) !important;
+}
+
+.home-container {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    height: 85vh;
+    background-color: rgb(19, 19, 19);
 }
   
 .home-content {
     text-align: center;
     margin: 20px;
+    color: rgb(97, 189, 220);
 }
   
-.video-cards {
+.video-container {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 16px;
+    align-items: start;
+    height: 85vh;
+    background-color: rgb(19, 19, 19);
 }
   
 .video-card {
     width: 300px;
+    max-width: 100%;
+    margin-top:40px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Finom árnyék */
+    border-radius: 8px; /* Kerekített sarkok */
+    margin: 10px auto; /* Távolság a kártyák között és középre igazítás */
+    background-color: rgb(97, 189, 220);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: flex;
     cursor: pointer;
 }
   
+mat-card-header {
+    display: flex;
+    align-items: center; /* Függőleges középre igazítás */
+    gap: 10px; /* Távolság az elemek között */
+}
+  
+  
+mat-card-content{
+    font-size: medium;
+    color:rgb(19, 19, 19);
+}
+
+mat-card-header {
+    display: flex;
+    align-items: center; /* Függőleges középre igazítás */
+    gap: 8px; /* Távolság az elemek között */
+}
+
+mat-icon.home{
+    transform: scale(1.5);
+    color: rgb(19, 19, 19);
+}
+
+mat-icon.search{
+    transform: scale(1.1);
+    color: rgb(19, 19, 19);
+}
+
+mat-icon.basic{
+    transform: scale(1);
+}

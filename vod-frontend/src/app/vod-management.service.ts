@@ -14,9 +14,7 @@ export class VodManagementService {
 
   // Videók lekérése JWT tokennel
   getVideos(): Observable<any> {
-    console.log('getvideos');
     const token = this.userService.getToken();
-    console.log(token);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}` // Token hozzáadása a kéréshez
     });
@@ -26,16 +24,6 @@ export class VodManagementService {
   // // Új videó létrehozása
   // createVideo(video: any): Observable<any> {
   //   return this.http.post(`${this.apiUrl}/videos`, video);
-  // }
-
-  // // Videó módosítása
-  // updateVideo(videoId: string, video: any): Observable<any> {
-  //   return this.http.put(`${this.apiUrl}/videos/${videoId}`, video);
-  // }
-
-  // // Videó törlése
-  // deleteVideo(videoId: string): Observable<any> {
-  //   return this.http.delete(`${this.apiUrl}/videos/${videoId}`);
   // }
 }
 

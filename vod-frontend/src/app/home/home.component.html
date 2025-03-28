@@ -1,39 +1,46 @@
 <mat-toolbar color="primary" class="toolbar">
-    <!-- Alkalmazás címe -->
-    <span class="app-title">Az Alkalmazás Címe</span>
+  <!-- Alkalmazás címe -->
+  <button mat-icon-button matSuffix>
+    <mat-icon class="home" routerLink="/">home</mat-icon>
+  </button>
+  <span class="app-title" routerLink="/">VOD Application</span>
+   
+  <!-- Középen a keresősáv -->
+  <div class="search-bar">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Search videos...">
+      <button mat-icon-button matSuffix>
+        <mat-icon class="search">search</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+   
+  <!-- Navigációs gombok -->
+  <span class="nav-buttons">
+    <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/login"><mat-icon class="basic">login</mat-icon>Login</button>
+    <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/register"><mat-icon class="basic">person_add</mat-icon>Register</button>
+    <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button"routerLink="/profile"><mat-icon class="basic">person</mat-icon>Profile</button>
+    <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button" (click)="logout()"><mat-icon class="basic">logout</mat-icon>Log out</button>
+  </span>
+</mat-toolbar>
   
-    <!-- Középen a keresősáv -->
-    <div class="search-bar">
-      <mat-form-field appearance="outline">
-        <mat-label>Keresés</mat-label>
-        <input matInput placeholder="Videók keresése...">
-        <button mat-icon-button matSuffix>
-          <mat-icon>search</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-  
-    <!-- Navigációs gombok -->
-    <span class="nav-buttons">
-      <button mat-button routerLink="/login">Bejelentkezés</button>
-      <button mat-button routerLink="/register">Regisztráció</button>
-    </span>
-  </mat-toolbar>
-  
+<div class="home-container">
   <!-- Köszöntő szöveg vagy videók bemutatása -->
   <div class="home-content">
-    <h1>Üdvözlünk az Alkalmazásban!</h1>
-    <p>Fedezd fel a legjobb videókat, és csatlakozz közösségünkhöz.</p>
-  
+    <h1>Welcome to the application!</h1>
+    <p>Explore the best videos, and join us!</p>
+    
     <!-- Videó kártyák bemutatása -->
-    <div class="video-cards" *ngIf="videos.length > 0; else noVideos">
+    <div class="video-container" *ngIf="videos.length > 0; else noVideos">
       <mat-card *ngFor="let video of videos" class="video-card" (click)="onVideoClick(video)">
         <mat-card-title>{{ video.title }}</mat-card-title>
         <mat-card-content>{{ video.description }}</mat-card-content>
       </mat-card>
     </div>
-  
+    
     <ng-template #noVideos>
-      <p>Jelenleg nincsenek bemutatott videók.</p>
+      <p>No available videos</p>
     </ng-template>
-</div>  
+  </div>
+</div>    

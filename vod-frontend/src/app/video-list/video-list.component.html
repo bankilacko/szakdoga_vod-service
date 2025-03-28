@@ -1,31 +1,52 @@
-<div *ngIf="!isLoggedIn">
-  <h2>{{ errorMessage }}</h2>
-  <a routerLink="/login">Bejelentkezés</a>
-</div>
+<mat-toolbar color="primary" class="toolbar">
+  <!-- Alkalmazás címe -->
+  <button mat-icon-button matSuffix>
+    <mat-icon class="home" routerLink="/">home</mat-icon>
+  </button>
+  <span class="app-title" routerLink="/">VOD Application</span>
+   
+  <!-- Középen a keresősáv -->
+  <div class="search-bar">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Search videos...">
+      <button mat-icon-button matSuffix>
+        <mat-icon class="search">search</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+   
+  <!-- Navigációs gombok -->
+  <span class="nav-buttons">
+    <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/login"><mat-icon class="basic">login</mat-icon>Login</button>
+    <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/register"><mat-icon class="basic">person_add</mat-icon>Register</button>
+    <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button"routerLink="/profile"><mat-icon class="basic">person</mat-icon>Profile</button>
+    <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button" (click)="logout()"><mat-icon class="basic">logout</mat-icon>Log out</button>
+  </span>
+</mat-toolbar>
 
-<div *ngIf="isLoggedIn">
-  <button (click)="loadVideos()">Frissítés</button> <!-- Frissítés gomb -->
-  <div *ngIf="errorMessage">
-    <h2>{{ errorMessage }}</h2>
-  </div>
-  <div *ngIf="!errorMessage && videos.length > 0" class="video-list">
-    <div class="video-list-container">
-      <mat-card *ngFor="let video of videos" class="video-card" (click)="onSelectVideo(video.fullUrl)">
-        <mat-card-header>
-          <mat-icon mat-list-icon>play_circle</mat-icon>
-          <mat-icon mat-list-icon>video_library</mat-icon>
-          <mat-card-title>{{ video.title }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>{{ video.description }}</p>
-        </mat-card-content>
-        <!-- <mat-card-actions>
-          <button mat-raised-button color="accent">Megnézem</button>
-        </mat-card-actions> -->
-      </mat-card>
-    </div> 
-  </div>
-  <div *ngIf="videos.length === 0">
-    <h2>Nincsenek elérhető videók.</h2>
+<div class="video-container">
+  <div *ngIf="isLoggedIn">
+    <div *ngIf="!errorMessage && videos.length > 0">
+      <div class="video-list-container">
+        <mat-card *ngFor="let video of videos" class="video-card" (click)="onSelectVideo(video.fullUrl)">
+          <mat-card-header>
+            <mat-icon mat-list-icon>play_circle</mat-icon>
+            <mat-card-title>{{ video.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ video.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div> 
+    </div>
+    <mat-card class="error" *ngIf="videos.length === 0 || errorMessage">
+      <mat-card-header>
+        <mat-card-title class="error">No video available</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{errorMessage}}</p>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>
