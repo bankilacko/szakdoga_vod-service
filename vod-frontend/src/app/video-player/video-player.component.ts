@@ -48,14 +48,17 @@ export class VideoPlayerComponent implements AfterViewInit {
       console.log('Kijelentkezési esemény érkezett');
       this.onLogout();
     });
-    this.route.queryParams.subscribe(params => {
-      if (params['url']) { // Ellenőrizd, hogy a 'url' paraméter létezik
-        this.videoSrc = params['url'].trim(); // Trim csak akkor hívódik meg, ha az érték definiált
-        this.initVideoPlayer();
-      } else {
-        console.error('A videó URL nem érkezett meg.');
-      }
-    });
+    if(this.isLoggedIn){
+      this.route.queryParams.subscribe(params => {
+        if (params['url']) { // Ellenőrizd, hogy a 'url' paraméter létezik
+          this.videoSrc = params['url'].trim(); // Trim csak akkor hívódik meg, ha az érték definiált
+          this.initVideoPlayer();
+        } else {
+          console.error('A videó URL nem érkezett meg.');
+        }
+      });
+    }
+    else this.router.navigate(['/login']);
   }
 
   checkLoginStatus(): void {

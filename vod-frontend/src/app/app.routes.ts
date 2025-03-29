@@ -10,8 +10,9 @@ import { NgModule } from '@angular/core';
 import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'video-list', component: VideoListComponent }, // Videók listája
+  //{ path: '', component: HomeComponent },
+  { path: '', component: VideoListComponent }, // Videók listája
+  { path: 'video-list', component: VideoListComponent },
   { path: 'login', component: LoginComponent }, // Bejelentkezés
   { path: 'register', component: RegisterComponent }, // Regisztráció
   { path: 'profile', component: ProfileComponent }, // Profil

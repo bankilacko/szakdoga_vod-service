@@ -5,8 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -18,6 +19,7 @@ import { MatIcon } from '@angular/material/icon';
     MatInputModule,
     MatButtonModule,
     MatIcon,
+    RouterModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -25,7 +27,11 @@ import { MatIcon } from '@angular/material/icon';
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
+  constructor(private fb: FormBuilder,
+    private userService: UserService,
+    private router: Router,
+    private location: Location
+  ) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required]],
@@ -45,6 +51,10 @@ export class RegisterComponent {
         }
       });
     }
+  }
+
+  goBack(): void {
+    this.location.back(); // Visszanavigál az előző oldalra
   }
 }
 

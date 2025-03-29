@@ -9,7 +9,7 @@
 mat-card {
   margin-top: 30px;
   width: 500px;
-  height: 400px;
+  height: 480px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: rgb(97, 189, 220);
   padding: 10px;
@@ -18,11 +18,13 @@ mat-card {
 }
 
 mat-card-header {
-  text-align: center; /* Középre igazítás az egész headerre */
-  display: flex;
-  flex-direction: column; /* Függőleges igazítás a címek között */
-  align-items: center; /* Középre igazít minden elemet */
+  display: flex; /* Flexbox használata az elrendezéshez */
+  flex-direction: row-reverse; /* Függőleges igazítás a címek között */
+  justify-content: center; /* Középre igazítjuk a tartalmat */
+  align-items: center; /* Függőleges középre igazítás */
   margin-bottom: 16px; /* Extra térköz a tartalom előtt */
+  text-align: center; /* Középre igazítás az egész headerre */
+  position: relative; /* Pozíció beállítása a gombhoz */
 }
 
 mat-card-title{
@@ -39,8 +41,22 @@ mat-card-title{
 
 .button-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center; /* Gomb igazítása középre*/
-  margin-top: 16px; /* Térköz a gomb felett */
+  gap: 30px;
+  margin-top: 0px; /* Térköz a gomb felett */
+}
+
+.registration{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+p{
+  font-size: small;
 }
 
 .custom-button:hover{
@@ -52,4 +68,17 @@ mat-card-title{
   background-color: rgb(97, 189, 220) !important;
   color: rgb(19, 19, 19) !important;
   border: 1px solid rgb(19, 19, 19) !important;
+}
+
+mat-icon.back{
+  transform: scale(1);
+  color: rgb(19, 19, 19);
+}
+
+button.back{
+  position: absolute; /* Gomb helyzetének abszolút beállítása */
+  top: 20; /* A gomb bal felső sarokban */
+  left: 0; /* A gomb bal oldalra kerül */
+  margin-top: 14px;
+  margin-left: 10px;
 }

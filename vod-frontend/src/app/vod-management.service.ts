@@ -14,11 +14,13 @@ export class VodManagementService {
 
   // Videók lekérése JWT tokennel
   getVideos(): Observable<any> {
+    console.log("getvideos");
+    return this.http.get(`${this.apiUrl}/videos`);
     const token = this.userService.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}` // Token hozzáadása a kéréshez
     });
-    return this.http.get(`${this.apiUrl}/videos`, { headers });
+    return this.http.get(`${this.apiUrl}/videos`); //, { headers }
   }
 
   // // Új videó létrehozása

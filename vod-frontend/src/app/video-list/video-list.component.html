@@ -25,10 +25,18 @@
   </span>
 </mat-toolbar>
 
-<div class="video-container">
-  <div *ngIf="isLoggedIn">
+<div class="home-container">
+  <!-- Köszöntő szöveg vagy videók bemutatása -->
+  <div class="home-content">
+    <h1>Welcome to the application!</h1>
+    <p *ngIf="!isLoggedIn">Explore the best videos, and join us!</p>
+  </div>
+</div>    
+
+<div class="video-list-container">
+  <div>
     <div *ngIf="!errorMessage && videos.length > 0">
-      <div class="video-list-container">
+      <div class="video-card-container">
         <mat-card *ngFor="let video of videos" class="video-card" (click)="onSelectVideo(video.fullUrl)">
           <mat-card-header>
             <mat-icon mat-list-icon>play_circle</mat-icon>
@@ -40,11 +48,11 @@
         </mat-card>
       </div> 
     </div>
-    <mat-card class="error" *ngIf="videos.length === 0 || errorMessage">
+    <mat-card class="error" *ngIf="!isLoading &&  (videos.length === 0 || errorMessage)">
       <mat-card-header>
         <mat-card-title class="error">No video available</mat-card-title>
       </mat-card-header>
-      <mat-card-content>
+      <mat-card-content class="error">
         <p>{{errorMessage}}</p>
       </mat-card-content>
     </mat-card>

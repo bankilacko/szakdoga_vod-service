@@ -1,3 +1,4 @@
+/*NAVIGATION/TOOL BAR SECTION*/
 .toolbar {
   display: flex;
   justify-content: space-between;
@@ -11,14 +12,13 @@
   font-size: 1.5rem;
   font-weight: bold;
   margin: 0px 0px 0px 10px;
+  cursor: pointer;
 }
 
 .search-bar {
   flex-grow: 1;
   margin-left: 20px;
   margin-top: 20px;
-  color: rgb(19, 19, 19) !important;
-  border-color: rgb(19, 19, 19) !important;
 }
 
 mat-form-field {
@@ -40,40 +40,53 @@ mat-form-field {
   border: 1px solid rgb(19, 19, 19) !important;
 }
 
-.video-list-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  padding: 16px;
-  background-color: rgb(19, 19, 19); 
+/*HOME (WELCOME) SECTION*/
+.home-content {
+  text-align: center;
+  margin: 20px;
+  color: rgb(97, 189, 220);
 }
 
-.video-container{
+.home-container {
   display: flex;
   justify-content: center;
   align-items: start;
+  background-color: rgb(19, 19, 19);
+}
+
+/*VIDEO_LIST SECTION*/
+.video-list-container{
+  display: flex;
+  align-items: start;
+  justify-content: center;
   height: 85vh;
   background-color: rgb(19, 19, 19);
 }
 
-.error{
-  color: rgb(148, 17, 17);
+.video-card-container {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 25px;
+  background-color: rgb(19, 19, 19); 
 }
 
-  
 .video-card {
-  width: 300px;
+  width: 280px;
   max-width: 100%;
-  margin-top:40px;
+  margin-top: 20px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Finom árnyék */
   border-radius: 8px; /* Kerekített sarkok */
-  margin: 10px auto; /* Távolság a kártyák között és középre igazítás */
   background-color: rgb(97, 189, 220);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
   padding: 10px;
-  display: flex;
   cursor: pointer;
+}
+
+.video-card:hover {
+  background-color: lightgray;
+  transform: scale(1.05);
 }
 
 mat-card-header {
@@ -99,6 +112,10 @@ mat-card-title{
   color: rgb(19, 19, 19);
 }
 
+.error{
+  color: rgb(148, 17, 17);
+}
+
 mat-card.error {
   display: flex;
   flex-direction: column; /* Függőleges irányú elrendezés */
@@ -109,7 +126,7 @@ mat-card.error {
   padding: 24px;
   text-align: center;
   background-color: lightgray;
-  margin-top: 80px;
+  margin-top: 20px;
 }
 
 mat-card-title.error {

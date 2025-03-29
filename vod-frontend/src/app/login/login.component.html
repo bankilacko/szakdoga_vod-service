@@ -1,6 +1,9 @@
 <div class="login-container">
   <mat-card>
     <mat-card-header>
+      <button class="back" mat-icon-button matSuffix>
+        <mat-icon class="back" (click)="goBack()">arrow_back</mat-icon>
+      </button>
       <mat-card-title>Login</mat-card-title>
     </mat-card-header>
     <mat-card-content>
@@ -15,6 +18,10 @@
         </mat-form-field>
         <div class="button-container">
           <button mat-raised-button class="custom-button"><mat-icon>login</mat-icon>Login</button>
+          <div class="registration">
+            <p>No account yet? Join us!</p>
+            <button mat-raised-button class="custom-button" routerLink="/register"><mat-icon>person_add</mat-icon>Registration</button>
+          </div>
         </div>
       </form>
     </mat-card-content>

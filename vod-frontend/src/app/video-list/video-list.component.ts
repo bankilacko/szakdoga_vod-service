@@ -32,6 +32,7 @@ export class VideoListComponent implements OnInit, OnDestroy{
   videos: any[] = [];
   isLoggedIn = false;
   errorMessage: string | null = null;
+  isLoading = true; // Betöltés állapota, kezdetben igaz
   selectedVideoUrl: string = ''; // Kiválasztott videó URL
   private baseUrl = 'http://localhost:32006/vod'; // Alap URL a videókhoz
   private logoutSubscription!: Subscription;
@@ -55,6 +56,7 @@ export class VideoListComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.checkLoginStatus();
+    this.loadVideos();
     // Feliratkozás a kijelentkezési eseményre
     this.logoutSubscription = this.userService.onLogout().subscribe(() => {
       console.log('Kijelentkezési esemény érkezett');
@@ -85,12 +87,15 @@ export class VideoListComponent implements OnInit, OnDestroy{
         this.videos = response.map(video => ({
           ...video,
           fullUrl: `${this.baseUrl}${video.path}` // Dinamikus URL
+          
         }));
         console.log('Videos loaded:', this.videos);
+        this.isLoading = false; // Betöltés befejezése
       },
       error: (err) => {
         console.error('Fail to load videos:', err);
         this.errorMessage = 'Sorry, try to login again or try again later!';
+        this.isLoading = false; // Betöltés befejezése
       }
     });
   }
