@@ -17,7 +17,7 @@ def read_root():
     return {"message": "Transcoding Service is up and running!"}
 
 @app.post("/upload")
-async def upload_video(file: UploadFile = File(...)):
+async def upload_video(file: UploadFile = File(...), metadata: UploadFile = File(...)):
     """
     Feltöltött MP4 videó feldolgozása és transzkódolása HLS formátumba.
     """
@@ -32,6 +32,12 @@ async def upload_video(file: UploadFile = File(...)):
     # Kimeneti fájlok elérési útjai
     output_file_base = OUTPUT_DIR / file.filename.replace(".mp4", "")
     m3u8_path = output_file_base.with_suffix(".m3u8")
+    metadata_path = output_file_base.with_name(f"{output_file_base.stem}_info.txt")
+
+    # Metaadatok mentése
+    if metadata:
+        with open(metadata_path, "wb") as meta_buffer:
+            meta_buffer.write(await metadata.read())
 
     # FFmpeg parancs a HLS formátumhoz
     ffmpeg_command = [
@@ -55,5 +61,6 @@ async def upload_video(file: UploadFile = File(...)):
 
     return {
         "message": "Fájl sikeresen transzkódolva.",
-        "m3u8_url": f"/vod/{m3u8_path.name}"
+        "m3u8_url": f"/vod/{m3u8_path.name}",
+        "metadata_url": f"/vod/{metadata_path.name}" if metadata else None
     }
