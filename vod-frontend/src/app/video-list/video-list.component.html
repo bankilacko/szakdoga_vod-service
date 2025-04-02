@@ -31,30 +31,46 @@
     <h1>Welcome to the application!</h1>
     <p *ngIf="!isLoggedIn">Explore the best videos, and join us!</p>
   </div>
-</div>    
+</div>
+
 
 <div class="video-list-container">
-  <div>
-    <div *ngIf="!errorMessage && videos.length > 0">
-      <div class="video-card-container">
-        <mat-card *ngFor="let video of videos" class="video-card" (click)="onSelectVideo(video.fullUrl)">
-          <mat-card-header>
-            <mat-icon mat-list-icon>play_circle</mat-icon>
-            <mat-card-title>{{ video.title }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>{{ video.description }}</p>
-          </mat-card-content>
-        </mat-card>
-      </div> 
-    </div>
-    <mat-card class="error" *ngIf="!isLoading &&  (videos.length === 0 || errorMessage)">
+  <div class="error-container">
+    <mat-card class="error" *ngIf="!isLoading &&  (categories.length === 0 || errorMessage)">
       <mat-card-header>
         <mat-card-title class="error">No video available</mat-card-title>
       </mat-card-header>
-      <mat-card-content class="error">
+      <mat-card-content *ngIf="errorMessage" class="error">
         <p>{{errorMessage}}</p>
       </mat-card-content>
     </mat-card>
   </div>
+  <div>
+    <div *ngIf="!errorMessage && categories.length > 0">
+      <div *ngIf="isLoading" class="loading-spinner">
+        <p>Adatok betöltése...</p>
+      </div>
+      <div *ngFor="let category of categories" class="video-category-container">
+        <div>
+          <h2 class="video-category">{{ category }}</h2>
+          <!-- <button class="scroll-button" (click)="scrollLeft()">&#8592; Előző</button>
+          <button class="scroll-button" (click)="scrollRight()">Következő &#8594;</button> -->
+          <div class="video-card-container" #videoList>
+            <mat-card *ngFor="let video of videosByCategory[category]" class="video-card" (click)="onSelectVideo(video)">
+              <mat-card-header>
+                <mat-card-title>{{ video.title }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p *ngIf="video.description.length > 50">{{ video.description | slice:0:60 }}...</p>
+                <p *ngIf="video.description.length <= 50">{{ video.description }}</p>
+                <mat-icon class="play">play_circle</mat-icon>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>
+  
 </div>
+

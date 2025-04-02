@@ -27,7 +27,7 @@
 
 <mat-card class="video-container">
     <mat-card-header>
-      <mat-card-title>Videó címe</mat-card-title>
+      <mat-card-title>{{ videoTitle }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="video-card">
@@ -38,5 +38,12 @@
           height="auto">
         </video>
       </div>
+      <p class="video-details">
+        <span *ngIf="videoDescription"><strong>Description:</strong> {{ videoDescription }}</span><br>
+        <span *ngIf="videoCategory"><strong>Category:</strong> {{ videoCategory }}</span><br>
+        <span *ngIf="videoCreatedAt"><strong>Uploaded at:</strong> {{ videoCreatedAt | date:'yyyy-MM-dd' }}</span><br>
+        <span *ngIf="videoDuration && minute"><strong>Duration:</strong> {{ videoMinute }} minute(s) {{ videoSecond }} seconds</span>
+        <span *ngIf="videoDuration && !minute"><strong>Duration:</strong> {{ videoSecond }} seconds</span>
+      </p>
     </mat-card-content>
 </mat-card>  

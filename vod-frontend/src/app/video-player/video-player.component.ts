@@ -1,5 +1,4 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, Input, SimpleChanges } from '@angular/core';
-import Hls from 'hls.js';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, NgForOf, NgIf } from '@angular/common';
@@ -9,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { UserService } from '../user.service';
 import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import Hls from 'hls.js';
 
 @Component({
   selector: 'app-video-player',
@@ -31,6 +31,16 @@ export class VideoPlayerComponent implements AfterViewInit {
   isLoggedIn = false;
   private logoutSubscription!: Subscription;
 
+  videoTitle: string = '';
+  videoDescription: string = '';
+  videoCategory: string = '';
+  videoCreatedAt: string = '';
+  videoUrl: string = '';
+  videoDuration: number = 0; // Az időtartam másodpercekben
+  minute = false; // Boolean jelzi, hogy van-e perc
+  videoMinute: number = 0; // Percek száma
+  videoSecond: number = 0; // Másodpercek száma
+
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
@@ -48,17 +58,35 @@ export class VideoPlayerComponent implements AfterViewInit {
       console.log('Kijelentkezési esemény érkezett');
       this.onLogout();
     });
-    if(this.isLoggedIn){
+    if (this.isLoggedIn) {
       this.route.queryParams.subscribe(params => {
-        if (params['url']) { // Ellenőrizd, hogy a 'url' paraméter létezik
-          this.videoSrc = params['url'].trim(); // Trim csak akkor hívódik meg, ha az érték definiált
-          this.initVideoPlayer();
+        // Videó információk fogadása
+        this.videoSrc = params['url'] || ''; // URL feldolgozása
+        this.videoTitle = params['title'] || null; // Cím feldolgozása
+        this.videoDescription = params['description'] || null; // Leírás feldolgozása
+        this.videoCategory = params['category'] || null; // Kategória feldolgozása
+        this.videoCreatedAt = params['createdAt'] || null; // Dátum feldolgozása
+        this.videoDuration = params['duration'] || null; //Hossz feldolgozása
+        this.videoDuration = parseInt(params['duration'], 10) || 0; // Hossz feldolgozása
+
+        if (this.videoDuration > 60) {
+          this.minute = true;
+          this.videoMinute = Math.floor(this.videoDuration / 60); // Percek számítása
+          this.videoSecond = this.videoDuration % 60; // Másodpercek számítása
+        } else {
+          this.minute = false;
+          this.videoSecond = this.videoDuration; // Ha nincs perc, az időtartam csak másodpercekben van
+        }
+  
+        if (this.videoSrc) {
+          this.initVideoPlayer(); // Lejátszó inicializálása az URL alapján
         } else {
           console.error('A videó URL nem érkezett meg.');
         }
       });
+    } else {
+      this.router.navigate(['/login']); // Kijelentkezett felhasználó esetén átirányítás
     }
-    else this.router.navigate(['/login']);
   }
 
   checkLoginStatus(): void {

@@ -41,15 +41,31 @@ mat-form-field {
 }
 
 .video-container {
-    height: 100vh;
     background-color: rgb(19, 19, 19);
+    border-radius: 0px; 
 }
   
 .video-card {
     max-width: 800px;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 20px;
     background-color: rgb(19, 19, 19);
+}
+
+mat-card-title{
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-left: 220px;
+    color: rgb(97, 189, 220);
+}
+
+.video-details{
+    display: flex;
+    flex-direction: column;
+    font-size: 1.1rem;
+    margin-left: 220px;
+    margin-right: 220px;
+    color: rgb(97, 189, 220);
 }
 
 mat-icon.home{
