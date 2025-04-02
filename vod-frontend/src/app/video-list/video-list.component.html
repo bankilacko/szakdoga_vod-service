@@ -1,16 +1,16 @@
 <mat-toolbar color="primary" class="toolbar">
   <!-- Alkalmazás címe -->
-  <button mat-icon-button matSuffix>
+  <button mat-icon-button matSuffix (click)="home()">
     <mat-icon class="home" routerLink="/">home</mat-icon>
   </button>
-  <span class="app-title" routerLink="/">VOD Application</span>
+  <span class="app-title" routerLink="/" (click)="home()">VOD Application</span>
    
   <!-- Középen a keresősáv -->
   <div class="search-bar">
     <mat-form-field appearance="outline">
       <mat-label>Search</mat-label>
-      <input matInput placeholder="Search videos...">
-      <button mat-icon-button matSuffix>
+      <input matInput placeholder="Search videos..." type="text" [(ngModel)]="searchQuery" (keydown.enter)="search()">
+      <button mat-icon-button matSuffix (click)="search()">
         <mat-icon class="search">search</mat-icon>
       </button>
     </mat-form-field>
@@ -35,6 +35,59 @@
 
 
 <div class="video-list-container">
+  
+  <div>
+    <div *ngIf="!errorMessage && categories.length > 0">
+      <div *ngIf="isLoading" class="loading-spinner">
+        <p>Adatok betöltése...</p>
+      </div>
+
+      <div *ngIf="isSearch && !errorMessage">
+        <div *ngFor="let category of searchCategories" class="video-category-container">
+          <div>
+            <h2 class="video-category">{{ category }}</h2>
+            <!-- <button class="scroll-button" (click)="scrollLeft()">&#8592; Előző</button>
+            <button class="scroll-button" (click)="scrollRight()">Következő &#8594;</button> -->
+            <div class="video-card-container" #videoList>
+              <mat-card *ngFor="let video of searchedVideosByCategory[category]" class="video-card" (click)="onSelectVideo(video)">
+                <mat-card-header>
+                  <mat-card-title>{{ video.title }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <p *ngIf="video.description.length > 50">{{ video.description | slice:0:60 }}...</p>
+                  <p *ngIf="video.description.length <= 50">{{ video.description }}</p>
+                  <mat-icon class="play">play_circle</mat-icon>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!isSearch">
+        <div *ngFor="let category of categories" class="video-category-container">
+          <div>
+            <h2 class="video-category">{{ category }}</h2>
+            <!-- <button class="scroll-button" (click)="scrollLeft()">&#8592; Előző</button>
+            <button class="scroll-button" (click)="scrollRight()">Következő &#8594;</button> -->
+            <div class="video-card-container" #videoList>
+              <mat-card *ngFor="let video of videosByCategory[category]" class="video-card" (click)="onSelectVideo(video)">
+                <mat-card-header>
+                  <mat-card-title>{{ video.title }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <p *ngIf="video.description.length > 50">{{ video.description | slice:0:60 }}...</p>
+                  <p *ngIf="video.description.length <= 50">{{ video.description }}</p>
+                  <mat-icon class="play">play_circle</mat-icon>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </div> 
+      </div>
+    </div>
+  </div>
+
   <div class="error-container">
     <mat-card class="error" *ngIf="!isLoading &&  (categories.length === 0 || errorMessage)">
       <mat-card-header>
@@ -45,32 +98,5 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div>
-    <div *ngIf="!errorMessage && categories.length > 0">
-      <div *ngIf="isLoading" class="loading-spinner">
-        <p>Adatok betöltése...</p>
-      </div>
-      <div *ngFor="let category of categories" class="video-category-container">
-        <div>
-          <h2 class="video-category">{{ category }}</h2>
-          <!-- <button class="scroll-button" (click)="scrollLeft()">&#8592; Előző</button>
-          <button class="scroll-button" (click)="scrollRight()">Következő &#8594;</button> -->
-          <div class="video-card-container" #videoList>
-            <mat-card *ngFor="let video of videosByCategory[category]" class="video-card" (click)="onSelectVideo(video)">
-              <mat-card-header>
-                <mat-card-title>{{ video.title }}</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <p *ngIf="video.description.length > 50">{{ video.description | slice:0:60 }}...</p>
-                <p *ngIf="video.description.length <= 50">{{ video.description }}</p>
-                <mat-icon class="play">play_circle</mat-icon>
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </div>
-      </div> 
-    </div>
-  </div>
-  
 </div>
 

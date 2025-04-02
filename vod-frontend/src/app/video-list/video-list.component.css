@@ -57,30 +57,33 @@ mat-form-field {
 /*VIDEO_LIST SECTION*/
 .video-list-container{
   display: flex;
-  align-items: start;
-  justify-content: start;
+  align-items: flex-start;
+  justify-content: flex-start;
   background-color: rgb(19, 19, 19);
   width: 100%; /* A szülőelem az oldal szélességét foglalja el */
   overflow-x: hidden; /* Csak a tartalom túlnyúlását rejti el */
+  flex-direction: column;
 }
 
 .video-category-container{
-  margin-left: 40px; 
+  margin-left: 40px;
 }
 
 .video-card-container {
   display: flex; /* Vízszintes elrendezés */
-  flex-wrap: nowrap;
+  flex-wrap: wrap; /* Több sorban is megjelenhetnek */
   align-items: flex-start;
-  gap: 25px; /* Kártyák közötti távolság */
+  gap: 40px; /* Kártyák közötti távolság */
+  justify-content: flex-start; /* Balra igazítás */
   background-color: rgb(19, 19, 19);
   overflow-x: auto; /* Vízszintes görgetés engedélyezése */
   padding: 20px;
+  width: 100%;
 }
 
 .video-card {
   flex-shrink: 0; /* Kártyák ne zsugorodjanak össze */
-  width: 320px;
+  width: 340px;
   height: 175px;
   max-width: 100%;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -205,15 +208,3 @@ mat-icon.search{
 mat-icon.basic{
   transform: scale(1);
 }
-
-
-/* 
-button{
-  border: 1px solid red;
-}
-
-
-
-mat-icon{
-  border: 1px solid purple;
-} */

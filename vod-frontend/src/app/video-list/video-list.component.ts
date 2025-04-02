@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { Subscription } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-video-list',
@@ -24,6 +25,7 @@ import { Subscription } from 'rxjs';
     MatIconModule,
     MatToolbarModule,
     MatInputModule,
+    FormsModule,
   ],
   templateUrl: './video-list.component.html',
   styleUrls: ['./video-list.component.css']
@@ -31,7 +33,9 @@ import { Subscription } from 'rxjs';
 export class VideoListComponent implements OnInit, OnDestroy{
   videos: any[] = [];
   videosByCategory: Record<string, any[]> = {}; // Kategorizált videók
+  searchedVideosByCategory: Record<string, any[]> = {}; // Keresésnek megfelelő kategorizált videók
   categories: string[] = []; // Kategóriák tömbje
+  searchCategories: string[] = [];
   isLoggedIn = false;
   errorMessage: string | null = null;
   isLoading = true; // Betöltés állapota, kezdetben igaz
@@ -39,6 +43,8 @@ export class VideoListComponent implements OnInit, OnDestroy{
   private baseUrl = 'http://localhost:32006/vod'; // Alap URL a videókhoz
   private logoutSubscription!: Subscription;
   @ViewChild('videoList', { static: false }) videoList!: ElementRef;
+  searchQuery: string = ''; // Keresési kulcsszó
+  isSearch = false;
 
   constructor(
     private vodService: VodManagementService,
@@ -58,7 +64,9 @@ export class VideoListComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+    this.isSearch = false;
     this.checkLoginStatus();
+    console.log(this.isLoggedIn);
     // Feliratkozás a kijelentkezési eseményre
     this.logoutSubscription = this.userService.onLogout().subscribe(() => {
       console.log('Kijelentkezési esemény érkezett');
@@ -77,34 +85,14 @@ export class VideoListComponent implements OnInit, OnDestroy{
     this.isLoggedIn = this.userService.isAuthenticated();
     if (this.isLoggedIn) {
       //this.loadVideos(); // Ha be van jelentkezve, azonnal töltsük le a videókat
-      this.loadVideos2();
+      this.loadVideos();
     } else {
       this.errorMessage = 'Kérjük, jelentkezzen be a videók megtekintéséhez!';
     }
   }
 
-  loadVideos(): void {
-     this.errorMessage = null; // Hibák törlése az új kérés előtt
-     this.vodService.getVideos().subscribe({
-       next: (response: any[]) => {
-         this.videos = response.map(video => ({
-           ...video,
-           fullUrl: `${this.baseUrl}${video.path}` // Dinamikus URL
-          
-         }));
-         console.log('Videos loaded:', this.videos);
-         this.isLoading = false; // Betöltés befejezése
-       },
-       error: (err) => {
-         console.error('Fail to load videos:', err);
-         this.errorMessage = 'Sorry, try to login again or try again later!';
-         this.isLoading = false; // Betöltés befejezése
-       }
-     });
-  }
-
   // Videók betöltése és csoportosítása
-  loadVideos2(): void {
+  loadVideos(): void {
     this.errorMessage = null; // Hibák törlése
     this.vodService.getVideos().subscribe({
       next: (response: any[]) => {
@@ -169,5 +157,52 @@ export class VideoListComponent implements OnInit, OnDestroy{
       left: 200, // Görgetés jobbra (200px)
       behavior: 'smooth'
     });
+  }
+
+  search(): void {
+    this.errorMessage = "";
+    if (this.searchQuery.trim() === '') {
+      this.isSearch = false;
+      this.searchedVideosByCategory = {}; // Ürítjük az előző keresést
+    } else {
+      this.isSearch = true;
+      this.searchCategories = this.filteredCategories();
+      this.searchedVideosByCategory = {}; // Új kereséshez újra inicializáljuk
+  
+      for (let c of this.searchCategories) {
+        this.searchedVideosByCategory[c] = this.filteredVideos(c); // Közvetlen hozzárendelés a tömbhöz
+      }
+    }
+
+    if(this.searchCategories.length == 0 ) this.errorMessage = "No video matches your search";
+  
+    console.log("Szűrt kategóriák:", this.searchCategories);
+    console.log("Szűrt videók:", this.searchedVideosByCategory);
+  }
+
+  filteredCategories(): string[] {
+    console.log("Keresési kulcsszó:", this.searchQuery);
+
+    return Object.keys(this.videosByCategory).filter(category =>
+      (category.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+      this.videosByCategory[category].some(video =>
+        video.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
+      ) &&
+      this.filteredVideos(category).length > 0 // Csak akkor jelenik meg a kategória, ha van benne találat
+    );
+  }
+
+  filteredVideos(category: string): any[] {
+    console.log("Szűrés kategória és cím alapján:", category, this.searchQuery);
+    return this.videosByCategory[category]?.filter(video =>
+      video.title.toLowerCase().includes(this.searchQuery.toLowerCase()) //||
+      //category.toLowerCase().includes(this.searchQuery.toLowerCase()) // Kategória nevére is keresünk
+    ) || [];
+  }
+
+  home(): void {
+    this.isSearch = false;
+    this.searchQuery = '';
+    this.loadVideos();
   }
 }
