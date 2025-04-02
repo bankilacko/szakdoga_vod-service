@@ -35,11 +35,18 @@ def startup_sync_videos():
 
                 for file in video_files:
                     if not db.query(Video).filter(Video.path == f"/{file}").first():
+                        # Metaadat fájl beolvasása
+                        metadata_file = file.replace(".m3u8", "_info.txt")
+                        metadata_path = os.path.join(VOD_SERVER_URL, metadata_file)
+                        title, category, duration, description = read_metadata(metadata_path)
+
+                        # Új videó hozzáadása az adatbázisba
                         new_video = Video(
-                            title=file.split(".")[0],
-                            description="Automatikusan szinkronizálva az NGINX-ből",
+                            title=title,
+                            description=description,
                             path=f"/{file}",
-                            category="Synced",
+                            category=category,
+                            duration=duration,
                             created_at=datetime.utcnow()
                         )
                         db.add(new_video)
@@ -109,12 +116,18 @@ def list_videos(db: Session = Depends(get_db)):
         for file in video_files:
             existing_video = db.query(Video).filter(Video.path == f"/{file}").first()
             if not existing_video:
+                # Metaadat fájl beolvasása
+                metadata_file = file.replace(".m3u8", "_info.txt")
+                metadata_path = os.path.join(VOD_SERVER_URL, metadata_file)
+                title, category, duration, description = read_metadata(metadata_path)
+
+                # Új videó hozzáadása az adatbázisba
                 new_video = Video(
-                    title=file.split(".")[0],
-                    description="Automatikusan szinkronizálva az NGINX-ből",
+                    title=title,
+                    description=description,
                     path=f"/{file}",
-                    category="Synced",
-                    duration=0,
+                    category=category,
+                    duration=duration,
                     created_at=datetime.utcnow()
                 )
                 db.add(new_video)
@@ -123,7 +136,36 @@ def list_videos(db: Session = Depends(get_db)):
         # Az aktuális videók listája az adatbázisból
         videos = db.query(Video).all()
         print(f"{len(videos)} videó található az adatbázisban.")
+        print(videos)
         return videos
 
     except requests.RequestException as e:
         raise HTTPException(status_code=500, detail=f"Nem sikerült elérni az NGINX szervert: {str(e)}")
+
+def read_metadata(metadata_url: str):
+    """
+    Metaadat fájl beolvasása és elemzése.
+    Az első sor a cím, a második a kategória, a többi sor egyesítve a leírás.
+    """
+    try:
+        # Metaadat fájl lekérése HTTP-n keresztül
+        response = requests.get(metadata_url)
+        response.raise_for_status()
+        lines = response.text.splitlines()
+
+        # Az első sor a cím
+        title = lines[0].strip() if len(lines) > 0 else "Nincs cím"
+
+        # A második sor a kategória
+        category = lines[1].strip() if len(lines) > 1 else "Nincs kategória"
+
+        # A harmadik sor a hossz
+        duration = lines[2].strip() if len(lines) > 1 else "Nincs hossz"
+
+        # A maradék sorokat egyesítsük leírásként
+        description = "\n".join(lines[3:]).strip() if len(lines) > 2 else "Nincs leírás"
+
+        return title, category, duration, description
+    except Exception as e:
+        print(f"Nem sikerült a metaadatokat beolvasni: {e}")
+        return "Nincs cím", "Nincs kategória", "Nincs leírás"
