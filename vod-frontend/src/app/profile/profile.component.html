@@ -1,11 +1,12 @@
+<!-- TOOLBAR SECTION -->
 <mat-toolbar color="primary" class="toolbar">
-  <!-- Alkalmazás címe -->
+  <!-- Application title -->
   <button mat-icon-button matSuffix>
     <mat-icon class="home" routerLink="/">home</mat-icon>
   </button>
   <span class="app-title" routerLink="/">VOD Application</span>
    
-  <!-- Középen a keresősáv -->
+  <!-- Searchbar -->
   <div class="search-bar">
     <mat-form-field appearance="outline">
       <mat-label>Search</mat-label>
@@ -16,33 +17,46 @@
     </mat-form-field>
   </div>
    
-  <!-- Navigációs gombok -->
+  <!-- Nvigation buttons -->
   <span class="nav-buttons">
+    <!-- Login button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/login"><mat-icon class="basic">login</mat-icon>Login</button>
+    <!-- Register button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/register"><mat-icon class="basic">person_add</mat-icon>Register</button>
+    <!-- Profile button -->
     <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button"routerLink="/profile"><mat-icon class="basic">person</mat-icon>Profile</button>
+    <!-- Log out button -->
     <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button" (click)="logout()"><mat-icon class="basic">logout</mat-icon>Log out</button>
   </span>
 </mat-toolbar>
 
+<!-- PROFILE SECTION -->
 <div class="profile-container">
     <mat-card *ngIf="userProfile">
       <mat-card-header>
         <div mat-card-avatar>
             <mat-icon class="profile">person</mat-icon>
         </div>
+        <!-- Title -->
         <mat-card-title>Profile</mat-card-title>
       </mat-card-header>
       <mat-card-content>
+        <!-- Username field -->
         <p><strong>Username:</strong> {{ userProfile.username }}</p>
+        <!-- Email field -->
         <p><strong>Email:</strong> {{ userProfile.email }}</p>
+        <!-- Registration date field -->
         <p><strong>Registration date:</strong> {{ userProfile.registration_date | date:'yyyy-MM-dd'}}</p>
       </mat-card-content>
+      <!-- Buttons -->
       <mat-card-actions>
         <button mat-raised-button class="custom-button" (click)="editProfile()"><mat-icon class="basic">edit</mat-icon>Edit Profile</button>
         <button mat-raised-button class="custom-button" (click)="logout()"><mat-icon class="basic">logout</mat-icon>Log out</button>
       </mat-card-actions>
     </mat-card>
+
+  <!-- ERROR SECTION -->
+  <!-- Display the error massage if there is any -->
     <mat-card class="error" *ngIf="errorMessage">
       <mat-card-header>
         <mat-card-title class="error">No profile data available</mat-card-title>

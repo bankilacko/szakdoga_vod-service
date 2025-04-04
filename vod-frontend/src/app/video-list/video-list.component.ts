@@ -1,99 +1,124 @@
-import { NgForOf, NgIf } from '@angular/common';
-import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { VodManagementService } from '../vod-management.service';
-import { UserService } from '../user.service';
-import { MatIconModule } from '@angular/material/icon';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router, RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { Subscription } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { Router, RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { UserService } from '../user.service';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-video-list',
   standalone: true,
   imports: [
-    RouterModule, // A RouterModule biztosítja a routerLink működését
-    MatCardModule,
+    // ROUTER
+    RouterModule,
+    // ANGULAR MATERIAL MODULES
+    MatToolbarModule,
     MatButtonModule,
+    MatInputModule,
+    MatCardModule,
+    MatIconModule,
+    // ANGULAR METHODS
     NgForOf,
     NgIf,
+    // OTHER MODULES
     CommonModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatInputModule,
     FormsModule,
   ],
-  templateUrl: './video-list.component.html',
-  styleUrls: ['./video-list.component.css']
+  templateUrl: './video-list.component.html', // HTML FILE
+  styleUrls: ['./video-list.component.css'] // CSS FILE
 })
 export class VideoListComponent implements OnInit, OnDestroy{
-  videos: any[] = [];
-  videosByCategory: Record<string, any[]> = {}; // Kategorizált videók
-  searchedVideosByCategory: Record<string, any[]> = {}; // Keresésnek megfelelő kategorizált videók
-  categories: string[] = []; // Kategóriák tömbje
-  searchCategories: string[] = [];
-  isLoggedIn = false;
-  errorMessage: string | null = null;
-  isLoading = true; // Betöltés állapota, kezdetben igaz
-  selectedVideoUrl: string = ''; // Kiválasztott videó URL
-  private baseUrl = 'http://localhost:32006/vod'; // Alap URL a videókhoz
-  private logoutSubscription!: Subscription;
-  @ViewChild('videoList', { static: false }) videoList!: ElementRef;
-  searchQuery: string = ''; // Keresési kulcsszó
-  isSearch = false;
+  // URL
+  private baseUrl = 'http://localhost:32006/vod'; // Nginx server to get video to play (test)
 
+  // VIDEO ARRAYS
+  videos: any[] = []; // Videos array - store videos before sorting into categories
+  categories: string[] = []; // Video categories array - store categories
+  videosByCategory: Record<string, any[]> = {}; // Videos array - store videos in categories (key-value)
+  searchCategories: string[] = []; // Video categories array - store categories, which were selected by search
+  searchedVideosByCategory: Record<string, any[]> = {}; // Videos array - store videos in categories (key-value), which were selected by search
+
+  // BOOLEAN 
+  isLoggedIn = false; // Login state (wether the user is logged in)
+  isLoading = true; // Loading state (wether the page is loading)
+  isSearch = false; // Search state (wether the user is using the search bar)
+
+  // STRING
+  selectedVideoUrl: string = ''; // Selected video's URL
+  errorMessage: string | null = null; // Error message, value based on the error type and displayed on the page to help the user
+  searchQuery: string = ''; // Searched word or expression, used to find the desired video(s)
+  
+  // SUBSCRIBTIONS
+  private logoutSubscription!: Subscription; // SubscriBtion to handle logout events
+
+  // CHILDS
+  @ViewChild('videoList', { static: false }) videoList!: ElementRef;
+  
+  // CONSTRUCTOR
   constructor(
     private vodService: VodManagementService,
     private userService: UserService,
     private router: Router
   ) {
-    this.init();
+    this.init(); // Call initialize
+    this.errorMessage = null; // Clear the previous error message
   }
 
+  // Initialize
   init(): void {
-    console.log("init video");
+    // Check the user's login status
     this.checkLoginStatus();
-    // Feliratkozás a kijelentkezési eseményre
+    // Subscribtion to the logout event
     this.logoutSubscription = this.userService.onLogout().subscribe(() => {
-      this.onLogout();
+      this.onLogout(); // Give the function to call when the event occurs
     });
   }
 
+  // Initialize
   ngOnInit(): void {
+    // By default, when the page is loaded there is no search
     this.isSearch = false;
+    // Check the user's login status
     this.checkLoginStatus();
-    console.log(this.isLoggedIn);
-    // Feliratkozás a kijelentkezési eseményre
+    // Load the videos
+    this.loadVideos();
+    // Subscribtion to the logout event
     this.logoutSubscription = this.userService.onLogout().subscribe(() => {
-      console.log('Kijelentkezési esemény érkezett');
-      this.onLogout();
+      this.onLogout(); // Give the function to call when the event occurs
     });
   }
 
+  // Destroy
   ngOnDestroy(): void {
-    // Előfizetés törlése memória szivárgás elkerüléséhez
+    // Unsubscribe to avoid memory leak
     if (this.logoutSubscription) {
       this.logoutSubscription.unsubscribe();
     }
   }
 
+  // Check the user's login status
   checkLoginStatus(): void {
     this.isLoggedIn = this.userService.isAuthenticated();
     if (this.isLoggedIn) {
-      //this.loadVideos(); // Ha be van jelentkezve, azonnal töltsük le a videókat
+      // If the user is logged in load the videos
       this.loadVideos();
-    } else {
-      this.errorMessage = 'Kérjük, jelentkezzen be a videók megtekintéséhez!';
-    }
+    } 
+    // else { 
+    //   this.errorMessage = 'Kérjük, jelentkezzen be a videók megtekintéséhez!';
+    // }
   }
 
-  // Videók betöltése és csoportosítása
+  // Load and categorise videos
   loadVideos(): void {
-    this.errorMessage = null; // Hibák törlése
+    this.errorMessage = null; // Delete the previos error message
+    this.isLoading = true; // Loading started
     this.vodService.getVideos().subscribe({
       next: (response: any[]) => {
         const groupedVideos = response.reduce((acc, video) => {
@@ -103,103 +128,109 @@ export class VideoListComponent implements OnInit, OnDestroy{
           }
           acc[category].push({
             ...video,
-            fullUrl: `${this.baseUrl}${video.path}`, // Teljes URL
+            fullUrl: `${this.baseUrl}${video.path}`, // Store full URL to know from where to get the video files when playing the video
           });
           return acc;
         }, {} as Record<string, any[]>);
 
-        this.videosByCategory = groupedVideos;
-        console.log('Videos loaded:', this.videosByCategory);
-        this.categories = Object.keys(this.videosByCategory); // Kategóriák listája
-        this.isLoading = false;
+        this.videosByCategory = groupedVideos; // List of videos grouped by categories
+        this.categories = Object.keys(this.videosByCategory); // List of categories
+        this.isLoading = false; // Loading finished
       },
       error: (err) => {
-        console.error('Hiba történt a videók betöltésekor:', err);
-        this.errorMessage = 'Hiba történt, próbáld meg később!';
-        this.isLoading = false;
+        this.errorMessage = 'Hiba történt, próbáld meg később!'; // Create error message when loading vieos failed
+        this.isLoading = false; // Loading finished
       },
     });
   }
 
-  // Videó kiválasztása a lejátszáshoz
+  // Play selected video
   onSelectVideo(video: any): void {
-    console.log(video.duration);
-    this.router.navigate(['/video-player'],
+    this.router.navigate(['/video-player'], // Navigate to the video-player page, pass the full URl and information about the video
       { queryParams: {
-        url: video.fullUrl,
-        title: video.title,
-        description: video.description,
-        category: video.category,
-        createdAt: video.created_at,
-        duration: video.duration,
-      } }); // Navigáció a lejátszó oldalra
+        url: video.fullUrl, // Full URL
+        title: video.title, // Video's title
+        description: video.description, // Video's description
+        category: video.category, // Video's category
+        createdAt: video.created_at, // Video's creation time
+        duration: video.duration, // Video's duration
+      } }); 
   }
 
+  // Logout logic
+  // The function is called when the logout event occurs
   onLogout(): void {
-    // Kijelentkezési logika
-    this.isLoggedIn = false;
-    this.router.navigate(['/']);
+    this.isLoggedIn = false; // Logged in state is over 
+    this.router.navigate(['/']); // Navigate to the home page
   }
 
+  // Logout event
+  // The function calls the user service's function, to generate a logout event occurs
   logout(): void {
-    this.userService.logout();
+    this.userService.logout(); // Call user-service logout function
   }
 
+  // Scroll left function
   scrollLeft(): void {
     this.videoList.nativeElement.scrollBy({
-      left: -200, // Görgetés balra (200px)
+      left: -200, // Scroll left (200px)
       behavior: 'smooth'
     });
   }
   
+  // Scroll right function
   scrollRight(): void {
     this.videoList.nativeElement.scrollBy({
-      left: 200, // Görgetés jobbra (200px)
+      left: 200, // Scroll right (200px)
       behavior: 'smooth'
     });
   }
 
+  // Search logic
+  // The function is called when the search button/enter is pressed while searching
   search(): void {
-    this.errorMessage = "";
+    this.errorMessage = ""; // Delete the previous error message
+    // Check wether anything is typed in the searchbar
     if (this.searchQuery.trim() === '') {
-      this.isSearch = false;
-      this.searchedVideosByCategory = {}; // Ürítjük az előző keresést
+      this.isSearch = false; // If the searchbar is empty finish the search state
+      this.searchedVideosByCategory = {}; // Empty the previous search result categories
     } else {
-      this.isSearch = true;
-      this.searchCategories = this.filteredCategories();
-      this.searchedVideosByCategory = {}; // Új kereséshez újra inicializáljuk
+      this.isSearch = true; // If the searchbar contains text start search state
+      this.searchCategories = this.filteredCategories(); // Search the videocategories which contain the search video(s)
+      this.searchedVideosByCategory = {}; // Empty the previous search result videos
   
+      // Go through the selected categories, and collect the searched videos
       for (let c of this.searchCategories) {
-        this.searchedVideosByCategory[c] = this.filteredVideos(c); // Közvetlen hozzárendelés a tömbhöz
+        this.searchedVideosByCategory[c] = this.filteredVideos(c); // Collect the videos
       }
     }
 
-    if(this.searchCategories.length == 0 ) this.errorMessage = "No video matches your search";
-  
-    console.log("Szűrt kategóriák:", this.searchCategories);
-    console.log("Szűrt videók:", this.searchedVideosByCategory);
+    // If no video matches the search text
+    if(this.searchCategories.length == 0 ) this.errorMessage = "No video matches your search"; // Set error message to inform the user
   }
 
+  // Filter categories
   filteredCategories(): string[] {
-    console.log("Keresési kulcsszó:", this.searchQuery);
-
+    // Chech wether the category or its videos match the search requirement
     return Object.keys(this.videosByCategory).filter(category =>
       (category.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       this.videosByCategory[category].some(video =>
         video.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
       ) &&
-      this.filteredVideos(category).length > 0 // Csak akkor jelenik meg a kategória, ha van benne találat
+      this.filteredVideos(category).length > 0 // Only add the category to the results if it has at least one video matches the search
     );
   }
 
+  // Filter videos
   filteredVideos(category: string): any[] {
-    console.log("Szűrés kategória és cím alapján:", category, this.searchQuery);
+    // Chech wether the videos int the category (given in parameter) match the search requirement
     return this.videosByCategory[category]?.filter(video =>
-      video.title.toLowerCase().includes(this.searchQuery.toLowerCase()) //||
-      //category.toLowerCase().includes(this.searchQuery.toLowerCase()) // Kategória nevére is keresünk
+      video.title.toLowerCase().includes(this.searchQuery.toLowerCase()) // Search for videos name 
+      //|| category.toLowerCase().includes(this.searchQuery.toLowerCase()) // Search for category name as well
     ) || [];
   }
 
+  // Home button/application name click function
   home(): void {
     this.isSearch = false;
     this.searchQuery = '';

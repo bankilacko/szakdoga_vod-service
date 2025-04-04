@@ -1,31 +1,23 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { UserService } from './user.service';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root' // Globálisan elérhető szerviz
+  providedIn: 'root'
 })
 export class VodManagementService {
-  //private apiUrl = 'http://localhost:30087/vod-management-service'; // Állítsd be az API URL-t
-  private apiUrl = 'http://localhost:5000';
+  // API URL
+  //private apiUrl = 'http://localhost:30087/vod-management-service'; // Vod-management-service URL (test - frontend runs on kubernetes)
+  private apiUrl = 'http://localhost:5000'; // Vod-management-service URL (test - frontend runs on host)
 
+  // CONSTRUCTOR
   constructor(private http: HttpClient, private userService: UserService) {}
 
-  // Videók lekérése JWT tokennel
+  // BACKEND VOD_MANAGEMENT-SERVICE API CALLS
+  // Load the available videos information, using the JWT token
   getVideos(): Observable<any> {
-    console.log("getvideos");
-    return this.http.get(`${this.apiUrl}/videos`);
-    const token = this.userService.getToken();
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}` // Token hozzáadása a kéréshez
-    });
-    return this.http.get(`${this.apiUrl}/videos`); //, { headers }
+    return this.http.get(`${this.apiUrl}/videos`); // return videos
   }
-
-  // // Új videó létrehozása
-  // createVideo(video: any): Observable<any> {
-  //   return this.http.post(`${this.apiUrl}/videos`, video);
-  // }
 }
 

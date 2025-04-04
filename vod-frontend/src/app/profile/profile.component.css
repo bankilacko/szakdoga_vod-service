@@ -1,121 +1,183 @@
+/*NAVIGATION/TOOL BAR SECTION*/
 .toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 16px;
-    background-color: rgb(97, 189, 220);
-    height: 80px;
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* WIDTH, HEIGHT */
+  height: 80px;
+  /* MARGIN, PADDING */
+  padding: 0px 16px;
+  /* COLOR */
+  background-color: rgb(97, 189, 220);
 }
   
 .app-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0px 0px 0px 10px;
-}
+  /* MARGIN, PADDING */
+  margin: 0px 0px 0px 10px;
+  /* TEXT */
+  font-size: 1.5rem;
+  font-weight: bold;
+  /* CURSOR */
+  cursor: pointer;
+}  
   
 .search-bar {
-    flex-grow: 1;
-    margin-left: 20px;
-    margin-top: 20px;
-    color: rgb(19, 19, 19) !important;
-    border-color: rgb(19, 19, 19) !important;
+  /* FLEXBOX */
+  flex-grow: 1;
+  /* MARGIN, PADDING */
+  margin-left: 20px;
+  margin-top: 20px;
 }
- 
+  
 mat-form-field {
-    width: 50%;
+  /* WIDTH, HEIGHT */
+  width: 50%;
 }
-
+  
 .nav-buttons button {
-    margin-left: 10px;
+  /* MARGIN, PADDING */
+  margin-left: 10px;
+}
+  
+.custom-button:hover{
+  /* COLOR */
+  color: rgb(97, 189, 220) !important;
+  background-color: rgb(19, 19, 19) !important;
+}
+  
+.custom-button{
+  /* COLOR */
+  color: rgb(19, 19, 19) !important;
+  background-color: rgb(97, 189, 220) !important;
+  /* BORDER */
+  border: 1px solid rgb(19, 19, 19) !important;
 }
 
+/* PROFILE SECTION */
 .profile-container {
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    height: 85vh;
-    background-color: rgb(19, 19, 19);
+  /* FLEXBOX */
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  /* WIDTH, HEIGHT */
+  height: 85vh;
+  /* COLOR */
+  background-color: rgb(19, 19, 19);  
 }
   
 mat-card {
-    margin-top: 60px;
-    width: 500px;
-    height: 350px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: rgb(97, 189, 220);
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
+  /* FLEXBOX */
+  display: flex;
+  justify-content: space-between;
+  /* WIDTH, HEIGHT */
+  width: 500px;
+  height: 350px;
+  /* MARGIN, PADDING */
+  margin-top: 60px;
+  padding: 10px;
+  /* COLOR */
+  background-color: rgb(97, 189, 220);
+  /* SHADOW */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 mat-card-content{
-    font-size: large;
+  /* TEXT */
+  font-size: large;
 }
 
 mat-card-title{
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0px 0px 0px 20px;
-    color: rgb(19, 19, 19);
-    margin-top: 18px;
+  /* MARGIN, PADDING */
+  margin-top: 18px;
+  margin: 0px 0px 0px 20px;
+  /* COLOR */
+  color: rgb(19, 19, 19);
+  /* TEXT */
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 mat-card-actions{
-    display: flex;
-    justify-content: space-between;
+  /* FLEXBOX */
+  display: flex;
+  justify-content: space-between;
 }
 
 mat-card.error {
-    display: flex;
-    flex-direction: column; /* Függőleges irányú elrendezés */
-    justify-content: center; /* Középre igazítás függőlegesen */
-    align-items: center; /* Középre igazítás vízszintesen */
-    width: 650px;
-    height: 250px;
-    padding: 24px;
-    text-align: center;
-    background-color: lightgray;
-    margin-top: 80px;
+  /* FLEXBOX */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* WIDTH, HEIGHT */
+  width: 650px;
+  height: 250px;
+  /* MARGIN, PADDING */
+  margin-top: 80px;
+  padding: 24px;
+  /* COLOR */
+  background-color: lightgray;
+  /* TEXT */
+  text-align: center;
 }
   
 mat-card-title.error {
-    font-weight: bold;
-    font-size: 50px;
-    margin: 0px 0px 30px 0px;
-    color: #a70808; /* Piros szín a figyelem felkeltéséhez */
+  /* MARGIN, PADDING */
+  margin: 0px 0px 30px 0px;
+  /* COLOR */
+  color: #a70808;
+  /* TEXT */
+  font-weight: bold;
+  font-size: 50px;
 }
   
 mat-card-content.error {
-    font-size: 20px;
-    color: #a70808;
+  /* COLOR */
+  color: #a70808;
+  /* TEXT */
+  font-size: 20px;
 }
 
 .custom-button:hover{
-    color: rgb(97, 189, 220) !important;
-    background-color: rgb(19, 19, 19) !important;
+  /* COLOR */
+  color: rgb(97, 189, 220) !important;
+  background-color: rgb(19, 19, 19) !important;
 }
 
 .custom-button{
-    background-color: rgb(97, 189, 220) !important;
-    color: rgb(19, 19, 19) !important;
-    border: 1px solid rgb(19, 19, 19) !important;
+  /* COLOR */
+  background-color: rgb(97, 189, 220) !important;
+  color: rgb(19, 19, 19) !important;
+  /* BORDER */
+  border: 1px solid rgb(19, 19, 19) !important;
 }
 
 mat-icon.profile{
-    transform: scale(3);
-    margin: 18px;
+  /* MARGIN, PADDING */
+  margin: 18px;
+  /* TRANSFORM */
+  transform: scale(3);
 }
 
+/* ICONS */
 mat-icon.home{
-    transform: scale(1.5);
-    color: rgb(19, 19, 19);
+  /* MARGIN, PADDING */
+  padding-bottom: 6px;
+  /* COLOR */
+  color: rgb(19, 19, 19);
+  /* TRANSFORM */
+  transform: scale(1.5);
 }
-
+  
 mat-icon.search{
-    transform: scale(1.1);
-    color: rgb(19, 19, 19);
+  /* COLOR */
+  color: rgb(19, 19, 19);
+  /* TRANSFORM */
+  transform: scale(1.1);
 }
-
+  
 mat-icon.basic{
-    transform: scale(1);
+  /* TRANSFORM */
+  transform: scale(1);
 }

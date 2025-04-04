@@ -1,11 +1,12 @@
+<!-- TOOLBAR SECTION -->
 <mat-toolbar color="primary" class="toolbar">
-  <!-- Alkalmazás címe -->
+  <!-- Application title -->
   <button mat-icon-button matSuffix (click)="home()">
     <mat-icon class="home" routerLink="/">home</mat-icon>
   </button>
   <span class="app-title" routerLink="/" (click)="home()">VOD Application</span>
    
-  <!-- Középen a keresősáv -->
+  <!-- Searchbar -->
   <div class="search-bar">
     <mat-form-field appearance="outline">
       <mat-label>Search</mat-label>
@@ -16,32 +17,37 @@
     </mat-form-field>
   </div>
    
-  <!-- Navigációs gombok -->
+  <!-- Nvigation buttons -->
   <span class="nav-buttons">
+    <!-- Login button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/login"><mat-icon class="basic">login</mat-icon>Login</button>
+    <!-- Register button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/register"><mat-icon class="basic">person_add</mat-icon>Register</button>
+    <!-- Profile button -->
     <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button"routerLink="/profile"><mat-icon class="basic">person</mat-icon>Profile</button>
+    <!-- Log out button -->
     <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button" (click)="logout()"><mat-icon class="basic">logout</mat-icon>Log out</button>
   </span>
 </mat-toolbar>
 
+<!-- HOME SECTION -->
 <div class="home-container">
-  <!-- Köszöntő szöveg vagy videók bemutatása -->
   <div class="home-content">
     <h1>Welcome to the application!</h1>
+    <!-- If the user is not loged in display a text to encourage them to jpin our community -->
     <p *ngIf="!isLoggedIn">Explore the best videos, and join us!</p>
   </div>
 </div>
 
-
+<!-- VIDEO SECTION -->
 <div class="video-list-container">
-  
   <div>
     <div *ngIf="!errorMessage && categories.length > 0">
       <div *ngIf="isLoading" class="loading-spinner">
         <p>Adatok betöltése...</p>
       </div>
 
+      <!-- Search video section -->
       <div *ngIf="isSearch && !errorMessage">
         <div *ngFor="let category of searchCategories" class="video-category-container">
           <div>
@@ -64,6 +70,7 @@
         </div>
       </div>
 
+      <!-- Default video section -->
       <div *ngIf="!isSearch">
         <div *ngFor="let category of categories" class="video-category-container">
           <div>
@@ -88,6 +95,8 @@
     </div>
   </div>
 
+  <!-- ERROR SECTION -->
+  <!-- Display the error massage if there is any -->
   <div class="error-container">
     <mat-card class="error" *ngIf="!isLoading &&  (categories.length === 0 || errorMessage)">
       <mat-card-header>

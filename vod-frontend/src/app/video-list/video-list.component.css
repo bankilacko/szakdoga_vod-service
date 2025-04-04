@@ -1,210 +1,292 @@
 /*NAVIGATION/TOOL BAR SECTION*/
 .toolbar {
+  /* FLEXBOX */
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0px 16px;
-  background-color: rgb(97, 189, 220);
+  justify-content: space-between;
+  /* WIDTH, HEIGHT */
   height: 80px;
+  /* MARGIN, PADDING */
+  padding: 0px 16px;
+  /* COLOR */
+  background-color: rgb(97, 189, 220);
 }
 
 .app-title {
+  /* MARGIN, PADDING */
+  margin: 0px 0px 0px 10px;
+  /* TEXT */
   font-size: 1.5rem;
   font-weight: bold;
-  margin: 0px 0px 0px 10px;
+  /* CURSOR */
   cursor: pointer;
 }
 
 .search-bar {
+  /* FLEXBOX */
   flex-grow: 1;
+  /* MARGIN, PADDING */
   margin-left: 20px;
   margin-top: 20px;
 }
 
 mat-form-field {
+  /* WIDTH, HEIGHT */
   width: 50%;
 }
 
 .nav-buttons button {
+  /* MARGIN, PADDING */
   margin-left: 10px;
 }
 
 .custom-button:hover{
+  /* COLOR */
   color: rgb(97, 189, 220) !important;
   background-color: rgb(19, 19, 19) !important;
 }
 
 .custom-button{
-  background-color: rgb(97, 189, 220) !important;
+  /* COLOR */
   color: rgb(19, 19, 19) !important;
+  background-color: rgb(97, 189, 220) !important;
+  /* BORDER */
   border: 1px solid rgb(19, 19, 19) !important;
 }
 
 /*HOME (WELCOME) SECTION*/
 .home-content {
-  text-align: center;
+  /* MARGIN, PADDING */
   margin: 20px;
+  /* COLOR */
   color: rgb(97, 189, 220);
+  /* TEXT */
+  text-align: center;
 }
 
 .home-container {
+  /* FLEXBOX */
   display: flex;
-  justify-content: center;
   align-items: start;
+  justify-content: center;
+  /* COLOR */
   background-color: rgb(19, 19, 19);
 }
 
 /*VIDEO_LIST SECTION*/
 .video-list-container{
+  /* FLEXBOX */
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
+  /* WIDTH, HEIGHT */
+  width: 100%;
+  /* COLOR */
   background-color: rgb(19, 19, 19);
-  width: 100%; /* A szülőelem az oldal szélességét foglalja el */
-  overflow-x: hidden; /* Csak a tartalom túlnyúlását rejti el */
-  flex-direction: column;
+  /* SCROLL */
+  overflow-x: hidden;
 }
 
 .video-category-container{
+  /* MARGIN, PADDING */
   margin-left: 40px;
 }
 
 .video-card-container {
-  display: flex; /* Vízszintes elrendezés */
-  flex-wrap: wrap; /* Több sorban is megjelenhetnek */
+  /* FLEXBOX */
+  display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
-  gap: 40px; /* Kártyák közötti távolság */
-  justify-content: flex-start; /* Balra igazítás */
-  background-color: rgb(19, 19, 19);
-  overflow-x: auto; /* Vízszintes görgetés engedélyezése */
-  padding: 20px;
+  justify-content: flex-start;
+  /* WIDTH, HEIGHT */
   width: 100%;
+  /* MARGIN, PADDING */
+  padding: 20px;
+  gap: 40px;
+  /* COLOR */
+  background-color: rgb(19, 19, 19);
+  /* SCROLL */
+  overflow-x: auto;
 }
 
 .video-card {
-  flex-shrink: 0; /* Kártyák ne zsugorodjanak össze */
+  /* FLEXBOX */
+  flex-shrink: 0;
+  /* WIDTH, HEIGHT */
   width: 340px;
   height: 175px;
   max-width: 100%;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  background-color: rgb(97, 189, 220);
-  transition: transform 0.3s ease; /* Hover animáció */
+  /* MARGIN, PADDING */
   padding: 10px;
+  /* COLOR */
+  background-color: rgb(97, 189, 220);
+  /* TRANSFORM */
+  transition: transform 0.3s ease;
+  /* BORDER */
+  border-radius: 8px;
+  /* CURSOR */
   cursor: pointer;
+  /* POSITION */
   position: relative;
+  /* SHADOW */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .video-card:hover {
+  /* COLOR */
   background-color: lightgray;
+  /* TRANSFORM */
   transform: scale(1.08);
 }
 
 mat-card-header {
+  /* FLEXBOX */
   display: flex;
   justify-content: start;
+  /* MARGIN, PADDING */
   gap: 10px;
 }
 
 mat-card-title{
+  /* COLOR */
+  color: rgb(19, 19, 19);
+  /* TEXT */
   font-size: 1.5rem;
   font-weight: bold;
-  color: rgb(19, 19, 19);
 }
 
-
 .play{
-  position: absolute;
-  bottom: 27px; /* Az ikon távolsága az alsó széltől */
-  right: 26px; /* Az ikon távolsága a jobb széltől */
-  font-size: 26px; /* Ikon mérete */
-  opacity: 0; /* Kezdetben rejtve */
-  transition: opacity 0.3s ease; /* Lassan jelenjen meg */
+  /* FLEXBOX */
   flex-shrink: 0;
+  /* TEXT */
+  font-size: 26px; /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+  /* TRANSFORM */
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  /* POSITION */
+  position: absolute;
+  bottom: 27px;
+  right: 26px;
 }
 
 .video-card:hover mat-icon {
-  opacity: 1; /* Hover esetén megjelenik */
+  /* TRANSFORM */
+  opacity: 1;
 }
 
 mat-card-content{
-  font-size: medium;
-  color:rgb(19, 19, 19);
+  /* FLEXBOX */
   flex-grow: 1;
+  /* COLOR */
+  color:rgb(19, 19, 19);
+  /* TEXT */
+  font-size: medium;
+  /* SCROLL */
   overflow: hidden;
 }
 
 .video-category{
-  color: rgb(97, 189, 220);
+  /* MARGIN, PADDING */
   margin-top: 40px;
   margin-left: 22px;
+  /* COLOR */
+  color: rgb(97, 189, 220);
 }
 
 .scroll-button{
-  background-color: rgb(97, 189, 220) !important;
-  color: rgb(19, 19, 19) !important;
-  border: 1px solid rgb(19, 19, 19) !important;
+  /* MARGIN, PADDING */
   margin-left: 20px;
   margin-top: 5px;
   margin-bottom: 5px;
+  /* COLOR */
+  background-color: rgb(97, 189, 220) !important;
+  color: rgb(19, 19, 19) !important;
+  /* BORDER */
+  border: 1px solid rgb(19, 19, 19) !important;
 }
 
 .loading-spinner{
+  /* COLOR */
   color: rgb(97, 189, 220);
+  /* TEXT */
   text-align: center;
 }
 
+/* ERROR */
 .error-container{
+  /* FLEXBOX */
   display: flex;
-  justify-content: center;
   align-items: start;
-  background-color: rgb(19, 19, 19);
+  justify-content: center;
+  /* WIDTH, HEIGHT */
   height: 63vh;
+  /* COLOR */
+  background-color: rgb(19, 19, 19);
+  /* MARGIN, PADDING */
   margin: auto;
 }
 
 .error{
+  /* COLOR */
   color: rgb(148, 17, 17);
 }
 
 mat-card.error {
+  /* FLEXBOX */
   display: flex;
-  flex-direction: column; /* Függőleges irányú elrendezés */
-  justify-content: center; /* Középre igazítás függőlegesen */
-  align-items: center; /* Középre igazítás vízszintesen */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* WIDTH, HEIGHT */
   width: 600px;
   height: 250px;
-  padding: 24px;
-  text-align: center;
+  /* COLOR */
   background-color: lightgray;
+  /* MARGIN, PADDING */
   margin-top: 20px;
+  padding: 24px;
+  /* TEXT */
+  text-align: center;
 }
 
 mat-card-title.error {
-  font-weight: bold;
-  font-size: 50px;
+  /* MARGIN, PADDING */
   margin-top: 40px;
-  color: #a70808; /* Piros szín a figyelem felkeltéséhez */
+  /* COLOR */
+  color: #a70808;
+  /* TEXT */
+  font-size: 50px;
+  font-weight: bold;
 }
 
 mat-card-content.error {
-  font-size: 20px;
-  color: #a70808;
+  /* MARGIN, PADDING */
   margin-top: 30px;
+  /* COLOR */
+  color: #a70808;
+  /* TEXT */
+  font-size: 20px;
 }
 
+/* ICONS */
 mat-icon.home{
-  transform: scale(1.5);
-  color: rgb(19, 19, 19);
-  /*margin: 0px auto;*/
+  /* MARGIN, PADDING */
   padding-bottom: 6px;
+  /* COLOR */
+  color: rgb(19, 19, 19);
+  /* TRANSFORM */
+  transform: scale(1.5);
 }
 
 mat-icon.search{
-  transform: scale(1.1);
+  /* COLOR */
   color: rgb(19, 19, 19);
+  /* TRANSFORM */
+  transform: scale(1.1);
 }
 
 mat-icon.basic{
+  /* TRANSFORM */
   transform: scale(1);
 }

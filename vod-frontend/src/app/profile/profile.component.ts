@@ -1,111 +1,128 @@
-import { CommonModule, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router, RouterModule } from '@angular/router';
-import { UserService } from '../user.service';
+import { CommonModule, NgIf } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../user.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
   imports: [
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatInputModule,
-    NgIf,
+    // ROUTER
     RouterModule,
+    // ANGULAR MATERIAL MODULES
+    MatToolbarModule,
+    MatButtonModule,
+    MatInputModule,
+    MatCardModule,
+    MatIconModule,
+    // ANGULAR METHODS
+    NgIf,
+    // OTHER MODULES
     CommonModule,
   ],
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  templateUrl: './profile.component.html', // HTML FILE
+  styleUrls: ['./profile.component.css'] // HTML FILE
 })
 
 export class ProfileComponent implements OnInit {
-  userProfile: any = null; // Felhasználói adatok tárolása
-  errorMessage: string | null = null; // Hibaüzenetek kezelése
-  isLoggedIn = false; //Bejelentkezett státusz
-  private logoutSubscription!: Subscription;
+  // ARRAY
+  userProfile: any = null; // User profile data
 
+  // BOOLEAN
+  isLoggedIn = false; // Login state (wether the user is logged in)
+
+  // STRING
+  errorMessage: string | null = null; // Error message, value based on the error type and displayed on the page to help the user
+  
+
+  // SUBSCRIBTIONS
+  private logoutSubscription!: Subscription; // SubscriBtion to handle logout events
+
+  // CONSTRUCTOR
   constructor(
     private userService: UserService,
     private router: Router,
     private http: HttpClient
   ) {
-    this.init();
+    this.init(); // Call initialize
+    this.errorMessage = null; // Clear the previous error message
   }
 
+  // Initialize
   init(): void {
-    console.log("init profile");
+    // Check the user's login status
     this.checkLoginStatus();
-    // Feliratkozás a kijelentkezési eseményre
+    // Subscribtion to the logout event
     this.logoutSubscription = this.userService.onLogout().subscribe(() => {
-      this.onLogout();
+      this.onLogout(); // Give the function to call when the event occurs
     });
   }
 
+  // Initialize
   ngOnInit(): void {
+    // Check the user's login status
     this.checkLoginStatus();
-    // Feliratkozás a kijelentkezési eseményre
+    // Subscribtion to the logout event
     this.logoutSubscription = this.userService.onLogout().subscribe(() => {
-      console.log('Kijelentkezési esemény érkezett');
-      this.onLogout();
+      this.onLogout(); // Give the function to call when the event occurs
     });
   }
 
+  // Destroy
   ngOnDestroy(): void {
-    // Előfizetés törlése memória szivárgás elkerüléséhez
+    // Unsubscribe to avoid memory leak
     if (this.logoutSubscription) {
       this.logoutSubscription.unsubscribe();
     }
   }
 
+  // Check the user's login status
   checkLoginStatus(): void {
     this.isLoggedIn = this.userService.isAuthenticated();
     if (this.isLoggedIn) {
-      this.loadUserProfile(); // Betöltjük a felhasználó adatait
+      // If the user is logged in load the prifile data
+      this.loadUserProfile();
     } else {
       this.errorMessage = 'Kérjük, jelentkezzen be az adatok megtekintéséhez!';
     }
-    
   }
 
+  // Load user data
   loadUserProfile(): void {
-    this.errorMessage = null; // Hibák törlése az új kérés előtt
+    this.errorMessage = null; // Delete the previos error message
     if (this.isLoggedIn) {
       this.userService.getProfile().subscribe({
         next: (data: any) => {
-          this.userProfile = data; // Felhasználói adatok mentése
-          console.log('Felhasználói adatok betöltve:', this.userProfile);
+          this.userProfile = data; // Store the user's data
         },
-        error: (err) => {
-          console.error('Hiba a felhasználói adatok lekérésekor:', err);
-          this.errorMessage = 'Nem sikerült betölteni a felhasználói adatokat.';
+        error: (err) => { 
+          this.errorMessage = 'Nem sikerült betölteni a felhasználói adatokat.'; // Create error message when loading user data failed
         }
       });
     }
   }
 
+  // Edit profile data
   editProfile(): void {
-    console.log('Profil szerkesztése');
-    // Navigálás egy szerkesztő oldalra, például:
-    this.router.navigate(['/edit-profile']);
+    this.router.navigate(['/edit-profile']); // Navigate to the edit-profil page
   }
 
+  // Logout logic
+  // The function is called when the logout event occurs
   onLogout(): void {
-    // Kijelentkezési logika
-    console.log('logout PROFILE');
-    this.isLoggedIn = false;
-    this.router.navigate(['/']);
+    this.isLoggedIn = false; // Logged in state is over 
+    this.router.navigate(['/']); // Navigate to the home page
   }
 
+  // Logout event
+  // The function calls the user service's function, to generate a logout event occurs
   logout(): void {
-    console.log('logout CLICK from PROFILE');
-    this.userService.logout();
+    this.userService.logout(); // Call user-service logout function
   }
 }

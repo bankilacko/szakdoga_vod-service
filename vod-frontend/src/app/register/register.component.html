@@ -1,27 +1,37 @@
 <div class="register-container">
-  <mat-card>
+  <!-- REGISTRATION SECTION -->
+  <mat-card *ngIf="!errorMessage">
     <mat-card-header>
+      <!-- Go back button -->
       <button class="back" mat-icon-button matSuffix>
         <mat-icon class="back" (click)="goBack()">arrow_back</mat-icon>
       </button>
+      <!-- Title -->
       <mat-card-title>Registration</mat-card-title>
     </mat-card-header>
     <mat-card-content>
+      <!-- Registartion form -->
       <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <!-- Username field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Username</mat-label>
           <input matInput type="text" formControlName="username" required>
         </mat-form-field>
+        <!-- Email field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email" required>
         </mat-form-field>
+        <!-- Password field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
           <input matInput formControlName="password" type="password" required>
         </mat-form-field>
+        <!-- Buttons -->
         <div class="button-container">
+          <!-- Register button -->
           <button class="custom-button" mat-raised-button><mat-icon>person_add</mat-icon>Register</button>
+          <!-- Login section -->
           <div class="login">
             <p>Already have an account? Log in!</p>
             <button mat-raised-button class="custom-button" routerLink="/login"><mat-icon>login</mat-icon>Login</button>
@@ -30,5 +40,19 @@
       </form>
     </mat-card-content>
   </mat-card>
+
+  <!-- ERROR SECTION -->
+  <div class="error-container" *ngIf="errorMessage">
+    <mat-card class="error">
+      <mat-card-header>
+        <mat-card-title class="error">Registration failed</mat-card-title>
+      </mat-card-header>
+      <mat-card-content *ngIf="errorMessage" class="error">
+        <p class="error">{{errorMessage}}</p>
+        <p class="error">Try again!</p>
+        <button mat-raised-button class="error-button" routerLink="/register" (click)="tryAgain()"><mat-icon>person_add</mat-icon>Registration</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
   
