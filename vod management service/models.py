@@ -1,15 +1,30 @@
 from sqlalchemy import Column, Integer, String, DateTime
-from database import Base
 from datetime import datetime
+from database import Base
 
+# SQLAlchemy model representing the "videos" table in the database
 class Video(Base):
-    __tablename__ = "videos"
+    __tablename__ = "videos" # Name of the table in the database
 
+    # Unique identifier for each video (Primary Key)
     id = Column(Integer, primary_key=True, index=True)
+
+    # Title of the video (required field)
     title = Column(String, nullable=False)
+
+    # Optional description of the video
     description = Column(String, nullable=True)
-    path = Column(String, nullable=False)  # .m3u8 fájl elérési útja
-    category = Column(String, nullable=True)  # Kategória, pl. "Film", "Sport"
-    duration = Column(Integer, nullable=False)  # Videó hossza másodpercben
-    created_at = Column(DateTime, default=datetime.utcnow)  # Létrehozás ideje
+
+    # Path to the video file (usually an .m3u8 file) – required
+    path = Column(String, nullable=False)
+
+    # Category of the video (e.g., "Film", "Sport") – optional
+    category = Column(String, nullable=True)
+
+    # Duration of the video in seconds – required
+    duration = Column(Integer, nullable=False)
+
+    # Timestamp indicating when the video record was created
+    # Defaults to the current UTC time
+    created_at = Column(DateTime, default=datetime.utcnow)
 
