@@ -27,6 +27,9 @@ def init_db():
 def get_db():
     db = SessionLocal()
     try:
-        yield  # Yield control to the request handler
+        yield db # Yield control to the request handler
     finally:
         db.close() # Close the session after the request is processed
+
+# Automatically initialize the database when this file is loaded
+init_db()
