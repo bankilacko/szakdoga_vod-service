@@ -1,36 +1,38 @@
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { CommonModule, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Router, RouterModule } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { Location, NgIf } from '@angular/common';
 import { UserService } from '../user.service';
+import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-edit-profile',
   imports: [
     // ROUTER
     RouterModule,
     // ANGULAR MATERIAL MODULES
-    MatToolbarModule,
+    MatFormFieldModule,
     MatButtonModule,
     MatInputModule,
     MatCardModule,
-    MatIconModule,
+    MatIcon,
     // ANGULAR METHODS
     NgIf,
     // OTHER MODULES
-    CommonModule,
+    ReactiveFormsModule,
   ],
-  templateUrl: './profile.component.html', // HTML FILE
-  styleUrls: ['./profile.component.css'] // HTML FILE
+  templateUrl: './edit-profile.component.html',
+  styleUrl: './edit-profile.component.css'
 })
+export class EditProfileComponent {
+  // FORM
+  editForm: FormGroup; // Edit form to send user data to the backend
 
-export class ProfileComponent implements OnInit {
   // ARRAY
   userProfile: any = null; // User profile data
 
@@ -45,22 +47,17 @@ export class ProfileComponent implements OnInit {
 
   // CONSTRUCTOR
   constructor(
+    private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private http: HttpClient
+    private location: Location
   ) {
-    this.init(); // Call initialize
-    this.errorMessage = null; // Clear the previous error message
-  }
-
-  // Initialize
-  init(): void {
-    // Check the user's login status
-    this.checkLoginStatus();
-    // Subscribtion to the logout event
-    this.logoutSubscription = this.userService.onLogout().subscribe(() => {
-      this.onLogout(); // Give the function to call when the event occurs
+    this.editForm = this.fb.group({ // Create register form
+      username: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      password: ['', []],
     });
+    this.errorMessage = null; // Clear the previous error message
   }
 
   // Initialize
@@ -71,6 +68,27 @@ export class ProfileComponent implements OnInit {
     this.logoutSubscription = this.userService.onLogout().subscribe(() => {
       this.onLogout(); // Give the function to call when the event occurs
     });
+  
+    if (this.isLoggedIn) {
+      // Load existing user profile data
+      this.userService.getProfile().subscribe({
+        next: (data: any) => {
+          this.userProfile = data; // Store user profile
+  
+          // Populate the form fields with user data
+          this.editForm.patchValue({
+            username: this.userProfile.username,
+            email: this.userProfile.email,
+            password: '', // Leave password empty by default
+          });
+        },
+        error: (err) => {
+          this.errorMessage = 'Cannot load user information. Please try again later.';
+        }
+      });
+    } else {
+      this.errorMessage = 'Sign in to see your profile information!';
+    }
   }
 
   // Destroy
@@ -107,9 +125,26 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  // Edit profile data
-  editProfile(): void {
-    this.router.navigate(['/edit-profile']); // Navigate to the edit-profil page
+  // Edit logic
+  // This function is called when the user send the register form
+  onEdit(): void {
+    if (this.editForm.valid) {
+      this.userService.edit(this.editForm.value).subscribe({
+        next: (response) => {
+          // If the edit was successful navigate to the profile screen
+          this.router.navigate(['/profile']);
+        },
+        error: (err) => {
+          // If the edit failed create new error message
+          this.errorMessage = "Error"
+        }
+      });
+    }
+  }
+
+  // Back button click function
+  goBack(): void {
+    this.location.back(); // Navigate to the previous page
   }
 
   // Logout logic

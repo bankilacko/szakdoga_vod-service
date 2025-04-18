@@ -1,0 +1,186 @@
+/* REGISTER SECTION */
+.edit-profile-container {
+  /* FLEXBOX */
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  /* WIDTH, HEIGHT */
+  height: 100vh;
+  /* COLOR */
+  background-color: rgb(19, 19, 19);
+}
+  
+mat-icon.back{
+  /* COLOR */
+  color: rgb(19, 19, 19);
+  /* TRANSFORM */
+  transform: scale(1);
+}
+  
+button.back{
+  /* MARGIN, PADDING */
+  margin-top: 14px;
+  margin-left: 10px;
+  /* POSITION */
+  position: absolute;
+  top: 20;
+  left: 0;
+}
+  
+mat-card {
+  /* FLEXBOX */
+  display: flex;
+  justify-content: space-between;
+  /* WIDTH, HEIGHT */
+  width: 500px;
+  height: 520px;
+  /* MARGIN, PADDING */
+  margin-top: 15px;
+  padding: 10px;
+  /* COLOR */
+  background-color: rgb(97, 189, 220);
+  /* SHADOW */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+  
+mat-card-header {
+  /* FLEXBOX */
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+  /* MARGIN, PADDING */
+  margin-bottom: 16px;
+  /* TEXT */
+  text-align: center;
+  /* POSITION */
+  position: relative;
+}
+  
+.full-width {
+  /* WIDTH, HEIGHT */
+  width: 100%;
+  /* MARGIN, PADDING */
+  margin-bottom: 18px;
+}
+  
+mat-card-title{
+  /* MARGIN, PADDING */
+  margin-top: 12px;
+  /* COLOR */
+  color: rgb(19, 19, 19);
+  /* TEXT */
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+  
+.button-container {
+  /* FLEXBOX */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* MARGIN, PADDING */
+  margin-top: 0px;
+  gap: 18px;
+}
+  
+.custom-button{
+  /* COLOR */
+  background-color: rgb(97, 189, 220) !important;
+  color: rgb(19, 19, 19) !important;
+  /* BORDER */
+  border: 1px solid rgb(19, 19, 19) !important;
+}
+  
+.custom-button:hover{
+  /* COLOR */
+  color: rgb(97, 189, 220) !important;
+  background-color: rgb(19, 19, 19) !important;
+}
+  
+/* LOGIN SECTION */
+.login{
+  /* FLEXBOX */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+  
+p{
+  /* TEXT */
+  font-size: small;
+}
+  
+/* ERROR SECTION */
+.error-container{
+  /* FLEXBOX */
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  /* WIDTH, HEIGHT */
+  height: 63vh;
+  /* MARGIN, PADDING */
+  margin: auto;
+  /* COLOR */
+  background-color: rgb(19, 19, 19);
+}
+  
+.error{
+  /* COLOR */
+  color: rgb(148, 17, 17);
+  /* TEXT */
+  font-size: medium;
+}
+  
+.error-button{
+  /* COLOR */
+  background-color: lightgray !important;
+  color: rgb(19, 19, 19) !important;
+  /* BORDER */
+  border: 1px solid rgb(19, 19, 19) !important;
+}
+  
+.error-button:hover{
+  /* COLOR */
+  color: lightgray !important;
+  background-color: rgb(19, 19, 19) !important;
+}
+  
+mat-card.error {
+  /* FLEXBOX */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* WIDTH, HEIGHT */
+  width: 600px;
+  height: 300px;
+  /* MARGIN, PADDING */
+  margin-top: 20px;
+  padding: 24px;
+  /* COLOR */
+  background-color: lightgray;
+  /* TEXT */
+  text-align: center;
+}
+  
+mat-card-title.error {
+  /* MARGIN, PADDING */
+  margin-top: 40px;
+  /* COLOR */
+  color: #a70808;
+  /* TEXT */
+  font-weight: bold;
+  font-size: 50px;
+}
+  
+mat-card-content.error {
+  /* MARGIN, PADDING */
+  margin-top: 30px;
+  /* COLOR */
+  color: #a70808;
+  /* TEXT */
+  font-size: 20px;
+}

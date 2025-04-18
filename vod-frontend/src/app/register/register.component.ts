@@ -37,7 +37,8 @@ export class RegisterComponent {
   errorMessage: string | null = null; // Error message, value based on the error type and displayed on the page to help the user
 
   // CONSTRUCTOR
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
     private location: Location
