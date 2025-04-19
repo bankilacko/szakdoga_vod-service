@@ -11,7 +11,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-register',
-  standalone: true, // Standalone mód
+  standalone: true,
   imports: [
     // ROUTER
     RouterModule,

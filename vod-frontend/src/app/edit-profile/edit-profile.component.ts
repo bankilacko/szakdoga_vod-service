@@ -26,8 +26,8 @@ import { Subscription } from 'rxjs';
     // OTHER MODULES
     ReactiveFormsModule,
   ],
-  templateUrl: './edit-profile.component.html',
-  styleUrl: './edit-profile.component.css'
+  templateUrl: './edit-profile.component.html', // HTML FILE
+  styleUrl: './edit-profile.component.css' // CSS FILE
 })
 export class EditProfileComponent {
   // FORM

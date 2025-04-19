@@ -61,7 +61,7 @@ mat-form-field {
   align-items: start;
   justify-content: center;
   /* WIDTH, HEIGHT */
-  height: 85vh;
+  height: 90%;
   /* COLOR */
   background-color: rgb(19, 19, 19);  
 }

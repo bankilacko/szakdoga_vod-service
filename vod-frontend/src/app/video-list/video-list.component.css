@@ -82,6 +82,7 @@ mat-form-field {
   justify-content: flex-start;
   /* WIDTH, HEIGHT */
   width: 100%;
+  height: 80%;
   /* COLOR */
   background-color: rgb(19, 19, 19);
   /* SCROLL */

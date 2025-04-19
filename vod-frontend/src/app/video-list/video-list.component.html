@@ -23,6 +23,8 @@
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/login"><mat-icon class="basic">login</mat-icon>Login</button>
     <!-- Register button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/register"><mat-icon class="basic">person_add</mat-icon>Register</button>
+    <!-- Upload button -->
+    <button *ngIf="isLoggedIn" mat-raised-button class="custom-button" routerLink="/upload"><mat-icon class="basic">upload</mat-icon>Upload</button>
     <!-- Profile button -->
     <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button"routerLink="/profile"><mat-icon class="basic">person</mat-icon>Profile</button>
     <!-- Log out button -->

@@ -110,9 +110,6 @@ export class VideoListComponent implements OnInit, OnDestroy{
       // If the user is logged in load the videos
       this.loadVideos();
     } 
-    // else { 
-    //   this.errorMessage = 'Kérjük, jelentkezzen be a videók megtekintéséhez!';
-    // }
   }
 
   // Load and categorise videos
@@ -138,7 +135,7 @@ export class VideoListComponent implements OnInit, OnDestroy{
         this.isLoading = false; // Loading finished
       },
       error: (err) => {
-        this.errorMessage = 'Hiba történt, próbáld meg később!'; // Create error message when loading vieos failed
+        this.errorMessage = 'An error occured, try again later!'; // Create error message when loading vieos failed
         this.isLoading = false; // Loading finished
       },
     });

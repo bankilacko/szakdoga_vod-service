@@ -10,7 +10,7 @@
       <mat-card-title>Edit Profile</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <!-- Registartion form -->
+      <!-- Edit profile form -->
       <form [formGroup]="editForm" (ngSubmit)="onEdit()">
         <!-- Username field -->
         <mat-form-field appearance="outline" class="full-width">
@@ -29,7 +29,7 @@
         </mat-form-field>
         <!-- Buttons -->
         <div class="button-container">
-          <!-- Register button -->
+          <!-- Edit button -->
           <button class="custom-button" mat-raised-button (click)="onEdit()"><mat-icon>edit</mat-icon>Save changes</button>
         </div>
       </form>
