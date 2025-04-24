@@ -1,10 +1,22 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, Form, UploadFile, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from pathlib import Path
 import subprocess
 import shutil
+import base64
 import os 
 
 app = FastAPI()
+
+# Configure CORS (Cross-Origin Resource Sharing)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:31084", "http://localhost:4200"],  # Allowed frontend origins (e.g., for local development)
+    allow_credentials=True, # Allow cookies and authorization headers
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all headers (e.g., Authorization, Content-Type)
+)
 
 # Define upload and output directories
 UPLOAD_DIR = Path("uploaded_videos") # Directory where uploaded videos are temporarily stored
@@ -60,11 +72,11 @@ async def upload_video(file: UploadFile = File(...), metadata: UploadFile = File
         subprocess.run(ffmpeg_command, check=True)
     except subprocess.CalledProcessError as e:
         # If FFmpeg fails, return a 500 error
-        raise HTTPException(status_code=500, detail=f"Transzkódolási hiba: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Transcoding error: {str(e)}")
 
     # Return success message and paths to the transcoded files
     return {
-        "message": "Fájl sikeresen transzkódolva.",
+        "message": "File transcdoded.",
         "m3u8_url": f"/vod/{m3u8_path.name}", # URL to access the playlist
         "metadata_url": f"/vod/{metadata_path.name}" if metadata else None # URL to access the metadata
-    }
+    }    
