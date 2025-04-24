@@ -23,7 +23,7 @@
 
 <div class="upload-container">
   <!-- UPLOAD SECTION -->
-  <mat-card *ngIf="!errorMessage">
+  <mat-card *ngIf="!errorMessage && !successMessage">
     <mat-card-header>
       <!-- Go back button -->
       <button class="back" mat-icon-button matSuffix>
@@ -43,11 +43,15 @@
         <!-- Category field -->
         <mat-form-field appearance="outline" class="category">
           <mat-label>Category</mat-label>
-          <input matInput formControlName="category" type="text" required>
+          <mat-select formControlName="category" required>
+            <mat-option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
         <!-- Length field -->
         <mat-form-field appearance="outline" class="length">
-          <mat-label>Length</mat-label>
+          <mat-label>Length (minutes)</mat-label>
           <input matInput formControlName="length" type="text" required>
         </mat-form-field>
         <!-- Description field -->
@@ -55,18 +59,25 @@
           <mat-label>Description</mat-label>
           <input matInput formControlName="description" type="text" required>
         </mat-form-field>
-      </form>  
+        <!-- File upload field -->
+        <div class="file-upload">
+          <label for="fileInput" class="file-label">Select MP4 File:</label>
+          <input formControlName="file" id="fileInput" type="file" (change)="onFileSelected($event)" accept="video/mp4" required/>
+          <div>
+            {{selectedFile?.name || "No file uploaded yet"}}
+         </div>
+        </div>
+      </form>
 
-      <!-- File upload field -->
-      <div class="file-upload">
-        <label for="fileInput" class="file-label">Select MP4 File:</label>
-        <input id="fileInput" type="file" (change)="onFileSelected($event)" accept="video/mp4" />
+      <!-- LOADING SECTION -->
+      <div *ngIf="isLoading" class="loading-container">
+        <p>Uploading...</p>
+        <mat-spinner diameter="30"></mat-spinner>
       </div>
 
-      <div class="button-container">
-        <!-- Upload button -->
-        <button class="custom-button" mat-raised-button (click)="onUpload()"><mat-icon>upload</mat-icon>Upload</button>
-      </div>
+      <!-- Upload button -->
+      <button class="custom-button" mat-raised-button (click)="onUpload()"><mat-icon>upload</mat-icon>Upload</button>
+
     </mat-card-content>
   </mat-card>
   
@@ -79,8 +90,30 @@
       <mat-card-content *ngIf="errorMessage" class="error">
         <p class="error">{{errorMessage}}</p>
         <p class="error">Try again!</p>
-        <button mat-raised-button class="error-button" routerLink="/" (click)="tryAgain()"><mat-icon>home</mat-icon>Home</button>
+        <div class="button-container">
+          <button mat-raised-button class="error-button" routerLink="/" (click)="tryAgain()"><mat-icon>home</mat-icon>Home</button>
+          <button mat-raised-button class="error-button" routerLink="/upload" (click)="tryAgain()"><mat-icon>upload</mat-icon>Upload</button>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
+
+  <!-- SUCCESS SECTION -->
+  <div class="success-container" *ngIf="successMessage">
+    <mat-card class="success">
+      <mat-card-header>
+        <mat-card-title class="success">Video uploaded!</mat-card-title>
+      </mat-card-header>
+      <mat-card-content *ngIf="successMessage" class="success">
+        <!-- <p class="success">{{successMessage}}</p> -->
+        <p class="success">Upload another video or watch something!</p>
+        <div class="button-container">
+          <button mat-raised-button class="success-button" routerLink="/" (click)="tryAgain()"><mat-icon>home</mat-icon>Home</button>
+        <button mat-raised-button class="success-button" routerLink="/upload" (click)="tryAgain()"><mat-icon>upload</mat-icon>Upload</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  
 </div>

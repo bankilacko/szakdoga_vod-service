@@ -86,7 +86,7 @@ mat-form-field {
   /* COLOR */
   background-color: rgb(19, 19, 19);
   /* SCROLL */
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .video-category-container{

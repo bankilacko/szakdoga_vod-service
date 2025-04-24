@@ -8,8 +8,8 @@ import * as CryptoJS from 'crypto-js';
 })
 export class UserService {
   // API URL
-  //private apiUrl = 'http://localhost:30087/user-service'; // User-service URL (test - frontend runs on kubernetes)
-  private apiUrl = 'http://localhost:5000'; // User-service URL (test - frontend runs on host)
+  private apiUrl = 'http://localhost:31968/user-service'; // User-service URL (test - frontend runs on kubernetes)
+  //private apiUrl = 'http://localhost:5000'; // User-service URL (test - frontend runs on host)
 
   // EVENTS
   private logoutSubject = new Subject<void>(); // Logout event

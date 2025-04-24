@@ -68,15 +68,6 @@ export class VideoPlayerComponent implements AfterViewInit {
         this.videoCreatedAt = params['createdAt'] || null; // Dátum feldolgozása
         this.videoDuration = params['duration'] || null; //Hossz feldolgozása
         this.videoDuration = parseInt(params['duration'], 10) || 0; // Hossz feldolgozása
-
-        if (this.videoDuration > 60) {
-          this.minute = true;
-          this.videoMinute = Math.floor(this.videoDuration / 60); // Percek számítása
-          this.videoSecond = this.videoDuration % 60; // Másodpercek számítása
-        } else {
-          this.minute = false;
-          this.videoSecond = this.videoDuration; // Ha nincs perc, az időtartam csak másodpercekben van
-        }
   
         if (this.videoSrc) {
           this.initVideoPlayer(); // Lejátszó inicializálása az URL alapján

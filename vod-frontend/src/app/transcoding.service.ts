@@ -7,18 +7,18 @@ import { Observable } from 'rxjs';
 })
 export class TranscodingService {
   // API URL
-  //private apiUrl = 'http://localhost:30087/transcoding-service'; // Transcoding-service URL (test - frontend runs on kubernetes)
-  private apiUrl = 'http://localhost:5000'; // Transcoding-service URL (test - frontend runs on host)
+  private apiUrl = 'http://localhost:31968/transcoding-service'; // Transcoding-service URL (test - frontend runs on kubernetes)
+  //private apiUrl = 'http://localhost:5000'; // Transcoding-service URL (test - frontend runs on host)
 
   // CONSTRUCTOR
   constructor(private http: HttpClient) { }
 
   // Upload
   // Calling backend transcoding-service /upload api endpoint
-  upload(fileData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}/upload`, fileData, {
+  upload(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/upload`, formData, {
       headers: {
-        // Content-Type: multipart/form-data is automatically set by the browser for FormData
+        // Content-Type header is automatically set by the browser for FormData
       },
     });
   }

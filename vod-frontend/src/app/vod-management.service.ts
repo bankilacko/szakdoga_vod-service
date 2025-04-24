@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 })
 export class VodManagementService {
   // API URL
-  //private apiUrl = 'http://localhost:30087/vod-management-service'; // Vod-management-service URL (test - frontend runs on kubernetes)
-  private apiUrl = 'http://localhost:5000'; // Vod-management-service URL (test - frontend runs on host)
+  private apiUrl = 'http://localhost:31968/vod-management-service'; // Vod-management-service URL (test - frontend runs on kubernetes)
+  //private apiUrl = 'http://localhost:5000'; // Vod-management-service URL (test - frontend runs on host)
 
   // CONSTRUCTOR
   constructor(private http: HttpClient, private userService: UserService) {}

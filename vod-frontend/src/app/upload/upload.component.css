@@ -111,7 +111,7 @@ mat-card-header {
 .description{
   /* WIDTH, HEIGHT */
   width: 100%;
-  height: 100px;
+  /* height: 100px; */
   /* MARGIN, PADDING */
   margin-bottom: 12px;
 }
@@ -134,7 +134,7 @@ mat-card-content{
   justify-content: start;
   /* MARGIN, PADDING */
   margin-top: 10px;
-  gap: 10px;
+  gap: 5px;
 }
 
 .file-upload{
@@ -145,15 +145,31 @@ mat-card-content{
   justify-content: space-between;
   /* MARGIN, PADDING */
   margin-bottom: 15px;
+  padding: 5px;
   /* TEXT */
   font-size: 1.1rem;
+  color: rgb(81, 78, 78);
+  /* BORDER */
+  border: 1px solid gray;
+  border-radius: 5px;
 }
 
-  
+.file-upload:hover{
+  /* TEXT */
+  color: black;
+  /* BORDER */
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+#fileInput{
+  display: none;
+}
+
 .button-container {
   /* FLEXBOX */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   /* MARGIN, PADDING */
@@ -245,6 +261,85 @@ mat-card-content.error {
   color: #a70808;
   /* TEXT */
   font-size: 20px;
+}
+
+/* SUCCESS SECTION */
+.success-container{
+  /* FLEXBOX */
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  /* WIDTH, HEIGHT */
+  height: 63vh;
+  /* MARGIN, PADDING */
+  margin: auto;
+  /* COLOR */
+  background-color: rgb(19, 19, 19);
+}
+  
+.success{
+  /* COLOR */
+  color: rgb(31, 142, 31);
+  /* TEXT */
+  font-size: medium;
+}
+  
+.success-button{
+  /* COLOR */
+  background-color: lightgray !important;
+  color: rgb(19, 19, 19) !important;
+  /* BORDER */
+  border: 1px solid rgb(19, 19, 19) !important;
+}
+  
+.success-button:hover{
+  /* COLOR */
+  color: lightgray !important;
+  background-color: rgb(19, 19, 19) !important;
+}
+  
+mat-card.success {
+  /* FLEXBOX */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* WIDTH, HEIGHT */
+  width: 600px;
+  height: 300px;
+  /* MARGIN, PADDING */
+  margin-top: 20px;
+  padding: 24px;
+  /* COLOR */
+  background-color: lightgray;
+  /* TEXT */
+  text-align: center;
+}
+  
+mat-card-title.success {
+  /* MARGIN, PADDING */
+  margin-top: 40px;
+  /* COLOR */
+  color: rgb(31, 142, 31);
+  /* TEXT */
+  font-weight: bold;
+  font-size: 50px;
+}
+  
+mat-card-content.success {
+  /* MARGIN, PADDING */
+  margin-top: 30px;
+  /* COLOR */
+  color: rgb(31, 142, 31);
+  /* TEXT */
+  font-size: 20px;
+}
+
+/* LOADING SECTION */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ICONS */

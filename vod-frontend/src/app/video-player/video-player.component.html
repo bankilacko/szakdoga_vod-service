@@ -1,30 +1,27 @@
+<!-- TOOLBAR SECTION -->
 <mat-toolbar color="primary" class="toolbar">
-  <!-- Alkalmazás címe -->
+  <!-- Application title -->
   <button mat-icon-button matSuffix>
     <mat-icon class="home" routerLink="/">home</mat-icon>
   </button>
   <span class="app-title" routerLink="/">VOD Application</span>
    
-  <!-- Középen a keresősáv -->
-  <div class="search-bar">
-    <mat-form-field appearance="outline">
-      <mat-label>Search</mat-label>
-      <input matInput placeholder="Search videos...">
-      <button mat-icon-button matSuffix>
-        <mat-icon class="search">search</mat-icon>
-      </button>
-    </mat-form-field>
-  </div>
-   
-  <!-- Navigációs gombok -->
+  <!-- Nvigation buttons -->
   <span class="nav-buttons">
+    <!-- Login button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/login"><mat-icon class="basic">login</mat-icon>Login</button>
+    <!-- Register button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/register"><mat-icon class="basic">person_add</mat-icon>Register</button>
+     <!-- Upload button -->
+     <button *ngIf="isLoggedIn" mat-raised-button class="custom-button" routerLink="/upload"><mat-icon class="basic">upload</mat-icon>Upload</button>
+    <!-- Profile button -->
     <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button"routerLink="/profile"><mat-icon class="basic">person</mat-icon>Profile</button>
+    <!-- Log out button -->
     <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button" (click)="logout()"><mat-icon class="basic">logout</mat-icon>Log out</button>
   </span>
 </mat-toolbar>
 
+<!-- VIDEO-PLAYER SECTION -->
 <mat-card class="video-container">
     <mat-card-header>
       <mat-card-title>{{ videoTitle }}</mat-card-title>
@@ -42,8 +39,9 @@
         <span *ngIf="videoDescription"><strong>Description:</strong> {{ videoDescription }}</span><br>
         <span *ngIf="videoCategory"><strong>Category:</strong> {{ videoCategory }}</span><br>
         <span *ngIf="videoCreatedAt"><strong>Uploaded at:</strong> {{ videoCreatedAt | date:'yyyy-MM-dd' }}</span><br>
-        <span *ngIf="videoDuration && minute"><strong>Duration:</strong> {{ videoMinute }} minute(s) {{ videoSecond }} seconds</span>
-        <span *ngIf="videoDuration && !minute"><strong>Duration:</strong> {{ videoSecond }} seconds</span>
+        <span *ngIf="videoDuration"><strong>Duration:</strong> {{ videoDuration }} minute(s)</span>
+        <!-- <span *ngIf="videoDuration && minute"><strong>Duration:</strong> {{ videoMinute }} minute(s) {{ videoSecond }} seconds</span>
+        <span *ngIf="videoDuration && !minute"><strong>Duration:</strong> {{ videoSecond }} seconds</span> -->
       </p>
     </mat-card-content>
 </mat-card>  

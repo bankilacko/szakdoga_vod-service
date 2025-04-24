@@ -36,7 +36,7 @@ import { Subscription } from 'rxjs';
 })
 export class VideoListComponent implements OnInit, OnDestroy{
   // URL
-  private baseUrl = 'http://localhost:32006/vod'; // Nginx server to get video to play (test)
+  private baseUrl = 'http://localhost:32707/vod'; // Nginx server to get video to play (test)
 
   // VIDEO ARRAYS
   videos: any[] = []; // Videos array - store videos before sorting into categories

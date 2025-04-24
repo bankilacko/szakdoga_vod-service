@@ -7,11 +7,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { Router, RouterModule } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
-import { NgIf, Location } from '@angular/common';
+import { NgIf, Location, NgFor } from '@angular/common';
 import { UserService } from '../user.service';
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-upload',
@@ -24,9 +25,13 @@ import { MatOption, MatSelect } from '@angular/material/select';
     MatButtonModule,
     MatInputModule,
     MatCardModule,
+    MatProgressSpinner,
+    MatOption,
+    MatSelect,
     MatIcon,
     // ANGULAR METHODS
     NgIf,
+    NgFor,
     // OTHER MODULES
     ReactiveFormsModule,
   ],
@@ -39,14 +44,16 @@ export class UploadComponent {
 
   // STRING
   errorMessage: string | null = null; // Error message, value based on the error type and displayed on the page to help the user
-  categories: string[] = ['Sports', 'Music', 'Movies', 'Education']; // Predefined categories
+  successMessage: string | null = null; // Message to show to the user when the upload was successful
+  categories: string[] = ['Animals', 'Sport', 'Music', 'Movies', 'Education']; // Predefined categories
   selectedCategory: string | null = null; // The selected category
 
   // BOOLEAN 
   isLoggedIn = false; // Login state (wether the user is logged in)
+  isLoading: boolean = false; // Loading state (when waiting for the video upload and transcoding)
 
   // SUBSCRIBTIONS
-  private logoutSubscription!: Subscription; // SubscriBtion to handle logout events
+  private logoutSubscription!: Subscription; // Subscription to handle logout events
 
   // FILE
   selectedFile: File | null = null;
@@ -60,11 +67,13 @@ export class UploadComponent {
     private fb: FormBuilder,
   ) {
     this.uploadForm = this.fb.group({ // Create upload form
+      file: ['', [Validators.required]],
       title: ['', [Validators.required]],
       category: ['', [Validators.required]],
       length: ['', [Validators.required]],
       description: ['', [Validators.required]],
     });
+    this.categories.sort();
     this.errorMessage = null; // Clear the previous error message
   }
 
@@ -93,25 +102,40 @@ export class UploadComponent {
     }
   }
 
-  // Upload the selected file
   onUpload(): void {
     if (!this.selectedFile) {
       this.errorMessage = "Please select an MP4 file to upload.";
       return;
     }
 
+    this.isLoading = true; // Start of the operation, set the loading boolean to true
+  
+    // Generate metadata content
+    const videoName = this.selectedFile.name.replace(".mp4", "");
+    const metadataFileName = `${videoName}_info.txt`;
+    const metadataContent = `${this.uploadForm.get("title")?.value}\n${this.uploadForm.get("category")?.value}\n${this.uploadForm.get("length")?.value}\n${this.uploadForm.get("description")?.value}`;
+  
+    // Create the metadata file
+    const metadataBlob = new Blob([metadataContent], { type: "text/plain" });
+    const metadataFile = new File([metadataBlob], metadataFileName);
+  
+    // Prepare FormData for upload
     const formData = new FormData();
-    formData.append("file", this.selectedFile); // Attach the file to the request
-
-    // Call TranscodingService to upload the file
+    formData.append("file", this.selectedFile); // Add MP4 file
+    formData.append("metadata", metadataFile); // Add metadata file
+  
+    // Call the transcoding service
     this.transcodingService.upload(formData).subscribe({
       next: (response) => {
-        console.log("File successfully uploaded:", response);
+        console.log("File and metadata successfully uploaded:", response);
         this.errorMessage = null; // Clear the error message
+        this.isLoading = false; // Upload is over
+        this.successMessage = "The file has been uploaded successfully!";
       },
       error: (err) => {
+        this.isLoading = false;
         console.error("Error uploading file:", err);
-        this.errorMessage = "Failed to upload the file. Please try again.";
+        this.errorMessage = "Failed to upload the file and metadata.";
       },
     });
   }
@@ -123,7 +147,15 @@ export class UploadComponent {
 
   // Try again button click function
   tryAgain(): void {
-    
+    this.successMessage = null;
+    this.errorMessage = null;
+    this.uploadForm = this.fb.group({ // Recreate upload form
+      file: ['', [Validators.required]],
+      title: ['', [Validators.required]],
+      category: ['', [Validators.required]],
+      length: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+    });
   }
 
   // Logout logic
