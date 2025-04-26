@@ -18,4 +18,8 @@ data:
         location /transcoding-service/ {
             proxy_pass http://transcoding-service;
         }
+
+        location /analytics-service/ {
+            proxy_pass http://analytics-service;
+        }
     }
