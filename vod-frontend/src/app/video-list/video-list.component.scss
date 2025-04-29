@@ -1,4 +1,10 @@
-/*NAVIGATION/TOOL BAR SECTION*/
+/* VARIABLES */
+// $primary-color: rgb(97, 189, 220);
+// $secondary-color: rgb(19, 19, 19);
+// $third-color: lightgray;
+$error-color: rgb(148, 17, 17);
+
+/* NAVIGATION/TOOL BAR SECTION */
 .toolbar {
   /* FLEXBOX */
   display: flex;
@@ -9,7 +15,8 @@
   /* MARGIN, PADDING */
   padding: 0px 16px;
   /* COLOR */
-  background-color: rgb(97, 189, 220);
+  //background-color: $primary-color;
+  background-color: var(--primary-color);
 }
 
 .app-title {
@@ -18,6 +25,8 @@
   /* TEXT */
   font-size: 1.5rem;
   font-weight: bold;
+  /* COLOR */
+  color: var(--secondary-color);
   /* CURSOR */
   cursor: pointer;
 }
@@ -35,6 +44,22 @@ mat-form-field {
   width: 50%;
 }
 
+::ng-deep .mat-slide-toggle-thumb {
+  display: none !important; 
+}
+
+.mat-slide-toggle-thumb {
+  display: none !important;
+}
+
+.custom-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px; /* Ikon méret */
+  color: green; /* Ikon szín */
+}
+
 .nav-buttons button {
   /* MARGIN, PADDING */
   margin-left: 10px;
@@ -42,24 +67,42 @@ mat-form-field {
 
 .custom-button:hover{
   /* COLOR */
-  color: rgb(97, 189, 220) !important;
-  background-color: rgb(19, 19, 19) !important;
+  //color: $primary-color !important;
+  color: var(--primary-color) !important;
+  //background-color: $secondary-color !important;
+  background-color: var(--secondary-color) !important;
 }
 
 .custom-button{
   /* COLOR */
-  color: rgb(19, 19, 19) !important;
-  background-color: rgb(97, 189, 220) !important;
+  //color: $secondary-color !important;
+  color: var(--secondary-color) !important;
+  //background-color: $primary-color !important;
+  background-color: var(--primary-color) !important;
   /* BORDER */
-  border: 1px solid rgb(19, 19, 19) !important;
+  //border: 1px solid $secondary-color !important;
+  border: 1.1px solid var(--secondary-color) !important;
 }
+
+::ng-deep .mat-slide-toggle-thumb {
+  background-color: red; /* Szín módosítása */
+  width: 28px; /* Thumb méret */
+  height: 28px; /* Thumb magasság */
+}
+
+::ng-deep .mat-slide-toggle-bar {
+  background-color: blue; /* Bar szín */
+  height: 12px; /* Bar magasság */
+}
+
 
 /*HOME (WELCOME) SECTION*/
 .home-content {
   /* MARGIN, PADDING */
   margin: 20px;
   /* COLOR */
-  color: rgb(97, 189, 220);
+  //color: $primary-color;
+  color: var(--primary-color);
   /* TEXT */
   text-align: center;
 }
@@ -70,7 +113,8 @@ mat-form-field {
   align-items: start;
   justify-content: center;
   /* COLOR */
-  background-color: rgb(19, 19, 19);
+  //background-color: $secondary-color;
+  background-color: var(--secondary-color);
 }
 
 /*VIDEO_LIST SECTION*/
@@ -86,7 +130,8 @@ mat-form-field {
   /* MARGIN, PADDING */
   padding-bottom: 40px;
   /* COLOR */
-  background-color: rgb(19, 19, 19);
+  //background-color: $secondary-color;
+  background-color: var(--secondary-color);
   /* SCROLL */
   overflow: hidden;
 }
@@ -108,7 +153,8 @@ mat-form-field {
   padding: 20px;
   gap: 40px;
   /* COLOR */
-  background-color: rgb(19, 19, 19);
+  //background-color: $secondary-color;
+  background-color: var(--secondary-color);
   /* SCROLL */
   overflow-x: auto;
 }
@@ -123,7 +169,8 @@ mat-form-field {
   /* MARGIN, PADDING */
   padding: 10px;
   /* COLOR */
-  background-color: rgb(97, 189, 220);
+  //background-color: $primary-color;
+  background-color: var(--primary-color);
   /* TRANSFORM */
   transition: transform 0.3s ease;
   /* BORDER */
@@ -133,12 +180,13 @@ mat-form-field {
   /* POSITION */
   position: relative;
   /* SHADOW */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 6px black;
 }
 
 .video-card:hover {
   /* COLOR */
-  background-color: lightgray;
+  //background-color: $third-color;
+  background-color: var(--third-color);
   /* TRANSFORM */
   transform: scale(1.08);
 }
@@ -153,7 +201,8 @@ mat-card-header {
 
 mat-card-title{
   /* COLOR */
-  color: rgb(19, 19, 19);
+  //color: $secondary-color;
+  color: var(--secondary-color);
   /* TEXT */
   font-size: 1.5rem;
   font-weight: bold;
@@ -182,7 +231,8 @@ mat-card-content{
   /* FLEXBOX */
   flex-grow: 1;
   /* COLOR */
-  color:rgb(19, 19, 19);
+  //color:$secondary-color;
+  color: var(--secondary-color);
   /* TEXT */
   font-size: medium;
   /* SCROLL */
@@ -194,7 +244,8 @@ mat-card-content{
   margin-top: 40px;
   margin-left: 22px;
   /* COLOR */
-  color: rgb(97, 189, 220);
+  //color: $primary-color;
+  color: var(--primary-color);
 }
 
 .scroll-button{
@@ -203,15 +254,19 @@ mat-card-content{
   margin-top: 5px;
   margin-bottom: 5px;
   /* COLOR */
-  background-color: rgb(97, 189, 220) !important;
-  color: rgb(19, 19, 19) !important;
+  //background-color: $primary-color !important;
+  background-color: var(--primary-color) !important;
+  //color: $secondary-color !important;
+  color: var(--secondary-color) !important;
   /* BORDER */
-  border: 1px solid rgb(19, 19, 19) !important;
+  //border: 1px solid $secondary-color !important;
+  border: 1px solid var(--secondary-color) !important;
 }
 
 .loading-spinner{
   /* COLOR */
-  color: rgb(97, 189, 220);
+  //color: $primary-color;
+  color: var(--primary-color);
   /* TEXT */
   text-align: center;
 }
@@ -225,14 +280,15 @@ mat-card-content{
   /* WIDTH, HEIGHT */
   height: 63vh;
   /* COLOR */
-  background-color: rgb(19, 19, 19);
+  //background-color: $secondary-color;
+  background-color: var(--secondary-color);
   /* MARGIN, PADDING */
   margin: auto;
 }
 
 .error{
   /* COLOR */
-  color: rgb(148, 17, 17);
+  color: $error-color;
 }
 
 mat-card.error {
@@ -245,7 +301,8 @@ mat-card.error {
   width: 600px;
   height: 250px;
   /* COLOR */
-  background-color: lightgray;
+  //background-color: $third-color;
+  background-color: var(--third-color);
   /* MARGIN, PADDING */
   margin-top: 20px;
   padding: 24px;
@@ -257,7 +314,7 @@ mat-card-title.error {
   /* MARGIN, PADDING */
   margin-top: 40px;
   /* COLOR */
-  color: #a70808;
+  color: $error-color;
   /* TEXT */
   font-size: 50px;
   font-weight: bold;
@@ -267,7 +324,7 @@ mat-card-content.error {
   /* MARGIN, PADDING */
   margin-top: 30px;
   /* COLOR */
-  color: #a70808;
+  color: $error-color;
   /* TEXT */
   font-size: 20px;
 }
@@ -283,7 +340,8 @@ mat-card-content.error {
   /* MARGIN, PADDING */
   margin: auto;
   /* TEXT */
-  color: rgb(97, 189, 220);
+  //color: $primary-color;
+  color: var(--primary-color);
 }
 
 /* ICONS */
@@ -291,14 +349,16 @@ mat-icon.home{
   /* MARGIN, PADDING */
   padding-bottom: 6px;
   /* COLOR */
-  color: rgb(19, 19, 19);
+  //color: $secondary-color;
+  color: var(--secondary-color);
   /* TRANSFORM */
   transform: scale(1.5);
 }
 
 mat-icon.search{
   /* COLOR */
-  color: rgb(19, 19, 19);
+  //color: $secondary-color;
+  color: gray;
   /* TRANSFORM */
   transform: scale(1.1);
 }

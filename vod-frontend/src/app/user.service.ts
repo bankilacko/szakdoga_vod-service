@@ -17,6 +17,9 @@ export class UserService {
   // STRINGS
   private jwtToken: string | null = null; // JWT token for authentication
 
+  // BOOLEANS
+  private isDarkTheme = false;
+
   // CONSTRUCTOR
   constructor(private http: HttpClient) { }
 
@@ -104,6 +107,23 @@ export class UserService {
       this.jwtToken = sessionStorage.getItem('jwtToken'); // get token from sessionStorage
     }
     return this.jwtToken; // return the token
+  }
+
+  // Get user ID for current user
+  getUserID(): string | null {
+    // Check the token's existense
+    if (!this.jwtToken) {
+      this.jwtToken = sessionStorage.getItem('jwtToken'); // get token from sessionStorage
+    }
+    return this.jwtToken; // return the token
+  }
+
+  getTheme(): boolean{
+    return this.isDarkTheme;
+  }
+
+  switchTheme(): void{
+    this.isDarkTheme = !this.isDarkTheme;
   }
 
   // Logout logic

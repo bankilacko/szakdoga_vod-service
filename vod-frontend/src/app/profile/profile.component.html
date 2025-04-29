@@ -19,6 +19,13 @@
    
   <!-- Nvigation buttons -->
   <span class="nav-buttons">
+    <!-- Change color theme button -->
+    <button  mat-raised-button class="custom-button" (click)="changeTheme()">
+      <p *ngIf="!isDarkTheme">Light Theme</p>
+      <mat-icon *ngIf="!isDarkTheme" class="icon sun">wb_sunny</mat-icon>
+      <p *ngIf="isDarkTheme">Dark Theme</p>
+      <mat-icon *ngIf="isDarkTheme" class="icon moon">nights_stay</mat-icon>
+    </button>
     <!-- Login button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/login"><mat-icon class="basic">login</mat-icon>Login</button>
     <!-- Register button -->

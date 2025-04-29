@@ -1,3 +1,9 @@
+/* VARIABLES */
+$primary-color: rgb(97, 189, 220);
+$secondary-color: rgb(19, 19, 19);
+$third-color: lightgray;
+$error-color: rgb(148, 17, 17);
+
 .not-found-container {
   /* FLEXBOX */ 
   display: flex;
@@ -6,7 +12,7 @@
   /* WIDTH, HEIGHT */
   height: 100vh;
   /* COLOR */
-  background-color: lightgray;
+  background-color: $third-color;
 }
   
 mat-card {
@@ -22,14 +28,14 @@ mat-card {
   padding: 24px;
   text-align: center;
   /* COLOR */
-  background-color: rgb(19,19,19);
+  background-color: $secondary-color;
 }
   
 mat-card-title {
   /* MARGIN, PADDING */
   margin: 0px 0px 30px 0px;
   /* COLOR */
-  color: #a70808;
+  color: $error-color;
   /* TEXT */
   font-weight: bold;
   font-size: 50px;
@@ -37,7 +43,7 @@ mat-card-title {
   
 mat-card-content {
   /* COLOR */
-  color: #a70808;
+  color: $error-color;
   /* TEXT */
   font-size: 20px;
 }

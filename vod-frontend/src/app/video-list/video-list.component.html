@@ -1,5 +1,7 @@
+<html>
+<body>
 <!-- TOOLBAR SECTION -->
-<mat-toolbar color="primary" class="toolbar">
+<mat-toolbar class="toolbar">
   <!-- Application title -->
   <button mat-icon-button matSuffix (click)="home()">
     <mat-icon class="home" routerLink="/">home</mat-icon>
@@ -19,6 +21,19 @@
    
   <!-- Nvigation buttons -->
   <span class="nav-buttons">
+    <!-- Switch theme slide -->
+    <!-- <mat-slide-toggle [(ngModel)]="isDarkTheme" (change)="toggleTheme()">
+      <mat-icon *ngIf="!isDarkTheme">wb_sunny</mat-icon>
+      <mat-icon *ngIf="isDarkTheme">nights_stay</mat-icon>
+    </mat-slide-toggle> -->
+
+    <!-- Change color theme button -->
+    <button  mat-raised-button class="custom-button" (click)="changeTheme()">
+      <p *ngIf="!isDarkTheme">Light Theme</p>
+      <mat-icon *ngIf="!isDarkTheme" class="icon sun">wb_sunny</mat-icon>
+      <p *ngIf="isDarkTheme">Dark Theme</p>
+      <mat-icon *ngIf="isDarkTheme" class="icon moon">nights_stay</mat-icon>
+    </button>
     <!-- Login button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/login"><mat-icon class="basic">login</mat-icon>Login</button>
     <!-- Register button -->
@@ -45,8 +60,9 @@
 <div class="video-list-container">
   <div>
     <div *ngIf="!errorMessage && categories.length > 0">
-      <div *ngIf="isLoading" class="loading-spinner">
-        <p>Adatok betöltése...</p>
+      <div *ngIf="isLoading" class="loading-container">
+        <p>Loading videos...</p>
+        <mat-spinner diameter="30"></mat-spinner>
       </div>
 
       <!-- Search video section -->
@@ -110,4 +126,5 @@
     </mat-card>
   </div>
 </div>
-
+</body>
+</html>

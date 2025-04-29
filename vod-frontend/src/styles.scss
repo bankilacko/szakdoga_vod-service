@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+$dark-primary-color: rgb(97, 189, 220);
+$dark-secondary-color: rgb(19, 19, 19);
+$dark-third-color: lightgray;
+
+$light-primary-color: rgb(97, 189, 220);
+$light-secondary-color: white;
+$light-third-color: gray;
+
+// Apply the variables to root for light theme
+:root {
+  --primary-color: #{$light-primary-color};
+  --secondary-color: #{$light-secondary-color};
+  --third-color: #{$light-third-color};
+}
+
+// Apply the variables to root for dark theme
+body.dark-theme {
+  --primary-color: #{$dark-primary-color};
+  --secondary-color: #{$dark-secondary-color};
+  --third-color: #{$dark-third-color};
+}

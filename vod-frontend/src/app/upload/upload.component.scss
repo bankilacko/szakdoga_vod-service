@@ -1,4 +1,8 @@
-/*NAVIGATION/TOOL BAR SECTION*/
+/* VARIABLES */
+$error-color: rgb(148, 17, 17);
+$success-color: rgb(31, 142, 31);
+
+/* NAVIGATION/TOOL BAR SECTION */
 .toolbar {
   /* FLEXBOX */
   display: flex;
@@ -9,12 +13,14 @@
   /* MARGIN, PADDING */
   padding: 0px 16px;
   /* COLOR */
-  background-color: rgb(97, 189, 220);
+  background-color: var(--primary-color);
 }
   
 .app-title {
   /* MARGIN, PADDING */
-  margin: 0px 631px 0px 0px;
+  margin: 0px 475px 0px 0px;
+  /* COLOR */
+  color: var(--secondary-color);
   /* TEXT */
   font-size: 1.5rem;
   font-weight: bold;
@@ -36,12 +42,12 @@
   /* WIDTH, HEIGHT */
   height: 100vh;
   /* COLOR */
-  background-color: rgb(19, 19, 19);
+  background-color: var(--secondary-color);
 }
   
 mat-icon.back{
   /* COLOR */
-  color: rgb(19, 19, 19);
+  color: var(--secondary-color);
   /* TRANSFORM */
   transform: scale(1);
 }
@@ -67,7 +73,7 @@ mat-card {
   margin-top: 15px;
   padding: 10px;
   /* COLOR */
-  background-color: rgb(97, 189, 220);
+  background-color: var(--primary-color);
   /* SHADOW */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -120,7 +126,7 @@ mat-card-title{
   /* MARGIN, PADDING */
   margin-top: 12px;
   /* COLOR */
-  color: rgb(19, 19, 19);
+  color: var(--secondary-color);
   /* TEXT */
   font-size: 1.5rem;
   font-weight: bold;
@@ -179,16 +185,16 @@ mat-card-content{
   
 .custom-button{
   /* COLOR */
-  background-color: rgb(97, 189, 220) !important;
-  color: rgb(19, 19, 19) !important;
+  background-color: var(--primary-color) !important;
+  color: var(--secondary-color) !important;
   /* BORDER */
-  border: 1px solid rgb(19, 19, 19) !important;
+  border: 1px solid var(--secondary-color) !important;
 }
   
 .custom-button:hover{
   /* COLOR */
-  color: rgb(97, 189, 220) !important;
-  background-color: rgb(19, 19, 19) !important;
+  color: var(--primary-color) !important;
+  background-color: var(--secondary-color) !important;
 }
 
 /* ERROR SECTION */
@@ -202,28 +208,28 @@ mat-card-content{
   /* MARGIN, PADDING */
   margin: auto;
   /* COLOR */
-  background-color: rgb(19, 19, 19);
+  background-color: var(--secondary-color);
 }
   
 .error{
   /* COLOR */
-  color: rgb(148, 17, 17);
+  color: $error-color;
   /* TEXT */
   font-size: medium;
 }
   
 .error-button{
   /* COLOR */
-  background-color: lightgray !important;
-  color: rgb(19, 19, 19) !important;
+  background-color: var(--third-color) !important;
+  color: var(--secondary-color) !important;
   /* BORDER */
-  border: 1px solid rgb(19, 19, 19) !important;
+  border: 1px solid var(--secondary-color) !important;
 }
   
 .error-button:hover{
   /* COLOR */
-  color: lightgray !important;
-  background-color: rgb(19, 19, 19) !important;
+  color: var(--third-color) !important;
+  background-color: var(--secondary-color) !important;
 }
   
 mat-card.error {
@@ -239,7 +245,7 @@ mat-card.error {
   margin-top: 20px;
   padding: 24px;
   /* COLOR */
-  background-color: lightgray;
+  background-color: var(--third-color);
   /* TEXT */
   text-align: center;
 }
@@ -248,7 +254,7 @@ mat-card-title.error {
   /* MARGIN, PADDING */
   margin-top: 40px;
   /* COLOR */
-  color: #a70808;
+  color: $error-color;
   /* TEXT */
   font-weight: bold;
   font-size: 50px;
@@ -258,7 +264,7 @@ mat-card-content.error {
   /* MARGIN, PADDING */
   margin-top: 30px;
   /* COLOR */
-  color: #a70808;
+  color: $error-color;
   /* TEXT */
   font-size: 20px;
 }
@@ -274,28 +280,28 @@ mat-card-content.error {
   /* MARGIN, PADDING */
   margin: auto;
   /* COLOR */
-  background-color: rgb(19, 19, 19);
+  background-color: var(--secondary-color);
 }
   
 .success{
   /* COLOR */
-  color: rgb(31, 142, 31);
+  color: $success-color;
   /* TEXT */
   font-size: medium;
 }
   
 .success-button{
   /* COLOR */
-  background-color: lightgray !important;
-  color: rgb(19, 19, 19) !important;
+  background-color: var(--third-color) !important;
+  color: var(--secondary-color) !important;
   /* BORDER */
-  border: 1px solid rgb(19, 19, 19) !important;
+  border: 1px solid var(--secondary-color) !important;
 }
   
 .success-button:hover{
   /* COLOR */
-  color: lightgray !important;
-  background-color: rgb(19, 19, 19) !important;
+  color: var(--third-color) !important;
+  background-color: var(--secondary-color) !important;
 }
   
 mat-card.success {
@@ -311,7 +317,7 @@ mat-card.success {
   margin-top: 20px;
   padding: 24px;
   /* COLOR */
-  background-color: lightgray;
+  background-color: var(--third-color);
   /* TEXT */
   text-align: center;
 }
@@ -320,7 +326,7 @@ mat-card-title.success {
   /* MARGIN, PADDING */
   margin-top: 40px;
   /* COLOR */
-  color: rgb(31, 142, 31);
+  color: $success-color;
   /* TEXT */
   font-weight: bold;
   font-size: 50px;
@@ -330,7 +336,7 @@ mat-card-content.success {
   /* MARGIN, PADDING */
   margin-top: 30px;
   /* COLOR */
-  color: rgb(31, 142, 31);
+  color: $success-color;
   /* TEXT */
   font-size: 20px;
 }
@@ -347,7 +353,7 @@ mat-icon.home{
   /* MARGIN, PADDING */
   padding-bottom: 6px;
   /* COLOR */
-  color: rgb(19, 19, 19);
+  color: var(--secondary-color);
   /* TRANSFORM */
   transform: scale(1.5);
 }

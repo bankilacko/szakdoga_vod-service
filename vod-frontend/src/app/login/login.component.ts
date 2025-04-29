@@ -2,6 +2,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { AnalyticsService } from '../analytics.service';
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
@@ -27,7 +28,7 @@ import { Component } from '@angular/core';
     ReactiveFormsModule,
   ],
   templateUrl: './login.component.html', // HTML FILE
-  styleUrls: ['./login.component.css'] // CSS FILE
+  styleUrls: ['./login.component.scss'] // SCSS FILE
 })
 export class LoginComponent {
   // FORM
@@ -41,6 +42,7 @@ export class LoginComponent {
     private userService: UserService,
     private router: Router,
     private location: Location,
+    private analyticsService: AnalyticsService,
     
   ) {
     this.loginForm = this.fb.group({ // Create login form
@@ -56,10 +58,14 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.userService.login(this.loginForm.value).subscribe({
         next: (response) => {
+          // Track the user activity using the AnalyticsService
+          this.analyticsService.trackEvent(this.loginForm.value.username, 'log_in');
           // If the login was successful navigate to the home screen
           this.router.navigate(['/']);
         },
         error: (err) => {
+          // Track the user activity using the AnalyticsService
+          this.analyticsService.trackEvent(this.loginForm.value.username, 'log_in_failed');
           // If the login failed create new error message
           this.errorMessage = "Wrong username or password";
         }

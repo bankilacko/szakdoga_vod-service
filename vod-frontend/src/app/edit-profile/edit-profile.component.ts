@@ -2,6 +2,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { AnalyticsService } from '../analytics.service';
 import { MatCardModule } from '@angular/material/card';
 import { Router, RouterModule } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
@@ -27,7 +28,7 @@ import { Subscription } from 'rxjs';
     ReactiveFormsModule,
   ],
   templateUrl: './edit-profile.component.html', // HTML FILE
-  styleUrl: './edit-profile.component.css' // CSS FILE
+  styleUrl: './edit-profile.component.scss' // SCSS FILE
 })
 export class EditProfileComponent {
   // FORM
@@ -41,6 +42,8 @@ export class EditProfileComponent {
 
   // STRING
   errorMessage: string | null = null; // Error message, value based on the error type and displayed on the page to help the user
+  private oldUserName: string | null = null;
+  private oldEmail: string | null = null;
 
   // SUBSCRIBTIONS
   private logoutSubscription!: Subscription; // SubscriBtion to handle logout events
@@ -50,7 +53,8 @@ export class EditProfileComponent {
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private analyticsService: AnalyticsService,
   ) {
     this.editForm = this.fb.group({ // Create register form
       username: ['', [Validators.required]],
@@ -74,6 +78,9 @@ export class EditProfileComponent {
       this.userService.getProfile().subscribe({
         next: (data: any) => {
           this.userProfile = data; // Store user profile
+
+          this.oldUserName = this.userProfile.username;
+          this.oldEmail = this.userProfile.email;
   
           // Populate the form fields with user data
           this.editForm.patchValue({
@@ -131,10 +138,18 @@ export class EditProfileComponent {
     if (this.editForm.valid) {
       this.userService.edit(this.editForm.value).subscribe({
         next: (response) => {
+          // Track the user activity using the AnalyticsService
+          this.analyticsService.trackEvent(
+            this.userProfile.username,
+            'edit_profile',
+            {old_username: this.oldUserName, new_username: this.userProfile.username, old_email: this.oldEmail, new_email: this.userProfile.email}
+          );
           // If the edit was successful navigate to the profile screen
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/profile']); 
         },
         error: (err) => {
+          // Track the user activity using the AnalyticsService
+          this.analyticsService.trackEvent(this.userProfile.username, 'edit_profile_failed');
           // If the edit failed create new error message
           this.errorMessage = "Error"
         }
@@ -155,8 +170,10 @@ export class EditProfileComponent {
   }
 
   // Logout event
-  // The function calls the user service's function, to generate a logout event occurs
+  // The function calls the user service's function, to generate a logout event
   logout(): void {
     this.userService.logout(); // Call user-service logout function
+    // Track the user activity using the AnalyticsService
+    this.analyticsService.trackEvent(this.userProfile.username, 'log_out');
   }
 }

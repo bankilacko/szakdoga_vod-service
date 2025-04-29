@@ -1,6 +1,7 @@
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { AnalyticsService } from '../analytics.service';
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user.service';
 import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-profile',
@@ -27,15 +29,16 @@ import { Subscription } from 'rxjs';
     CommonModule,
   ],
   templateUrl: './profile.component.html', // HTML FILE
-  styleUrls: ['./profile.component.css'] // HTML FILE
+  styleUrls: ['./profile.component.scss'] // sCSS FILE
 })
 
 export class ProfileComponent implements OnInit {
-  // ARRAY
+  // PROFILE
   userProfile: any = null; // User profile data
 
   // BOOLEAN
   isLoggedIn = false; // Login state (wether the user is logged in)
+  isDarkTheme = false;
 
   // STRING
   errorMessage: string | null = null; // Error message, value based on the error type and displayed on the page to help the user
@@ -47,30 +50,23 @@ export class ProfileComponent implements OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private analyticsService: AnalyticsService,
   ) {
-    this.init(); // Call initialize
-    this.errorMessage = null; // Clear the previous error message
-  }
-
-  // Initialize
-  init(): void {
-    // Check the user's login status
-    this.checkLoginStatus();
-    // Subscribtion to the logout event
-    this.logoutSubscription = this.userService.onLogout().subscribe(() => {
-      this.onLogout(); // Give the function to call when the event occurs
-    });
+    
   }
 
   // Initialize
   ngOnInit(): void {
+    // Set the current color theme
+    this.isDarkTheme = this.userService.getTheme();
     // Check the user's login status
     this.checkLoginStatus();
     // Subscribtion to the logout event
     this.logoutSubscription = this.userService.onLogout().subscribe(() => {
       this.onLogout(); // Give the function to call when the event occurs
     });
+    this.errorMessage = null; // Clear the previous error message
   }
 
   // Destroy
@@ -112,10 +108,22 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(['/edit-profile']); // Navigate to the edit-profil page
   }
 
+  // Change color theme (dark/light)
+  changeTheme(): void {
+    this.userService.switchTheme();
+    this.isDarkTheme = this.userService.getTheme();
+    const body = document.body;
+    if (this.isDarkTheme) {
+      body.classList.add('dark-theme'); // Activates dark theme
+    } else {
+      body.classList.remove('dark-theme'); // Activates light theme
+    }
+  }
+
   // Logout logic
   // The function is called when the logout event occurs
   onLogout(): void {
-    this.isLoggedIn = false; // Logged in state is over 
+    this.isLoggedIn = false; // Logged in state is over
     this.router.navigate(['/']); // Navigate to the home page
   }
 
@@ -123,5 +131,7 @@ export class ProfileComponent implements OnInit {
   // The function calls the user service's function, to generate a logout event occurs
   logout(): void {
     this.userService.logout(); // Call user-service logout function
+    // Track the user activity using the AnalyticsService
+    this.analyticsService.trackEvent(this.userProfile.username, 'log_out');
   }
 }

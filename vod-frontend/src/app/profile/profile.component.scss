@@ -1,3 +1,6 @@
+/* VARIABLES */
+$error-color: rgb(148, 17, 17);
+
 /* NAVIGATION/TOOL BAR SECTION */
 .toolbar {
   /* FLEXBOX */
@@ -9,12 +12,14 @@
   /* MARGIN, PADDING */
   padding: 0px 16px;
   /* COLOR */
-  background-color: rgb(97, 189, 220);
+  background-color: var(--primary-color);
 }
   
 .app-title {
   /* MARGIN, PADDING */
   margin: 0px 0px 0px 10px;
+  /* COLOR */
+  color: var(--secondary-color);
   /* TEXT */
   font-size: 1.5rem;
   font-weight: bold;
@@ -42,16 +47,16 @@ mat-form-field {
   
 .custom-button:hover{
   /* COLOR */
-  color: rgb(97, 189, 220) !important;
-  background-color: rgb(19, 19, 19) !important;
+  color: var(--primary-color) !important;
+  background-color: var(--secondary-color) !important;
 }
   
 .custom-button{
   /* COLOR */
-  color: rgb(19, 19, 19) !important;
-  background-color: rgb(97, 189, 220) !important;
+  color: var(--secondary-color) !important;
+  background-color: var(--primary-color) !important;
   /* BORDER */
-  border: 1px solid rgb(19, 19, 19) !important;
+  border: 1px solid var(--secondary-color) !important;
 }
 
 /* PROFILE SECTION */
@@ -63,7 +68,7 @@ mat-form-field {
   /* WIDTH, HEIGHT */
   height: 90%;
   /* COLOR */
-  background-color: rgb(19, 19, 19);  
+  background-color: var(--secondary-color);  
 }
   
 mat-card {
@@ -77,7 +82,7 @@ mat-card {
   margin-top: 60px;
   padding: 10px;
   /* COLOR */
-  background-color: rgb(97, 189, 220);
+  background-color: var(--primary-color);
   /* SHADOW */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -85,6 +90,8 @@ mat-card {
 mat-card-content{
   /* TEXT */
   font-size: large;
+  /* COLOR */
+  color: var(--secondary-color);
 }
 
 mat-card-title{
@@ -92,7 +99,7 @@ mat-card-title{
   margin-top: 18px;
   margin: 0px 0px 0px 20px;
   /* COLOR */
-  color: rgb(19, 19, 19);
+  color: var(--secondary-color);
   /* TEXT */
   font-size: 1.5rem;
   font-weight: bold;
@@ -117,7 +124,7 @@ mat-card.error {
   margin-top: 80px;
   padding: 24px;
   /* COLOR */
-  background-color: lightgray;
+  background-color: var(--third-color);
   /* TEXT */
   text-align: center;
 }
@@ -126,7 +133,7 @@ mat-card-title.error {
   /* MARGIN, PADDING */
   margin: 0px 0px 30px 0px;
   /* COLOR */
-  color: #a70808;
+  color: $error-color;
   /* TEXT */
   font-weight: bold;
   font-size: 50px;
@@ -134,23 +141,23 @@ mat-card-title.error {
   
 mat-card-content.error {
   /* COLOR */
-  color: #a70808;
+  color: $error-color;
   /* TEXT */
   font-size: 20px;
 }
 
 .custom-button:hover{
   /* COLOR */
-  color: rgb(97, 189, 220) !important;
-  background-color: rgb(19, 19, 19) !important;
+  color: var(--primary-color) !important;
+  background-color: var(--secondary-color) !important;
 }
 
 .custom-button{
   /* COLOR */
-  background-color: rgb(97, 189, 220) !important;
-  color: rgb(19, 19, 19) !important;
+  background-color: var(--primary-color) !important;
+  color: var(--secondary-color) !important;
   /* BORDER */
-  border: 1px solid rgb(19, 19, 19) !important;
+  border: 1px solid var(--secondary-color) !important;
 }
 
 mat-icon.profile{
@@ -158,6 +165,8 @@ mat-icon.profile{
   margin: 18px;
   /* TRANSFORM */
   transform: scale(3);
+  /* COLOR */
+  color: var(--secondary-color);
 }
 
 /* ICONS */
@@ -165,14 +174,14 @@ mat-icon.home{
   /* MARGIN, PADDING */
   padding-bottom: 6px;
   /* COLOR */
-  color: rgb(19, 19, 19);
+  color: var(--secondary-color);
   /* TRANSFORM */
   transform: scale(1.5);
 }
   
 mat-icon.search{
   /* COLOR */
-  color: rgb(19, 19, 19);
+  color: var(--secondary-color);
   /* TRANSFORM */
   transform: scale(1.1);
 }

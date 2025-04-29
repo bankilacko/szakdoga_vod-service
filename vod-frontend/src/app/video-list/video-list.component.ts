@@ -1,16 +1,17 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { VodManagementService } from '../vod-management.service';
 import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { AnalyticsService } from '../analytics.service';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { UserService } from '../user.service';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-
 
 @Component({
   selector: 'app-video-list',
@@ -19,6 +20,7 @@ import { Subscription } from 'rxjs';
     // ROUTER
     RouterModule,
     // ANGULAR MATERIAL MODULES
+    MatProgressSpinner,
     MatToolbarModule,
     MatButtonModule,
     MatInputModule,
@@ -32,11 +34,14 @@ import { Subscription } from 'rxjs';
     FormsModule,
   ],
   templateUrl: './video-list.component.html', // HTML FILE
-  styleUrls: ['./video-list.component.css'] // CSS FILE
+  styleUrls: ['./video-list.component.scss'] // SCSS FILE
 })
 export class VideoListComponent implements OnInit, OnDestroy{
   // URL
   private baseUrl = 'http://localhost:32707/vod'; // Nginx server to get video to play (test)
+
+  // PROFILE
+  userProfile: any = null; // User profile data
 
   // VIDEO ARRAYS
   videos: any[] = []; // Videos array - store videos before sorting into categories
@@ -49,6 +54,7 @@ export class VideoListComponent implements OnInit, OnDestroy{
   isLoggedIn = false; // Login state (wether the user is logged in)
   isLoading = true; // Loading state (wether the page is loading)
   isSearch = false; // Search state (wether the user is using the search bar)
+  isDarkTheme = false;
 
   // STRING
   selectedVideoUrl: string = ''; // Selected video's URL
@@ -65,7 +71,8 @@ export class VideoListComponent implements OnInit, OnDestroy{
   constructor(
     private vodService: VodManagementService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private analyticsService: AnalyticsService,
   ) {
     this.init(); // Call initialize
     this.errorMessage = null; // Clear the previous error message
@@ -85,8 +92,14 @@ export class VideoListComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     // By default, when the page is loaded there is no search
     this.isSearch = false;
+    // Set the current color theme
+    this.isDarkTheme = this.userService.getTheme();
     // Check the user's login status
     this.checkLoginStatus();
+    if(this.isLoggedIn){
+      // If the user is logged in load the profile data
+      this.loadUserProfile();
+    }
     // Load the videos
     this.loadVideos();
     // Subscribtion to the logout event
@@ -106,10 +119,6 @@ export class VideoListComponent implements OnInit, OnDestroy{
   // Check the user's login status
   checkLoginStatus(): void {
     this.isLoggedIn = this.userService.isAuthenticated();
-    if (this.isLoggedIn) {
-      // If the user is logged in load the videos
-      this.loadVideos();
-    } 
   }
 
   // Load and categorise videos
@@ -119,7 +128,7 @@ export class VideoListComponent implements OnInit, OnDestroy{
     this.vodService.getVideos().subscribe({
       next: (response: any[]) => {
         const groupedVideos = response.reduce((acc, video) => {
-          const category = video.category || 'Egyéb';
+          const category = video.category || 'Other';
           if (!acc[category]) {
             acc[category] = [];
           }
@@ -151,13 +160,29 @@ export class VideoListComponent implements OnInit, OnDestroy{
         category: video.category, // Video's category
         createdAt: video.created_at, // Video's creation time
         duration: video.duration, // Video's duration
-      } }); 
+      } });
+      this.analyticsService.trackEvent(this.userProfile.username, 'play-video', {video: video.title}); 
+  }
+
+  // Load user data
+  loadUserProfile(): void {
+    this.errorMessage = null; // Delete the previos error message
+    if (this.isLoggedIn) {
+      this.userService.getProfile().subscribe({
+        next: (data: any) => {
+          this.userProfile = data; // Store the user's data
+        },
+        error: (err) => { 
+          this.errorMessage = 'Cannnot load user informations'; // Create error message when loading user data failed
+        }
+      });
+    }
   }
 
   // Logout logic
   // The function is called when the logout event occurs
   onLogout(): void {
-    this.isLoggedIn = false; // Logged in state is over 
+    this.isLoggedIn = false; // Logged in state is over
     this.router.navigate(['/']); // Navigate to the home page
   }
 
@@ -165,6 +190,20 @@ export class VideoListComponent implements OnInit, OnDestroy{
   // The function calls the user service's function, to generate a logout event occurs
   logout(): void {
     this.userService.logout(); // Call user-service logout function
+    // Track the user activity using the AnalyticsService
+    this.analyticsService.trackEvent(this.userProfile.username, 'log_out');
+  }
+
+  // Change color theme (dark/light)
+  changeTheme(): void {
+    this.userService.switchTheme();
+    this.isDarkTheme = this.userService.getTheme();
+    const body = document.body;
+    if (this.isDarkTheme) {
+      body.classList.add('dark-theme'); // Activates dark theme
+    } else {
+      body.classList.remove('dark-theme'); // Activates light theme
+    }
   }
 
   // Scroll left function

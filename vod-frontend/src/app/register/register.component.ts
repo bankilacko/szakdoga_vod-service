@@ -2,6 +2,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { AnalyticsService } from '../analytics.service';
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
@@ -27,7 +28,7 @@ import { Component } from '@angular/core';
     ReactiveFormsModule,
   ],
   templateUrl: './register.component.html', // HTML FILE
-  styleUrl: './register.component.css' // CSS FILE
+  styleUrl: './register.component.scss' // SCSS FILE
 })
 export class RegisterComponent {
   // FORM
@@ -36,12 +37,16 @@ export class RegisterComponent {
   // STRING
   errorMessage: string | null = null; // Error message, value based on the error type and displayed on the page to help the user
 
+  // BOOLEAN
+  isDarkTheme = false;
+
   // CONSTRUCTOR
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private analyticsService: AnalyticsService,
   ) {
     this.registerForm = this.fb.group({ // Create register form
       username: ['', [Validators.required]],
@@ -57,10 +62,14 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.userService.register(this.registerForm.value).subscribe({
         next: (response) => {
+          // Track the user activity using the AnalyticsService
+          this.analyticsService.trackEvent(this.registerForm.value.username, 'registration');
           // If the registration was successful navigate to the login screen
           this.router.navigate(['/login']);
         },
         error: (err) => {
+          // Track the user activity using the AnalyticsService
+          this.analyticsService.trackEvent(this.registerForm.value.username, 'registration_failed');
           // If the registration failed create new error message
           this.errorMessage = "Username or email already exists"
         }

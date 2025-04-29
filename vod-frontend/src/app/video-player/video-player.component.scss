@@ -1,4 +1,7 @@
-/*NAVIGATION/TOOL BAR SECTION*/
+/* VARIABLES */
+$error-color: rgb(148, 17, 17);
+
+/* NAVIGATION/TOOL BAR SECTION */
 .toolbar {
   /* FLEXBOX */
   display: flex;
@@ -9,12 +12,14 @@
   /* MARGIN, PADDING */
   padding: 0px 16px;
   /* COLOR */
-  background-color: rgb(97, 189, 220);
+  background-color: var(--primary-color);
 }
   
 .app-title {
   /* MARGIN, PADDING */
-  margin: 0px 631px 0px 0px;
+  margin: 0px 475px 0px 0px;
+  /* COLOR */
+  color: var(--secondary-color) !important;
   /* TEXT */
   font-size: 1.5rem;
   font-weight: bold;
@@ -29,22 +34,22 @@
   
 .custom-button:hover{
   /* COLOR */
-  color: rgb(97, 189, 220) !important;
-  background-color: rgb(19, 19, 19) !important;
+  color: var(--primary-color) !important;
+  background-color: var(--secondary-color) !important;
 }
   
 .custom-button{
   /* COLOR */
-  color: rgb(19, 19, 19) !important;
-  background-color: rgb(97, 189, 220) !important;
+  color: var(--secondary-color) !important;
+  background-color: var(--primary-color) !important;
   /* BORDER */
-  border: 1px solid rgb(19, 19, 19) !important;
+  border: 1px solid var(--secondary-color) !important;
 }
 
 /* VIDEO PLAYER SECTION */
 .video-container {
   /* COLOR */  
-  background-color: rgb(19, 19, 19);
+  background-color: var(--secondary-color);
   /* BORDER */
   border-radius: 0px; 
 }
@@ -56,14 +61,14 @@
   margin: auto;
   margin-top: 20px;
   /* COLOR */ 
-  background-color: rgb(19, 19, 19);
+  background-color: var(--secondary-color);
 }
 
 mat-card-title{
   /* MARGIN, PADDING */
   margin-left: 220px;
   /* COLOR */ 
-  color: rgb(97, 189, 220);
+  color: var(--primary-color);
   /* TEXT */
   font-size: 1.5rem;
   font-weight: bold;
@@ -77,7 +82,7 @@ mat-card-title{
   margin-left: 220px;
   margin-right: 220px;
   /* COLOR */ 
-  color: rgb(97, 189, 220);
+  color: var(--primary-color);
   /* TEXT */  
   font-size: 1.1rem;
 }
@@ -86,7 +91,7 @@ mat-icon.home{
   /* MARGIN, PADDING */
   padding-bottom: 6px;
   /* COLOR */ 
-  color: rgb(19, 19, 19);
+  color: var(--secondary-color);
   /* TRANSFORM */
   transform: scale(1.5);
 }
