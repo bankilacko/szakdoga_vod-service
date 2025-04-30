@@ -84,7 +84,7 @@
 
       <!-- Default video section -->
       <div *ngIf="!isSearch">
-        <div *ngFor="let category of categories" class="video-category-container">
+        <div class="video-category-container">
           <!-- Recently watched 3 videos -->
           <div *ngIf="recentlyWatchedVideos.length > 0 && isLoggedIn">
             <h2 class="video-category">Recently watched</h2>
@@ -101,6 +101,8 @@
               </mat-card>
             </div>
           </div>
+        </div>
+        <div *ngFor="let category of categories" class="video-category-container">
           <!-- All available videos -->
           <div>
             <h2 class="video-category">{{ category }}</h2>
