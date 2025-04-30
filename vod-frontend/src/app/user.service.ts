@@ -1,4 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AnalyticsService } from './analytics.service';
 import { Observable, tap, of, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
@@ -9,7 +10,7 @@ import * as CryptoJS from 'crypto-js';
 export class UserService {
   // API URL
   private apiUrl = 'http://localhost:31968/user-service'; // User-service URL (test - frontend runs on kubernetes)
-  //private apiUrl = 'http://localhost:5000'; // User-service URL (test - frontend runs on host)
+  //private apiUrl = 'http://api-gateway/user-service'; // User-service URL (test - frontend runs on host)
 
   // EVENTS
   private logoutSubject = new Subject<void>(); // Logout event
@@ -21,7 +22,10 @@ export class UserService {
   private isDarkTheme = false;
 
   // CONSTRUCTOR
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private analyticsService: AnalyticsService,
+  ) { }
 
   // BACKEND USER-SERVICE API CALLS
 

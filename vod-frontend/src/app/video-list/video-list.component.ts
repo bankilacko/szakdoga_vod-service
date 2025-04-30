@@ -49,6 +49,8 @@ export class VideoListComponent implements OnInit, OnDestroy{
   videosByCategory: Record<string, any[]> = {}; // Videos array - store videos in categories (key-value)
   searchCategories: string[] = []; // Video categories array - store categories, which were selected by search
   searchedVideosByCategory: Record<string, any[]> = {}; // Videos array - store videos in categories (key-value), which were selected by search
+  recentlyWatchedVideos: string[] = []; // The 3 recently watched videos' title by the current user, get from the analytics service
+  recentlyWatchedVideoList: any[] = []; // The 3 recently watched video objects by the current user, get from the analytics service
 
   // BOOLEAN 
   isLoggedIn = false; // Login state (wether the user is logged in)
@@ -66,7 +68,7 @@ export class VideoListComponent implements OnInit, OnDestroy{
 
   // CHILDS
   @ViewChild('videoList', { static: false }) videoList!: ElementRef;
-  
+   
   // CONSTRUCTOR
   constructor(
     private vodService: VodManagementService,
@@ -74,34 +76,25 @@ export class VideoListComponent implements OnInit, OnDestroy{
     private router: Router,
     private analyticsService: AnalyticsService,
   ) {
-    this.init(); // Call initialize
-    this.errorMessage = null; // Clear the previous error message
   }
 
   // Initialize
-  init(): void {
-    // Check the user's login status
-    this.checkLoginStatus();
-    // Subscribtion to the logout event
-    this.logoutSubscription = this.userService.onLogout().subscribe(() => {
-      this.onLogout(); // Give the function to call when the event occurs
-    });
-  }
-
-  // Initialize
-  ngOnInit(): void {
-    // By default, when the page is loaded there is no search
-    this.isSearch = false;
-    // Set the current color theme
-    this.isDarkTheme = this.userService.getTheme();
+  async ngOnInit(): Promise<void> {
+    // Load the videos
+    await this.loadVideos();
     // Check the user's login status
     this.checkLoginStatus();
     if(this.isLoggedIn){
       // If the user is logged in load the profile data
-      this.loadUserProfile();
-    }
-    // Load the videos
-    this.loadVideos();
+      await this.loadUserProfile();
+      this.getRecentlyWatchedVideos();
+    }  
+    // Clear the previous error message
+    this.errorMessage = null;
+    // By default, when the page is loaded there is no search
+    this.isSearch = false;
+    // Set the current color theme
+    this.isDarkTheme = this.userService.getTheme();
     // Subscribtion to the logout event
     this.logoutSubscription = this.userService.onLogout().subscribe(() => {
       this.onLogout(); // Give the function to call when the event occurs
@@ -122,36 +115,79 @@ export class VideoListComponent implements OnInit, OnDestroy{
   }
 
   // Load and categorise videos
-  loadVideos(): void {
-    this.errorMessage = null; // Delete the previos error message
-    this.isLoading = true; // Loading started
-    this.vodService.getVideos().subscribe({
-      next: (response: any[]) => {
-        const groupedVideos = response.reduce((acc, video) => {
-          const category = video.category || 'Other';
-          if (!acc[category]) {
-            acc[category] = [];
-          }
-          acc[category].push({
-            ...video,
-            fullUrl: `${this.baseUrl}${video.path}`, // Store full URL to know from where to get the video files when playing the video
-          });
-          return acc;
-        }, {} as Record<string, any[]>);
+  loadVideos(): Promise<void> {
+    this.errorMessage = null; // Delete previous error message
+    this.isLoading = true; // Start loading
+  
+    return new Promise((resolve, reject) => {
+      this.vodService.getVideos().subscribe({
+        next: (response: any[]) => {
+          this.videos = response;
 
-        this.videosByCategory = groupedVideos; // List of videos grouped by categories
-        this.categories = Object.keys(this.videosByCategory); // List of categories
-        this.isLoading = false; // Loading finished
+          const groupedVideos = response.reduce((acc, video) => {
+            const category = video.category || 'Other';
+            if (!acc[category]) {
+              acc[category] = [];
+            }
+            acc[category].push({
+              ...video,
+              fullUrl: `${this.baseUrl}${video.path}`, // Store full video URL
+            });
+            return acc;
+          }, {} as Record<string, any[]>);
+  
+          this.videosByCategory = groupedVideos; // Grouped videos by category
+          this.categories = Object.keys(this.videosByCategory); // List of categories
+          this.isLoading = false; // Loading finished
+  
+          console.log("Videos loaded successfully.");
+          resolve(); // Resolve the Promise when loading is complete
+        },
+        error: (err) => {
+          this.errorMessage = 'An error occurred, try again later!'; // Error message when loading fails
+          this.isLoading = false; // Stop loading
+  
+          console.error("Error loading videos:", err);
+          reject(err); // Reject the Promise if an error occurs
+        },
+      });
+    });
+  }
+  
+
+  // Get the 3 recently watched videos from the analytics service
+  getRecentlyWatchedVideos(): void {
+    this.recentlyWatchedVideoList = [];
+    this.analyticsService.getRecentVideos(this.userProfile.username).subscribe({
+      next: (response: any) => {
+        console.log('Received recently watched video titles:', response.recent_videos);
+        this.recentlyWatchedVideos = response.recent_videos || [];
+        
+
+        // Search the video object by title in the videos array
+        for (let videoTitle of this.recentlyWatchedVideos) {
+          for (let video of this.videos) {
+            if(video.title == videoTitle){
+              console.log(`Match found: ${video.title}`);
+              this.recentlyWatchedVideoList.push({
+                ...video,
+                fullUrl: `${this.baseUrl}${video.path}`
+              });
+            }
+          }
+        }
+
+        //console.log('Received recently watched videos:', this.recentlyWatchedVideoList);
       },
       error: (err) => {
-        this.errorMessage = 'An error occured, try again later!'; // Create error message when loading vieos failed
-        this.isLoading = false; // Loading finished
+        console.error('Error fetching recently watched videos:', err);
       },
     });
   }
 
   // Play selected video
   onSelectVideo(video: any): void {
+    console.log(video.fullUrl);
     this.router.navigate(['/video-player'], // Navigate to the video-player page, pass the full URl and information about the video
       { queryParams: {
         url: video.fullUrl, // Full URL
@@ -165,18 +201,28 @@ export class VideoListComponent implements OnInit, OnDestroy{
   }
 
   // Load user data
-  loadUserProfile(): void {
-    this.errorMessage = null; // Delete the previos error message
-    if (this.isLoggedIn) {
-      this.userService.getProfile().subscribe({
-        next: (data: any) => {
-          this.userProfile = data; // Store the user's data
-        },
-        error: (err) => { 
-          this.errorMessage = 'Cannnot load user informations'; // Create error message when loading user data failed
-        }
-      });
-    }
+  // Returns promise to guarantee that the profile data is loaded before trying to fetch the users recently watched videos
+  loadUserProfile(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.errorMessage = null; // Reset previous error message
+      if (this.isLoggedIn) {
+        this.userService.getProfile().subscribe({
+          next: (data: any) => {
+            this.userProfile = data; // Store the user's data
+            console.log("User profile loaded successfully:", this.userProfile.username);
+            resolve(); // Signal that profile loading is complete
+          },
+          error: (err) => { 
+            this.errorMessage = 'Cannot load user information'; // Display error message
+            console.error("Error loading user profile:", err);
+            reject(err); // Signal that an error occurred
+          }
+        });
+      } else {
+        console.warn("User is not logged in, skipping profile load.");
+        resolve(); // No action needed, but prevent blocking further execution
+      }
+    });
   }
 
   // Logout logic

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +23,9 @@ export class AnalyticsService {
         console.error('Error tracking user activity:', err);
       }
     });
+  }
+
+  getRecentVideos(username: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/recent-videos/${username}`);
   }
 }

@@ -21,12 +21,6 @@
    
   <!-- Nvigation buttons -->
   <span class="nav-buttons">
-    <!-- Switch theme slide -->
-    <!-- <mat-slide-toggle [(ngModel)]="isDarkTheme" (change)="toggleTheme()">
-      <mat-icon *ngIf="!isDarkTheme">wb_sunny</mat-icon>
-      <mat-icon *ngIf="isDarkTheme">nights_stay</mat-icon>
-    </mat-slide-toggle> -->
-
     <!-- Change color theme button -->
     <button  mat-raised-button class="custom-button" (click)="changeTheme()">
       <p *ngIf="!isDarkTheme">Light Theme</p>
@@ -91,10 +85,25 @@
       <!-- Default video section -->
       <div *ngIf="!isSearch">
         <div *ngFor="let category of categories" class="video-category-container">
+          <!-- Recently watched 3 videos -->
+          <div *ngIf="recentlyWatchedVideos.length > 0 && isLoggedIn">
+            <h2 class="video-category">Recently watched</h2>
+            <div class="video-card-container" #videoList>
+              <mat-card *ngFor="let video of recentlyWatchedVideoList" class="video-card" (click)="onSelectVideo(video)">
+                <mat-card-header>
+                  <mat-card-title>{{ video.title }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <p *ngIf="video.description.length > 50">{{ video.description | slice:0:60 }}...</p>
+                  <p *ngIf="video.description.length <= 50">{{ video.description }}</p>
+                  <mat-icon class="play">play_circle</mat-icon>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+          <!-- All available videos -->
           <div>
             <h2 class="video-category">{{ category }}</h2>
-            <!-- <button class="scroll-button" (click)="scrollLeft()">&#8592; Előző</button>
-            <button class="scroll-button" (click)="scrollRight()">Következő &#8594;</button> -->
             <div class="video-card-container" #videoList>
               <mat-card *ngFor="let video of videosByCategory[category]" class="video-card" (click)="onSelectVideo(video)">
                 <mat-card-header>
