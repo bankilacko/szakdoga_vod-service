@@ -28,4 +28,4 @@ def get_db():
         db.close() # Close the session after the request is completed
 
 # Automatically initialize the database when this file is loaded
-init_db()
+# init_db()

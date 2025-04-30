@@ -1,10 +1,13 @@
+from models import UserActivity, SystemMetric, UserRecentVideos
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Depends, Request
-from models import UserActivity, SystemMetric
+from database import init_db, get_db
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
 from datetime import datetime
-from database import get_db
+from typing import Dict
 from time import time
-
+  
 # Create the FastAPI app instance
 app = FastAPI()
 
@@ -16,6 +19,17 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allow all headers (e.g., Authorization, Content-Type)
 )
+
+# Input model
+class TrackEventRequest(BaseModel):
+    username: str
+    event_type: str
+    activity_metadata: Dict = {}
+
+# Initialize database tables at application startup
+@app.on_event("startup")
+def startup():
+    init_db() # Creates tables if they don't exist
 
 # Health check endpoint
 @app.get("/")
@@ -34,45 +48,65 @@ def get_user_activities(db: Session = Depends(get_db)):
 def get_system_metrics(db: Session = Depends(get_db)):
     # Query all records from the SystemMetric table
     metrics = db.query(SystemMetric).all()
-    return {"system_metrics": metrics}    
+    return {"system_metrics": metrics}
 
-# User Activity Tracking Endpoint
+# Endpoint to fetch all users recently watched videos
+@app.get("/recent-videos/{username}")
+def get_recent_videos(username: str, db: Session = Depends(get_db)):
+    user_recent = db.query(UserRecentVideos).filter(UserRecentVideos.username == username).first()
+    if not user_recent:
+        return {"username": username, "recent_videos": []}
+    return {"username": username, "recent_videos": user_recent.video_titles}
+
+
 @app.post("/track")
-def track_event(user_id: int, event_type: str, metadata: dict = {}, db: Session = Depends(get_db)):
+def track_event(data: TrackEventRequest, db: Session = Depends(get_db)):
     # Create a new UserActivity record with the provided details
     activity = UserActivity(
-        user_id=user_id,    # ID of the user who triggered the activity
-        event_type=event_type,  # Type of activity (e.g., "video_play", "login", etc.)
-        metadata=metadata   # Optional metadata related to the activity (e.g., video ID or other context)
+        username=data.username, # Name of the user who triggered the activity
+        event_type=data.event_type, # Type of activity (e.g., "video_play", "login", etc.)
+        activity_metadata=data.activity_metadata # Optional metadata related to the activity (e.g., video ID or other context)
     )
     # Add the new activity record to the database session
     db.add(activity)
     # Commit the transaction to save the record in the database
     db.commit()
-    # Return a success message to indicate the event was tracked
-    return {"message": "User activity tracked successfully"}
 
-# Middleware for Measuring API Performance
-@app.middleware("http")
-async def measure_performance(request: Request, call_next):
-    # Record the start time to measure the request's duration
-    start_time = time()
-    # Process the incoming HTTP request and generate a response
-    response = await call_next(request)
-    # Calculate the total time taken to process the request
-    process_time = time() - start_time
+    # If the activity type is "video_play", refresh the UserRecentVideos table
+    if data.event_type == "play-video":
+        user_recent = db.query(UserRecentVideos).filter(UserRecentVideos.username == data.username).first()
+        if not user_recent:
+            print("create new record for user")
+            # If the user hasnt got any record create a record with the username
+            user_recent = UserRecentVideos(
+                username=data.username,
+                video_titles=[data.activity_metadata["video"]]
+            )
+            # Add the new activity record to the database session
+            db.add(user_recent)
+        else:
+            print(f"Record already exists for user: {data.username}")
+            print(f"Current video list before update: {user_recent.video_titles}")
 
-    # Save the performance metrics to the database
-    with SessionLocal() as db:
-        metric = SystemMetric(
-            endpoint=request.url.path,  # The API endpoint that was called (e.g., "/track")
-            response_time=process_time, # Time taken to process the request (in seconds)
-            status_code=response.status_code,  # HTTP status code of the response (e.g., 200, 404, etc.)
-        )
-        # Add the new metrics record to the database session
-        db.add(metric)
+            video_titles = user_recent.video_titles or []
+            new_video = data.activity_metadata["video"]
+
+            if new_video not in video_titles:
+                print(f"Adding new video: {new_video} to the recently watched list.")
+                video_titles.insert(0, new_video)  # Add new video to the beginning
+                user_recent.video_titles = video_titles[:3]  # Keep only the last 3 videos
+            else:
+                print(f"Skipping duplicate video: {new_video}")
+
+            #video_titles.insert(0, new_video)  # Add the new video to the beginning of the list
+            #updated_videos = video_titles[:3]  # Keep only the last 3 videos
+
+            #db.query(UserRecentVideos).filter(UserRecentVideos.username == data.username).update(
+            #    {"video_titles": updated_videos}
+            #)  # UPDATE the database with the new video list
+
+        
         # Commit the transaction to save the record in the database
         db.commit()
-
-    # Return the original response to the client
-    return response
+    # Return a success message to indicate the event was tracked
+    return {"message": "User activity tracked successfully"}           

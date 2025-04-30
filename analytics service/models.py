@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, JSON
-from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 from database import Base 
 
@@ -10,8 +9,8 @@ class UserActivity(Base):
     # Unique identifier for each activity (Primary Key)
     id = Column(Integer, primary_key=True, index=True)
     
-    # ID of the user - must be not null
-    user_id = Column(Integer, nullable=False)
+    # name of the user - must be not null
+    username = Column(String, nullable=False)
     
     # Type of the event - can be null
     event_type = Column(String, nullable=False)
@@ -20,7 +19,18 @@ class UserActivity(Base):
     timestamp = Column(DateTime, default=datetime.utcnow)
     
     # Additional information in JSON format - can be null
-    metadata = Column(JSON, nullable=True) 
+    activity_metadata = Column(JSON, nullable=True) 
+
+# This class defines the UserRecentVideos table structure in the database
+class UserRecentVideos(Base):
+    __tablename__ = "user_recent_videos" # Name of the table in the database
+
+    # Unique identifier for each user-videos pair (Primary Key)
+    id = Column(Integer, primary_key=True, index=True)
+    # name of the user - must be not null
+    username = Column(String, nullable=False)
+    # name of the 3 recently watched videos - must be not null
+    video_titles = Column(JSON, nullable=False)
 
 # This class defines the SystemMetric table structure in the database
 class SystemMetric(Base):
