@@ -38,7 +38,7 @@ import { Subscription } from 'rxjs';
 })
 export class VideoListComponent implements OnInit, OnDestroy{
   // URL
-  private baseUrl = 'http://localhost:32707/vod'; // Nginx server to get video to play (test)
+  private baseUrl = 'http://localhost:7000/vod'; // Nginx server to get video to play (test)
 
   // PROFILE
   userProfile: any = null; // User profile data

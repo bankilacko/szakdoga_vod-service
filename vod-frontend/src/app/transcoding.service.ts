@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class TranscodingService {
   // API URL
-  private apiUrl = 'http://localhost:31968/transcoding-service'; // Transcoding-service URL (test - frontend runs on kubernetes)
+  private apiUrl = 'http://localhost:5000/transcoding-service'; // Transcoding-service URL (test - frontend runs on kubernetes)
+  //private apiUrl = 'http://api-gateway/transcoding-service';
   //private apiUrl = 'http://localhost:5000'; // Transcoding-service URL (test - frontend runs on host)
 
   // CONSTRUCTOR
