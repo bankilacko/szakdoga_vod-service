@@ -14,10 +14,10 @@ import os
 router = APIRouter()
 
 # Base URL of the NGINX VOD server (can be set via environment variable or fallback to default)
-VOD_SERVER_URL = os.getenv("VOD_SERVER_URL", "http://nginx-vod-service:8080/vod/")
+VOD_SERVER_URL = os.getenv("VOD_SERVER_URL", "http://nginx-vod-service:7000/vod/")
 
 # Global URL used for video streaming from the local dev environment
-VOD_SERVER_URL_GLOBAL = "http://localhost:8080/vod/"
+# VOD_SERVER_URL_GLOBAL = "http://localhost:8080/vod/"
 
 # Runs automatically when the app starts to sync available videos from the VOD server
 @router.on_event("startup")

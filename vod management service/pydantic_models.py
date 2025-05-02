@@ -8,7 +8,7 @@ class VideoBase(BaseModel):
     description: Optional[str] = None       # Optional text description of the video
     path: str                               # File path or URL to the video on the server (required)
     category: Optional[str] = None          # Optional category (e.g., "sports", "music", etc.)
-    duration: int                           # Duration of the video in seconds (required)
+    duration: str                        # Duration of the video in seconds (required)
 
 # Model used for creating a new video (e.g., in POST requests)
 class VideoCreate(VideoBase):

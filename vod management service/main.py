@@ -10,7 +10,7 @@ app = FastAPI()
 # This allows frontend applications (e.g., on a different port) to interact with this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:32075", "http://localhost:4200"],  # Allowed origins (e.g., frontend dev servers)
+    allow_origins=["http://localhost:31084", "http://localhost:4200", "http://localhost:8080"],  # Allowed origins (e.g., frontend dev servers)
     allow_credentials=True,  # Allow sending cookies and authentication headers
     allow_methods=["*"],     # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],     # Allow all headers

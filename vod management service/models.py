@@ -22,7 +22,7 @@ class Video(Base):
     category = Column(String, nullable=True)
 
     # Duration of the video in seconds – required
-    duration = Column(Integer, nullable=False)
+    duration = Column(String, nullable=False)
 
     # Timestamp indicating when the video record was created
     # Defaults to the current UTC time
