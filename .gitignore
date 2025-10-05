@@ -1,0 +1,15 @@
+# Általános
+*.log
+.DS_Store
+/video input
+
+# Node.js (Frontend)
+node_modules/
+dist/
+
+# Python (Backend)
+__pycache__/
+*.pyc
+*.pyo
+env/
+venv/

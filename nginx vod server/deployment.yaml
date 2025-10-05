@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-vod-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-vod
+  template:
+    metadata:
+      labels:
+        app: nginx-vod
+    spec:
+      containers:
+      - name: nginx-vod
+        image: bankilacko11/nginx-vod
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: vod-storage
+          mountPath: usr/share/nginx/html/vod #
+      volumes:
+      - name: vod-storage
+        persistentVolumeClaim:
+          claimName: vod-storage-claim    

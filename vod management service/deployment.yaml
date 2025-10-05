@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vod-management-service
+spec:
+  replicas: 1  # Ha szükséges, több példány is futhat
+  selector:
+    matchLabels:
+      app: vod-management-service
+  template:
+    metadata:
+      labels:
+        app: vod-management-service
+    spec:
+      containers:
+        - name: vod-management-service
+          image: bankilacko11/vod-management-service:latest 
+          ports:
+            - containerPort: 5000  
+          env:
+            - name: DATABASE_URL
+              value: "postgres://user:password@database-service:5432/vod-database"
+            - name: VOD_SERVER_URL
+              value: "http://nginx-vod-service:8080/vod/"
+      volumes:
+      - name: vod-storage
+        persistentVolumeClaim:
+          claimName: vod-storage-claim

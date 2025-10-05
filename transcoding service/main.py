@@ -6,6 +6,15 @@ import shutil  # Fájlok másolásához
 
 app = FastAPI()
 
+# Configure CORS (Cross-Origin Resource Sharing)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:31084", "http://localhost:4200"],  # Allowed frontend origins (e.g., for local development)
+    allow_credentials=True, # Allow cookies and authorization headers
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all headers (e.g., Authorization, Content-Type)
+)
+
 # Mappák definiálása
 UPLOAD_DIR = Path("uploaded_videos")
 OUTPUT_DIR = Path("/vod")
