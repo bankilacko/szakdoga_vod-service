@@ -1,36 +1,48 @@
 .not-found-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: lightgray; /* Halvány rózsaszín háttér */
-    /*background-color: rgb(19,19,19); */
+  /* FLEXBOX */ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* WIDTH, HEIGHT */
+  height: 100vh;
+  /* COLOR */
+  background-color: lightgray;
 }
   
 mat-card {
-    display: flex;
-    flex-direction: column; /* Függőleges irányú elrendezés */
-    justify-content: center; /* Középre igazítás függőlegesen */
-    align-items: center; /* Középre igazítás vízszintesen */
-    width: 600px;
-    height: 250px;
-    padding: 24px;
-    text-align: center;
-    background-color: rgb(19,19,19);
+  /* FLEXBOX */  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* WIDTH, HEIGHT */
+  width: 600px;
+  height: 250px;
+  /* MARGIN, PADDING */
+  padding: 24px;
+  text-align: center;
+  /* COLOR */
+  background-color: rgb(19,19,19);
 }
   
 mat-card-title {
-    font-weight: bold;
-    font-size: 50px;
-    margin: 0px 0px 30px 0px;
-    color: #a70808; /* Piros szín a figyelem felkeltéséhez */
+  /* MARGIN, PADDING */
+  margin: 0px 0px 30px 0px;
+  /* COLOR */
+  color: #a70808;
+  /* TEXT */
+  font-weight: bold;
+  font-size: 50px;
 }
   
 mat-card-content {
-    font-size: 20px;
-    color: #a70808;
+  /* COLOR */
+  color: #a70808;
+  /* TEXT */
+  font-size: 20px;
 }
   
 mat-card-actions {
-    margin-top: 16px;
+  /* MARGIN, PADDING */
+  margin-top: 16px;
 }  

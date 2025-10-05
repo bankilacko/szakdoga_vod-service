@@ -1,83 +1,92 @@
+/*NAVIGATION/TOOL BAR SECTION*/
 .toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 16px;
-    background-color: rgb(97, 189, 220);
-    height: 80px;
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* WIDTH, HEIGHT */
+  height: 80px;
+  /* MARGIN, PADDING */
+  padding: 0px 16px;
+  /* COLOR */
+  background-color: rgb(97, 189, 220);
 }
   
 .app-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0px 0px 0px 10px;
-}
-  
-.search-bar {
-    flex-grow: 1;
-    margin-left: 20px;
-    margin-top: 20px;
-    color: rgb(19, 19, 19) !important;
-    border-color: rgb(19, 19, 19) !important;
-}
-  
-mat-form-field {
-    width: 50%;
+  /* MARGIN, PADDING */
+  margin: 0px 631px 0px 0px;
+  /* TEXT */
+  font-size: 1.5rem;
+  font-weight: bold;
+  /* CURSOR */
+  cursor: pointer;
 }
   
 .nav-buttons button {
-    margin-left: 10px;
+  /* MARGIN, PADDING */
+  margin-left: 10px;
 }
   
 .custom-button:hover{
-    color: rgb(97, 189, 220) !important;
-    background-color: rgb(19, 19, 19) !important;
+  /* COLOR */
+  color: rgb(97, 189, 220) !important;
+  background-color: rgb(19, 19, 19) !important;
 }
   
 .custom-button{
-    background-color: rgb(97, 189, 220) !important;
-    color: rgb(19, 19, 19) !important;
-    border: 1px solid rgb(19, 19, 19) !important;
+  /* COLOR */
+  color: rgb(19, 19, 19) !important;
+  background-color: rgb(97, 189, 220) !important;
+  /* BORDER */
+  border: 1px solid rgb(19, 19, 19) !important;
 }
 
+/* VIDEO PLAYER SECTION */
 .video-container {
-    background-color: rgb(19, 19, 19);
-    border-radius: 0px; 
+  /* COLOR */  
+  background-color: rgb(19, 19, 19);
+  /* BORDER */
+  border-radius: 0px; 
 }
   
 .video-card {
-    max-width: 800px;
-    margin: auto;
-    margin-top: 20px;
-    background-color: rgb(19, 19, 19);
+  /* WIDTH, HEIGHT */  
+  max-width: 800px;
+  /* MARGIN, PADDING */
+  margin: auto;
+  margin-top: 20px;
+  /* COLOR */ 
+  background-color: rgb(19, 19, 19);
 }
 
 mat-card-title{
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-left: 220px;
-    color: rgb(97, 189, 220);
+  /* MARGIN, PADDING */
+  margin-left: 220px;
+  /* COLOR */ 
+  color: rgb(97, 189, 220);
+  /* TEXT */
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .video-details{
-    display: flex;
-    flex-direction: column;
-    font-size: 1.1rem;
-    margin-left: 220px;
-    margin-right: 220px;
-    color: rgb(97, 189, 220);
+  /* FLEXBOX */  
+  display: flex;
+  flex-direction: column;
+  /* MARGIN, PADDING */
+  margin-left: 220px;
+  margin-right: 220px;
+  /* COLOR */ 
+  color: rgb(97, 189, 220);
+  /* TEXT */  
+  font-size: 1.1rem;
 }
 
 mat-icon.home{
-    transform: scale(1.5);
-    color: rgb(19, 19, 19);
-}
-  
-mat-icon.search{
-    transform: scale(1.1);
-    color: rgb(19, 19, 19);
-}
-  
-mat-icon.basic{
-    transform: scale(1);
+  /* MARGIN, PADDING */
+  padding-bottom: 6px;
+  /* COLOR */ 
+  color: rgb(19, 19, 19);
+  /* TRANSFORM */
+  transform: scale(1.5);
 }

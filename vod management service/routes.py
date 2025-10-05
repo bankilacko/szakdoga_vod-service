@@ -1,46 +1,63 @@
+from pydantic_models import VideoCreate, VideoResponse 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from auth import verify_token
+from bs4 import BeautifulSoup
+from datetime import datetime 
 from database import get_db
 from models import Video
-from auth import verify_token
-from pydantic_models import VideoCreate, VideoResponse  # Pydantic modellek az adatellenőrzéshez és válaszokhoz
 from typing import List
-from datetime import datetime
-import os
 import requests
-from bs4 import BeautifulSoup
 import time
+import os
 
 router = APIRouter()
 
-# NGINX VOD szerver alap URL-je (környezeti változóból vagy alapértelmezett értékkel)
-VOD_SERVER_URL = os.getenv("VOD_SERVER_URL", "http://nginx-vod-service:8080/vod/")
-VOD_SERVER_URL_GLOBAL = "http://localhost:8080/vod/"
+# Base URL of the NGINX VOD server (can be set via environment variable or fallback to default)
+VOD_SERVER_URL = os.getenv("VOD_SERVER_URL", "http://nginx-vod-service:7000/vod/")
 
-# Induláskor: Automatikus videó szinkronizálás az NGINX szerverről
+# Global URL used for video streaming from the local dev environment
+# VOD_SERVER_URL_GLOBAL = "http://localhost:8080/vod/"
+
+# Runs automatically when the app starts to sync available videos from the VOD server
 @router.on_event("startup")
 def startup_sync_videos():
-    print("Videószinkronizáció indítása...")
-    db = next(get_db())
-    max_retries = 5
-    retry_delay = 5
+
+    # This function is triggered when the FastAPI application starts.
+    # It attempts to connect to the NGINX VOD server, extract available video files,
+    # read their metadata, and synchronize them with the local database.
+
+    # Log the start of the synchronization process
+    print("Start video syncronization...")
+
+    db = next(get_db()) # Open a new database session
+    max_retries = 5 # Maximum number of retries
+    retry_delay = 5 # Wait time (in seconds) between retries
 
     try:
         for attempt in range(max_retries):
             try:
-                print(f"{attempt + 1}/{max_retries} próbálkozás az NGINX-hez...")
+                # Log the current attempt to reach the VOD server
+                print(f"{attempt + 1}/{max_retries} attempt to reach the NGINX server...")
+
+                # Send GET request to the VOD server to get HTML listing of files
                 response = requests.get(VOD_SERVER_URL)
                 response.raise_for_status()
+
+                # Extract list of video filenames from the HTML
                 video_files = extract_video_filenames(response.text)
 
                 for file in video_files:
+                    # Check if the video is already in the database
                     if not db.query(Video).filter(Video.path == f"/{file}").first():
-                        # Metaadat fájl beolvasása
+                        # Build the corresponding metadata file path
                         metadata_file = file.replace(".m3u8", "_info.txt")
                         metadata_path = os.path.join(VOD_SERVER_URL, metadata_file)
+
+                        # Read metadata (title, category, duration, description)
                         title, category, duration, description = read_metadata(metadata_path)
 
-                        # Új videó hozzáadása az adatbázisba
+                        # Create a new Video entry
                         new_video = Video(
                             title=title,
                             description=description,
@@ -49,79 +66,116 @@ def startup_sync_videos():
                             duration=duration,
                             created_at=datetime.utcnow()
                         )
+
+                        # Save the new video to the database
                         db.add(new_video)
                         db.commit()
-                        print(f"Videó hozzáadva: {new_video.title}")
-                break  # Ha sikeres, kilépünk a próbálkozások ciklusából
+
+                        # Log the newly added video
+                        print(f"Video added: {new_video.title}")
+                break  # If successful, break out of the retry loop
+
             except requests.RequestException as e:
-                print(f"Sikertelen próbálkozás: {e}")
-                time.sleep(retry_delay)
+                # Log the failed attempt to contact the VOD server
+                print(f"Unsuccessfull attempt: {e}")
+                time.sleep(retry_delay) # Wait before retrying
+
         else:
-            print("Maximális próbálkozások száma elérve.")
+            # All attempts failed, log that max retries were reached
+            print("Reached the number of max attempts.")
     except Exception as e:
-        print(f"Hiba történt a szinkronizáció során: {e}")
+        # Log any other unexpected error that occurred during sync
+        print(f"Error during syncronization: {e}")
     finally:
-        db.close()
-        print("Adatbázis-kapcsolat lezárva.")
+        db.close() # Ensure the database connection is closed
+        # Log the close
+        print("Database connection closed.")
 
 
-# Segédfüggvény: HTML tartalom feldolgozása .m3u8 fájlok kinyerésére
+# Function: Extracts .m3u8 filenames from the HTML content of the VOD directory
 def extract_video_filenames(html_content):
-    """
-    HTML tartalom feldolgozása és .m3u8 fájlnevek kinyerése.
-    """
+
+    # Parses the given HTML content and extracts all filenames that point to .m3u8 video playlist files.
+    # This function assumes that the HTML contains <a> tags with href attributes
+    # pointing to video files served by an NGINX VOD directory listing.
+
+    # Parse the HTML using BeautifulSoup
     soup = BeautifulSoup(html_content, 'html.parser')
     video_files = []
 
-    # Keresünk minden <a> tag-et, és kiszűrjük azokat, amelyek .m3u8 fájlokra mutatnak
+    # Search for all <a> tags and extract the hrefs that end with .m3u8 (HLS playlist files)
     for link in soup.find_all('a'):
         href = link.get('href')
         if href and href.endswith(".m3u8"):
             video_files.append(href)
-    print(f"Kinyert fájlnevek: {video_files}")
+
+    # Log the extracted filenames for debugging purposes        
+    print(f"Extracted filenames: {video_files}")
+
+    # Return the video files
     return video_files
 
-# Végpont: Videó elérése .m3u8 fájlnév alapján
+# Endpoint to retrieve a video stream URL based on the filename
 @router.get("/videos/{filename}", dependencies=[Depends(verify_token)])
 def get_video_by_filename(filename: str, db: Session = Depends(get_db)):
-    """
-    Egy videófájl teljes URL-jének lekérése az NGINX szerverről.
-    """
-    # Ellenőrizzük, hogy a fájl létezik-e az adatbázisban
-    video = db.query(Video).filter(Video.path == f"/{filename}").first()
-    if not video:
-        print(f"Videó nem található az adatbázisban: {filename}")
-        raise HTTPException(status_code=404, detail="A videó nem található")
 
-    # Teljes URL generálása a videóhoz
+    # Returns the full URL of a video stream file (.m3u8) from the NGINX server.
+    # This endpoint is protected and requires a valid token (via HTTPBearer).
+
+    # Look up the video in the database using its filename
+    video = db.query(Video).filter(Video.path == f"/{filename}").first()
+
+    # If the video doesn't exist, raise a 404 error
+    if not video:
+        print(f"Video not found: {filename}")
+        raise HTTPException(status_code=404, detail="Video not found")
+
+    # Construct the full URL using the global VOD base path
     video_url = f"{VOD_SERVER_URL_GLOBAL}{filename}"
-    print(f"Videó URL generálva: {video_url}")
+
+    # Log the generation of the video URL
+    print(f"Video URL generated: {video_url}")
+
+    # Return the full video URL as JSON
     return {"video_url": video_url}
 
-# Titkosított végpont: Videók listázása
-@router.get("/videos", response_model=List[VideoResponse]) #, dependencies=[Depends(verify_token)]
+# Endpoint to return the list of available videos from the database
+@router.get("/videos", response_model=List[VideoResponse]) 
 def list_videos(db: Session = Depends(get_db)):
-    """
-    Az NGINX szerverről dinamikusan lekéri az aktuális videókat,
-    és az adatbázist frissíti az új videók szerint.
-    """
+
+    # Retrieves the list of all video files currently available on the NGINX VOD server.
+    # If any new video files are found, they are added to the database along with
+    # metadata (title, category, duration, description).
+
+    #The final response returns all video entries stored in the database.
+
     try:
-        # Lekérdezés az NGINX szerverről
-        print("Lekérdezés az NGINX szerverről")
+        # Log the start of the request
+        print("Requesting video list from NGINX server")
+
+        # Send a request to the NGINX server to get the directory listing (HTML)
         response = requests.get(VOD_SERVER_URL)
+
+        # Raise an exception if the server response is not successful (e.g., 404 or 500)
         response.raise_for_status()
+
+        # Extract filenames (*.m3u8) from the HTML response
         video_files = extract_video_filenames(response.text)
 
-        # Az adatbázis frissítése az új videókkal
+        # Iterate through each video file to check if it exists in the database
         for file in video_files:
+            # Check if the video already exists based on its path
             existing_video = db.query(Video).filter(Video.path == f"/{file}").first()
+
             if not existing_video:
-                # Metaadat fájl beolvasása
+                # Construct metadata file path and read its content
                 metadata_file = file.replace(".m3u8", "_info.txt")
                 metadata_path = os.path.join(VOD_SERVER_URL, metadata_file)
+
+                # Parse metadata from the associated .txt file
                 title, category, duration, description = read_metadata(metadata_path)
 
-                # Új videó hozzáadása az adatbázisba
+                # Create a new Video model instance with the parsed metadata
                 new_video = Video(
                     title=title,
                     description=description,
@@ -130,42 +184,61 @@ def list_videos(db: Session = Depends(get_db)):
                     duration=duration,
                     created_at=datetime.utcnow()
                 )
+
+                # Save the new video record into the database
                 db.add(new_video)
                 db.commit()
         
-        # Az aktuális videók listája az adatbázisból
+        # After processing, fetch the complete list of videos from the database
         videos = db.query(Video).all()
-        print(f"{len(videos)} videó található az adatbázisban.")
+        # Log the available videos
+        print(f"{len(videos)} videos are in the database.")
         print(videos)
+
+        # Return the list of videos to the client
         return videos
 
+    # In case of any error return HTTPException
     except requests.RequestException as e:
-        raise HTTPException(status_code=500, detail=f"Nem sikerült elérni az NGINX szervert: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to contact NGINX server: {str(e)}")
 
+# Function to read video metadata from a text file
 def read_metadata(metadata_url: str):
-    """
-    Metaadat fájl beolvasása és elemzése.
-    Az első sor a cím, a második a kategória, a többi sor egyesítve a leírás.
-    """
+
+    # Reads and parses metadata from a .txt file.
+    # Format expected:
+    # Line 1: title
+    # Line 2: category
+    # Line 3: duration
+    # Lines 4+: description
+
     try:
-        # Metaadat fájl lekérése HTTP-n keresztül
+        # Make an HTTP GET request to download the metadata file
         response = requests.get(metadata_url)
+
+        # Raise an HTTPException if the request failed (e.g., 404 or 500)
         response.raise_for_status()
+
+        # Split the file content into individual lines
         lines = response.text.splitlines()
 
-        # Az első sor a cím
-        title = lines[0].strip() if len(lines) > 0 else "Nincs cím"
+        # The first line is the title
+        title = lines[0].strip() if len(lines) > 0 else "No title"
 
-        # A második sor a kategória
-        category = lines[1].strip() if len(lines) > 1 else "Nincs kategória"
+        # The second line is the category
+        category = lines[1].strip() if len(lines) > 1 else "No category"
 
-        # A harmadik sor a hossz
-        duration = lines[2].strip() if len(lines) > 1 else "Nincs hossz"
+        # Third line is the length
+        duration = lines[2].strip() if len(lines) > 1 else "No length"
 
-        # A maradék sorokat egyesítsük leírásként
-        description = "\n".join(lines[3:]).strip() if len(lines) > 2 else "Nincs leírás"
+        # The remaining lines are the description
+        description = "\n".join(lines[3:]).strip() if len(lines) > 2 else "No description"
 
+        # Return all extracted values as a tuple
         return title, category, duration, description
     except Exception as e:
-        print(f"Nem sikerült a metaadatokat beolvasni: {e}")
-        return "Nincs cím", "Nincs kategória", "Nincs leírás"
+        # In case of any error (e.g., network failure, file format issue), log error
+        print(f"Failed to read metadata: {e}")
+
+        # Return safe fallback values so the application doesn't break
+        return "No Title", "No Category", "No Duration", "No Description"

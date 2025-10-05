@@ -1,9 +1,10 @@
-from fastapi import FastAPI
-from database import init_db
 from fastapi.middleware.cors import CORSMiddleware
+from database import init_db
+from fastapi import FastAPI
 from routes import router
 #import ssl
 
+# Create the FastAPI app instance
 app = FastAPI()
 
 # if __name__ == "__main__":
@@ -14,20 +15,21 @@ app = FastAPI()
 # CORS konfiguráció
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:32075", "http://localhost:4200"],  # Frontend URL
-    allow_credentials=True,
-    allow_methods=["*"],  # Engedélyezett metódusok
-    allow_headers=["*"],  # Engedélyezett headerek
+    allow_origins=["http://localhost:31084", "http://localhost:4200", "http://localhost:8080"],  # Allowed frontend origins (e.g., for local development)
+    allow_credentials=True, # Allow cookies and authorization headers
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all headers (e.g., Authorization, Content-Type)
 )
 
-# API útvonalak hozzáadása
+# Include all routes defined in the router
 app.include_router(router)
 
-# Táblák inicializálása induláskor
+# Initialize database tables at application startup
 @app.on_event("startup")
 def startup():
-    init_db()
+    init_db() # Creates tables if they don't exist
 
+# Default root endpoint to verify the service is running
 @app.get("/")
 def read_root():
     return {"message": "User Service is up and running!"}

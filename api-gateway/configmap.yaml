@@ -14,4 +14,12 @@ data:
         location /vod-management-service/ {
             proxy_pass http://vod-management-service;
         }
+
+        location /transcoding-service/ {
+            proxy_pass http://transcoding-service;
+        }
+
+        location /analytics-service/ {
+            proxy_pass http://analytics-service;
+        }
     }

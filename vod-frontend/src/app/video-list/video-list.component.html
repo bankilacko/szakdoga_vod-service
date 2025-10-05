@@ -1,5 +1,7 @@
+<html>
+<body>
 <!-- TOOLBAR SECTION -->
-<mat-toolbar color="primary" class="toolbar">
+<mat-toolbar class="toolbar">
   <!-- Application title -->
   <button mat-icon-button matSuffix (click)="home()">
     <mat-icon class="home" routerLink="/">home</mat-icon>
@@ -19,10 +21,19 @@
    
   <!-- Nvigation buttons -->
   <span class="nav-buttons">
+    <!-- Change color theme button -->
+    <button  mat-raised-button class="custom-button" (click)="changeTheme()">
+      <p *ngIf="!isDarkTheme">Light Theme</p>
+      <mat-icon *ngIf="!isDarkTheme" class="icon sun">wb_sunny</mat-icon>
+      <p *ngIf="isDarkTheme">Dark Theme</p>
+      <mat-icon *ngIf="isDarkTheme" class="icon moon">nights_stay</mat-icon>
+    </button>
     <!-- Login button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/login"><mat-icon class="basic">login</mat-icon>Login</button>
     <!-- Register button -->
     <button *ngIf="!isLoggedIn" mat-raised-button class="custom-button" routerLink="/register"><mat-icon class="basic">person_add</mat-icon>Register</button>
+    <!-- Upload button -->
+    <button *ngIf="isLoggedIn" mat-raised-button class="custom-button" routerLink="/upload"><mat-icon class="basic">upload</mat-icon>Upload</button>
     <!-- Profile button -->
     <button *ngIf="isLoggedIn" mat-raised-button  class="custom-button"routerLink="/profile"><mat-icon class="basic">person</mat-icon>Profile</button>
     <!-- Log out button -->
@@ -43,8 +54,9 @@
 <div class="video-list-container">
   <div>
     <div *ngIf="!errorMessage && categories.length > 0">
-      <div *ngIf="isLoading" class="loading-spinner">
-        <p>Adatok betöltése...</p>
+      <div *ngIf="isLoading" class="loading-container">
+        <p>Loading videos...</p>
+        <mat-spinner diameter="30"></mat-spinner>
       </div>
 
       <!-- Search video section -->
@@ -72,11 +84,28 @@
 
       <!-- Default video section -->
       <div *ngIf="!isSearch">
+        <div class="video-category-container">
+          <!-- Recently watched 3 videos -->
+          <div *ngIf="recentlyWatchedVideos.length > 0 && isLoggedIn">
+            <h2 class="video-category">Recently watched</h2>
+            <div class="video-card-container" #videoList>
+              <mat-card *ngFor="let video of recentlyWatchedVideoList" class="video-card" (click)="onSelectVideo(video)">
+                <mat-card-header>
+                  <mat-card-title>{{ video.title }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <p *ngIf="video.description.length > 50">{{ video.description | slice:0:60 }}...</p>
+                  <p *ngIf="video.description.length <= 50">{{ video.description }}</p>
+                  <mat-icon class="play">play_circle</mat-icon>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </div>
         <div *ngFor="let category of categories" class="video-category-container">
+          <!-- All available videos -->
           <div>
             <h2 class="video-category">{{ category }}</h2>
-            <!-- <button class="scroll-button" (click)="scrollLeft()">&#8592; Előző</button>
-            <button class="scroll-button" (click)="scrollRight()">Következő &#8594;</button> -->
             <div class="video-card-container" #videoList>
               <mat-card *ngFor="let video of videosByCategory[category]" class="video-card" (click)="onSelectVideo(video)">
                 <mat-card-header>
@@ -108,4 +137,5 @@
     </mat-card>
   </div>
 </div>
-
+</body>
+</html>

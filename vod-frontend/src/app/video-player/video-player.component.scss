@@ -1,0 +1,97 @@
+/* VARIABLES */
+$error-color: rgb(148, 17, 17);
+
+/* NAVIGATION/TOOL BAR SECTION */
+.toolbar {
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* WIDTH, HEIGHT */
+  height: 80px;
+  /* MARGIN, PADDING */
+  padding: 0px 16px;
+  /* COLOR */
+  background-color: var(--primary-color);
+}
+  
+.app-title {
+  /* MARGIN, PADDING */
+  margin: 0px 475px 0px 0px;
+  /* COLOR */
+  color: var(--secondary-color) !important;
+  /* TEXT */
+  font-size: 1.5rem;
+  font-weight: bold;
+  /* CURSOR */
+  cursor: pointer;
+}
+  
+.nav-buttons button {
+  /* MARGIN, PADDING */
+  margin-left: 10px;
+}
+  
+.custom-button:hover{
+  /* COLOR */
+  color: var(--primary-color) !important;
+  background-color: var(--secondary-color) !important;
+}
+  
+.custom-button{
+  /* COLOR */
+  color: var(--secondary-color) !important;
+  background-color: var(--primary-color) !important;
+  /* BORDER */
+  border: 1px solid var(--secondary-color) !important;
+}
+
+/* VIDEO PLAYER SECTION */
+.video-container {
+  /* COLOR */  
+  background-color: var(--secondary-color);
+  /* BORDER */
+  border-radius: 0px; 
+}
+  
+.video-card {
+  /* WIDTH, HEIGHT */  
+  max-width: 800px;
+  /* MARGIN, PADDING */
+  margin: auto;
+  margin-top: 20px;
+  /* COLOR */ 
+  background-color: var(--secondary-color);
+}
+
+mat-card-title{
+  /* MARGIN, PADDING */
+  margin-left: 220px;
+  /* COLOR */ 
+  color: var(--primary-color);
+  /* TEXT */
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.video-details{
+  /* FLEXBOX */  
+  display: flex;
+  flex-direction: column;
+  /* MARGIN, PADDING */
+  margin-left: 220px;
+  margin-right: 220px;
+  /* COLOR */ 
+  color: var(--primary-color);
+  /* TEXT */  
+  font-size: 1.1rem;
+}
+
+mat-icon.home{
+  /* MARGIN, PADDING */
+  padding-bottom: 6px;
+  /* COLOR */ 
+  color: var(--secondary-color);
+  /* TRANSFORM */
+  transform: scale(1.5);
+}

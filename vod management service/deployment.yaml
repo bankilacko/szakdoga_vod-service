@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: vod-management-service
 spec:
-  replicas: 1  # Ha szükséges, több példány is futhat
+  replicas: 1
   selector:
     matchLabels:
       app: vod-management-service
@@ -21,7 +21,7 @@ spec:
             - name: DATABASE_URL
               value: "postgres://user:password@database-service:5432/vod-database"
             - name: VOD_SERVER_URL
-              value: "http://nginx-vod-service:8080/vod/"
+              value: "http://nginx-vod-service:7000/vod/"
       volumes:
       - name: vod-storage
         persistentVolumeClaim:

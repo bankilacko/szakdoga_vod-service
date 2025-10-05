@@ -82,10 +82,13 @@ mat-form-field {
   justify-content: flex-start;
   /* WIDTH, HEIGHT */
   width: 100%;
+  height: 80%;
+  /* MARGIN, PADDING */
+  padding-bottom: 40px;
   /* COLOR */
   background-color: rgb(19, 19, 19);
   /* SCROLL */
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .video-category-container{
@@ -159,8 +162,6 @@ mat-card-title{
 .play{
   /* FLEXBOX */
   flex-shrink: 0;
-  /* TEXT */
-  font-size: 26px; /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
   /* TRANSFORM */
   transition: opacity 0.3s ease;
   opacity: 0;
@@ -168,11 +169,13 @@ mat-card-title{
   position: absolute;
   bottom: 27px;
   right: 26px;
+  /* TRANSFORM */
+  transform: scale(1.5);
 }
 
 .video-card:hover mat-icon {
   /* TRANSFORM */
-  opacity: 1;
+  opacity: 0.9;
 }
 
 mat-card-content{
@@ -267,6 +270,20 @@ mat-card-content.error {
   color: #a70808;
   /* TEXT */
   font-size: 20px;
+}
+
+/* LOADING SECTION */
+.loading-container {
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* WIDTH, HEIGHT */
+  width: 180px;
+  /* MARGIN, PADDING */
+  margin: auto;
+  /* TEXT */
+  color: rgb(97, 189, 220);
 }
 
 /* ICONS */
