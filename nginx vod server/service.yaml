@@ -10,4 +10,5 @@ spec:
       protocol: TCP
       port: 7000
       targetPort: 8080
-  type: LoadBalancer
+      nodePort: 30070
+  type: NodePort

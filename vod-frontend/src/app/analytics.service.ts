@@ -7,9 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class AnalyticsService {
   // API URL
-  private apiUrl = 'http://localhost:5000/analytics-service'; // User-service URL (test - frontend runs on kubernetes)
-  //private apiUrl = 'http://api-gateway/analytics-service';
-  //private apiUrl = 'http://localhost:5000'; // User-service URL (test - frontend runs on host)
+  private apiUrl = 'http://172.16.0.29:30080/analytics-service'; // Analytics-service URL (VM K8s NodePort)
+  //private apiUrl = 'http://localhost:5000/analytics-service'; // Local development
 
   constructor(private http: HttpClient) {}
 
