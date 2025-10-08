@@ -19,7 +19,7 @@ spec:
         - containerPort: 8080
         volumeMounts:
         - name: vod-storage
-          mountPath: usr/share/nginx/html/vod #
+          mountPath: usr/share/nginx/html/vod
       volumes:
       - name: vod-storage
         persistentVolumeClaim:
