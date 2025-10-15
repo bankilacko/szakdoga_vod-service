@@ -268,8 +268,9 @@ kubectl port-forward svc/api-gateway 5000:80
 - [ ] Frontend elérhető (belső): http://172.16.0.29:30000
 - [ ] API Gateway elérhető (külső): http://152.66.245.139:22291
 - [ ] API Gateway elérhető (belső): http://172.16.0.29:30080
-- [ ] Regisztráció működik
-- [ ] Login működik
+- [ ] **API Gateway újraindítva** (CORS javítás után): `kubectl rollout restart deployment api-gateway`
+- [ ] Regisztráció működik (CORS hiba nélkül)
+- [ ] Login működik (CORS hiba nélkül)
 - [ ] Videó feltöltés működik
 - [ ] Videó lejátszás működik
 
