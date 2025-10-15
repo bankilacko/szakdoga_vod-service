@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class VodManagementService {
   // API URL
-  private apiUrl = 'http://172.16.0.29:30080/vod-management-service'; // Vod-management-service URL (VM K8s NodePort)
+  private apiUrl = 'http://152.66.245.139:22291/vod-management-service'; // Vod-management-service URL (VM with port forwarding)
   //private apiUrl = 'http://localhost:5000/vod-management-service'; // Local development
 
   // CONSTRUCTOR

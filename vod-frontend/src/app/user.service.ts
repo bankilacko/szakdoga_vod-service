@@ -9,7 +9,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class UserService {
   // API URL
-  private apiUrl = 'http://172.16.0.29:30080/user-service'; // User-service URL (VM K8s NodePort)
+  private apiUrl = 'http://152.66.245.139:22291/user-service'; // User-service URL (VM with port forwarding)
   //private apiUrl = 'http://localhost:5000/user-service'; // Local development
 
   // EVENTS

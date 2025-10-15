@@ -10,6 +10,22 @@
 
 ---
 
+## 🔌 Port Forwarding (Router/Firewall)
+
+**Előfeltétel:** A következő port forwarding szabályoknak működniük kell a routeren/firewallban:
+
+```
+External Port → Internal IP:Port
+----------------------------------------
+22290 → 172.16.0.29:30000   # Frontend
+22291 → 172.16.0.29:30080   # API Gateway  
+22292 → 172.16.0.29:30070   # NGINX VOD
+```
+
+Ezek a beállítások lehetővé teszik, hogy a `152.66.245.139` külső IP-ről elérjük a Kubernetes NodePort service-eket.
+
+---
+
 ## 📋 Deployment Lépések
 
 ### 1️⃣ SSH Kapcsolódás a VM-hez
@@ -59,17 +75,24 @@ kubectl logs <pod-name>
 
 ## 🌐 Hozzáférési Pontok
 
-| Service | URL | Port | Leírás |
-|---------|-----|------|--------|
-| Frontend | http://172.16.0.29:30000 | 30000 | Angular alkalmazás |
-| API Gateway | http://172.16.0.29:30080 | 30080 | Reverse proxy minden backend-hez |
-| NGINX VOD | http://172.16.0.29:30070 | 30070 | Video streaming |
+### Port Forwarding konfiguráció:
+```
+152.66.245.139:22290 → 172.16.0.29:30000   # VOD frontend
+152.66.245.139:22291 → 172.16.0.29:30080   # API Gateway
+152.66.245.139:22292 → 172.16.0.29:30070   # NGINX-VOD
+```
+
+| Service | External URL (Public) | Internal (K8s) | Leírás |
+|---------|----------------------|----------------|--------|
+| Frontend | http://152.66.245.139:22290 | 172.16.0.29:30000 | Angular alkalmazás |
+| API Gateway | http://152.66.245.139:22291 | 172.16.0.29:30080 | Reverse proxy minden backend-hez |
+| NGINX VOD | http://152.66.245.139:22292 | 172.16.0.29:30070 | Video streaming |
 
 ### Frontend API hívások:
-- User Service: `http://172.16.0.29:30080/user-service/`
-- VOD Management: `http://172.16.0.29:30080/vod-management-service/`
-- Transcoding: `http://172.16.0.29:30080/transcoding-service/`
-- Analytics: `http://172.16.0.29:30080/analytics-service/`
+- User Service: `http://152.66.245.139:22291/user-service/`
+- VOD Management: `http://152.66.245.139:22291/vod-management-service/`
+- Transcoding: `http://152.66.245.139:22291/transcoding-service/`
+- Analytics: `http://152.66.245.139:22291/analytics-service/`
 
 ---
 
@@ -98,17 +121,36 @@ kubectl rollout restart deployment user-service
 
 ### 1. Frontend Elérhetőség
 ```bash
+# Külső (Public)
+curl http://152.66.245.139:22290
+
+# Belső (VM-ről)
 curl http://172.16.0.29:30000
 ```
 
 ### 2. API Gateway Elérhetőség
 ```bash
+# Külső (Public)
+curl http://152.66.245.139:22291/user-service/
+
+# Belső (VM-ről)
 curl http://172.16.0.29:30080/user-service/
+
 # Válasz: {"message":"User Service is up and running!"}
 ```
 
 ### 3. Regisztráció Teszt
 ```bash
+# Külső (Public)
+curl -X POST http://152.66.245.139:22291/user-service/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "test123"
+  }'
+
+# Belső (VM-ről)
 curl -X POST http://172.16.0.29:30080/user-service/register \
   -H "Content-Type: application/json" \
   -d '{
@@ -120,6 +162,15 @@ curl -X POST http://172.16.0.29:30080/user-service/register \
 
 ### 4. Login Teszt
 ```bash
+# Külső (Public)
+curl -X POST http://152.66.245.139:22291/user-service/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "testuser",
+    "password": "test123"
+  }'
+
+# Belső (VM-ről)
 curl -X POST http://172.16.0.29:30080/user-service/login \
   -H "Content-Type: application/json" \
   -d '{
@@ -213,8 +264,10 @@ kubectl port-forward svc/api-gateway 5000:80
 - [ ] Portok engedélyezve (30000, 30080)
 - [ ] `kubectl get pods` - minden pod Running
 - [ ] `kubectl get svc` - minden service létezik
-- [ ] Frontend elérhető: http://172.16.0.29:30000
-- [ ] API Gateway elérhető: http://172.16.0.29:30080
+- [ ] Frontend elérhető (külső): http://152.66.245.139:22290
+- [ ] Frontend elérhető (belső): http://172.16.0.29:30000
+- [ ] API Gateway elérhető (külső): http://152.66.245.139:22291
+- [ ] API Gateway elérhető (belső): http://172.16.0.29:30080
 - [ ] Regisztráció működik
 - [ ] Login működik
 - [ ] Videó feltöltés működik
