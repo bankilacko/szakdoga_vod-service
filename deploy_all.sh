@@ -24,6 +24,8 @@ fi
 
 # Elsőként az adatbázis deploy
 echo "🗄️ Deploying database..."
+kubectl apply -f "database/persistent-volume.yaml"
+kubectl apply -f "database/persistent-volume-claim.yaml"
 kubectl apply -f "database/deployment.yaml"
 kubectl apply -f "database/service.yaml"
 

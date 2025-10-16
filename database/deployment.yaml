@@ -29,4 +29,5 @@ spec:
               name: postgres-storage
       volumes:
         - name: postgres-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: database-storage-claim
