@@ -12,6 +12,8 @@ spec:
       labels:
         app: nginx-vod
     spec:
+      securityContext:
+        fsGroup: 101
       containers:
       - name: nginx-vod
         image: bankilacko11/nginx-vod
