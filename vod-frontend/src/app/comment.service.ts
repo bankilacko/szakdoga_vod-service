@@ -24,7 +24,8 @@ export interface CommentCreate {
 })
 export class CommentService {
   // API URL for vod-management-service
-  private apiUrl = 'http://localhost:5000/vod-management-service';
+  private apiUrl = 'http://152.66.245.139:22291/vod-management-service'; // VM with port forwarding
+  //private apiUrl = 'http://localhost:5000/vod-management-service'; // Local development
 
   constructor(private http: HttpClient) {}
 
@@ -42,7 +43,6 @@ export class CommentService {
 
     // Get JWT token from sessionStorage (same as user service)
     const token = sessionStorage.getItem('jwtToken');
-    console.log('Token from sessionStorage:', token);
     
     if (!token) {
       throw new Error('No authentication token found. Please login first.');
@@ -53,7 +53,6 @@ export class CommentService {
       'Content-Type': 'application/json'
     });
 
-    console.log('Sending comment request:', { videoId, content, headers });
     return this.http.post<Comment>(`${this.apiUrl}/videos/${videoId}/comments`, commentData, { headers });
   }
 
