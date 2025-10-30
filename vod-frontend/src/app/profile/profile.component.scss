@@ -57,6 +57,7 @@ mat-form-field {
   background-color: var(--primary-color) !important;
   /* BORDER */
   border: 1px solid var(--secondary-color) !important;
+  border-radius: 8px !important;
 }
 
 /* PROFILE SECTION */
@@ -158,6 +159,7 @@ mat-card-content.error {
   color: var(--secondary-color) !important;
   /* BORDER */
   border: 1px solid var(--secondary-color) !important;
+  border-radius: 8px !important;
 }
 
 mat-icon.profile{

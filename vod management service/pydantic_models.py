@@ -23,3 +23,24 @@ class VideoResponse(VideoBase):
     class Config:
         # Enables automatic conversion from ORM (e.g., SQLAlchemy) objects to Pydantic models
         from_attributes = True
+
+# Base Pydantic model that defines shared fields for comment data
+class CommentBase(BaseModel):
+    content: str                               # Comment content (required)
+
+# Model used for creating a new comment (e.g., in POST requests)
+class CommentCreate(CommentBase):
+    video_id: int                              # ID of the video being commented on
+
+# Model used for responses (e.g., in GET requests)
+class CommentResponse(CommentBase):
+    id: int                                    # Unique identifier of the comment
+    video_id: int                              # ID of the video being commented on
+    user_id: int                               # ID of the user who wrote the comment
+    username: str                              # Username of the commenter
+    created_at: datetime                       # Timestamp of when the comment was created
+    updated_at: datetime                       # Timestamp of when the comment was last updated
+
+    class Config:
+        # Enables automatic conversion from ORM (e.g., SQLAlchemy) objects to Pydantic models
+        from_attributes = True

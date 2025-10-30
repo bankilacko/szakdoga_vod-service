@@ -1,0 +1,350 @@
+.comment-section {
+  margin-top: 30px;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.comments-title {
+  color: var(--primary-color);
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  margin-left: 0;
+}
+
+.new-comment {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: rgba(var(--primary-color-rgb), 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(var(--primary-color-rgb), 0.1);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 0px !important;
+}
+
+.comments-list {
+  /* Remove max-height and overflow-y to allow scrolling with the page */
+}
+
+.comment {
+  border: 1px solid rgba(var(--primary-color-rgb), 0.3);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: var(--comment-background);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.comment:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.comment-author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary-color);
+  line-height: 1;
+}
+
+.comment-author mat-icon {
+  color: var(--primary-color);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment-content-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.comment-content {
+  flex: 1;
+  line-height: 1.5;
+  white-space: pre-line;
+  word-wrap: break-word;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+  color: var(--comment-text-color);
+}
+
+.comment-actions {
+  display: flex !important;
+  gap: 2px;
+  flex-shrink: 0;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure edit/delete buttons are visible */
+.comment-actions button {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Icon button styling */
+.comment-actions .mat-icon-button {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  min-width: 28px !important;
+  border-radius: 8px !important;
+}
+
+.comment-actions .mat-icon-button .mat-icon {
+  display: block !important;
+  visibility: visible !important;
+  color: rgb(97, 189, 220) !important;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Force button visibility */
+.comment-actions button[mat-icon-button] {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  padding: 0 !important;
+  min-width: 28px !important;
+  border-radius: 8px !important;
+}
+
+.comment-actions button[mat-icon-button] .mat-icon {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: rgb(97, 189, 220) !important;
+}
+
+.comment-date {
+  color: rgba(var(--primary-color-rgb), 0.7);
+  font-size: 0.9em;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  color: rgba(var(--primary-color-rgb), 0.7);
+}
+
+.no-comments {
+  text-align: center;
+  padding: 30px;
+  color: rgba(var(--primary-color-rgb), 0.6);
+  font-style: italic;
+}
+
+/* Edit functionality styles */
+.edit-comment {
+  margin-top: 10px;
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Delete confirmation modal styles */
+.delete-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.delete-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.delete-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Button styles - scoped to comment section only */
+:host ::ng-deep .comment-section .mat-raised-button.mat-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+:host ::ng-deep .comment-section .mat-raised-button.mat-primary:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.8);
+}
+
+:host ::ng-deep .comment-section .mat-raised-button:disabled {
+  background-color: transparent !important;
+  color: rgb(97, 189, 220) !important;
+  border: 1px solid rgb(97, 189, 220) !important;
+}
+
+:host ::ng-deep .comment-section .mat-raised-button:disabled .mat-icon {
+  color: rgb(97, 189, 220) !important;
+}
+
+/* Apply light blue color to comment section raised buttons only */
+:host ::ng-deep .comment-section .mat-mdc-raised-button:not(:disabled) {
+  background-color: rgb(97, 189, 220) !important;
+  color: white !important;
+  border-radius: 8px !important;
+}
+
+/* Dark theme button text color when not disabled */
+body.dark-theme :host ::ng-deep .comment-section .mat-mdc-raised-button:not(:disabled),
+body.dark-theme :host ::ng-deep .comment-section .mat-mdc-raised-button:not(:disabled) .mat-icon,
+body.dark-theme :host ::ng-deep .comment-section .mat-mdc-raised-button:not(:disabled) .mdc-button__label {
+  color: #000000 !important;
+}
+
+:host ::ng-deep .comment-section .mat-mdc-raised-button:not(:disabled):hover {
+  background-color: rgba(97, 189, 220, 0.8) !important;
+  color: white !important;
+}
+
+:host ::ng-deep .comment-section .mat-mdc-raised-button:disabled {
+  border-radius: 8px !important;
+  background-color: transparent !important;
+  color: rgb(97, 189, 220) !important;
+  border: 1px solid rgb(97, 189, 220) !important;
+}
+
+:host ::ng-deep .comment-section .mat-mdc-raised-button:disabled .mat-icon {
+  color: rgb(97, 189, 220) !important;
+}
+
+/* Textarea full width and color */
+.new-comment .mat-form-field {
+  width: 100% !important;
+}
+
+.edit-comment .mat-form-field {
+  width: 100% !important;
+}
+
+/* Textarea text color */
+.new-comment textarea,
+.edit-comment textarea {
+  color: var(--comment-text-color) !important;
+}
+
+/* Character count hint color */
+:host ::ng-deep .comment-section .mat-mdc-form-field-hint {
+  color: rgb(97, 189, 220) !important;
+}
+
+.new-comment .mat-form-field .mat-form-field-wrapper {
+  width: 100% !important;
+}
+
+.edit-comment .mat-form-field .mat-form-field-wrapper {
+  width: 100% !important;
+}
+
+.new-comment .mat-form-field .mat-form-field-infix {
+  width: 100% !important;
+}
+
+.edit-comment .mat-form-field .mat-form-field-infix {
+  width: 100% !important;
+}
+
+/* Form field focus styling - scoped to comment section only */
+:host ::ng-deep .comment-section .mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__leading,
+:host ::ng-deep .comment-section .mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__notch,
+:host ::ng-deep .comment-section .mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: rgb(97, 189, 220) !important;
+}
+
+:host ::ng-deep .comment-section .mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__leading,
+:host ::ng-deep .comment-section .mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__notch,
+:host ::ng-deep .comment-section .mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: rgb(97, 189, 220) !important;
+  border-width: 2px !important;
+}
+
+:host ::ng-deep .comment-section .mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-floating-label {
+  color: rgb(97, 189, 220) !important;
+}
+
+:host ::ng-deep .comment-section .mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-floating-label {
+  color: rgb(97, 189, 220) !important;
+}
+
+/* Override Angular Material's transparent border - scoped to comment section only */
+:host ::ng-deep .comment-section .mat-mdc-form-field .mdc-notched-outline__notch {
+  border-left: none !important;
+}
+
+/* Cancel button text color - scoped to comment edit actions and delete modal */
+:host ::ng-deep .edit-actions button[mat-button] .mdc-button__label,
+:host ::ng-deep .delete-modal-actions button[mat-button] .mdc-button__label {
+  color: rgb(97, 189, 220) !important;
+}
+
+/* Add border-radius to all buttons in comment section */
+:host ::ng-deep .comment-section button[mat-raised-button],
+:host ::ng-deep .comment-section button[mat-button] {
+  border-radius: 8px !important;
+}

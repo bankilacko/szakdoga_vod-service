@@ -77,7 +77,7 @@ def login(input: LoginInput, db: Session = Depends(get_db)):
     print("Password verified")
 
     # Create a JWT token
-    token = create_token({"user_id": user.id})
+    token = create_token({"user_id": user.id, "username": user.username})
 
     # Return the access token to the client
     return {"access_token": token}

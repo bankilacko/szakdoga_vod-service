@@ -8,6 +8,7 @@ import { AnalyticsService } from '../analytics.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { UserService } from '../user.service';
+import { CommentSectionComponent } from '../comment-section/comment-section.component';
 import { Subscription } from 'rxjs';
 import Hls from 'hls.js';
 
@@ -26,6 +27,8 @@ import Hls from 'hls.js';
     NgIf,
     // OTHER MODULES
     CommonModule,
+    // COMMENT COMPONENT
+    CommentSectionComponent,
   ],
   templateUrl: './video-player.component.html', // HTML FILE
   styleUrls: ['./video-player.component.scss'] // SCSS FILE
@@ -48,6 +51,7 @@ export class VideoPlayerComponent implements AfterViewInit {
   videoCategory: string = '';
   videoCreatedAt: string = '';
   videoUrl: string = '';
+  videoId: number = 0; // Video ID for comments
   @Input() videoSrc!: string;
 
   // NUMBER
@@ -92,6 +96,7 @@ export class VideoPlayerComponent implements AfterViewInit {
         this.videoCreatedAt = params['createdAt'] || null;
         this.videoDuration = params['duration'] || null;
         this.videoDuration = parseInt(params['duration'], 10) || 0;
+        this.videoId = parseInt(params['id'], 10) || 0;
   
         if (this.videoSrc) {
           this.initVideoPlayer(); // initialize video player based on URL

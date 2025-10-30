@@ -1,11 +1,11 @@
-from pydantic_models import VideoCreate, VideoResponse 
+from pydantic_models import VideoCreate, VideoResponse, CommentCreate, CommentResponse
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from auth import verify_token
 from bs4 import BeautifulSoup
 from datetime import datetime 
 from database import get_db
-from models import Video
+from models import Video, Comment
 from typing import List
 import requests
 import time
@@ -242,3 +242,116 @@ def read_metadata(metadata_url: str):
 
         # Return safe fallback values so the application doesn't break
         return "No Title", "No Category", "No Duration", "No Description"
+
+# COMMENT API ENDPOINTS
+
+# Get all comments for a specific video
+@router.get("/videos/{video_id}/comments", response_model=List[CommentResponse])
+def get_video_comments(video_id: int, db: Session = Depends(get_db)):
+    """
+    Retrieve all comments for a specific video.
+    Returns a list of comments ordered by creation date (newest first).
+    """
+    # Check if the video exists
+    video = db.query(Video).filter(Video.id == video_id).first()
+    if not video:
+        raise HTTPException(status_code=404, detail="Video not found")
+    
+    # Get all comments for the video, ordered by creation date (newest first)
+    comments = db.query(Comment).filter(Comment.video_id == video_id).order_by(Comment.created_at.desc()).all()
+    
+    return comments
+
+# Create a new comment for a video
+@router.post("/videos/{video_id}/comments", response_model=CommentResponse)
+def create_comment(video_id: int, comment: CommentCreate, 
+                  current_user: dict = Depends(verify_token), 
+                  db: Session = Depends(get_db)):
+    """
+    Create a new comment for a specific video.
+    Requires authentication (valid JWT token).
+    """
+    # Check if the video exists
+    video = db.query(Video).filter(Video.id == video_id).first()
+    if not video:
+        raise HTTPException(status_code=404, detail="Video not found")
+    
+    # Validate that the video_id in the request matches the URL parameter
+    if comment.video_id != video_id:
+        raise HTTPException(status_code=400, detail="Video ID mismatch")
+    
+    # Create new comment
+    new_comment = Comment(
+        video_id=video_id,
+        user_id=current_user["user_id"],
+        username=current_user["username"],
+        content=comment.content
+    )
+    
+    # Add to database
+    db.add(new_comment)
+    db.commit()
+    db.refresh(new_comment)
+    
+    return new_comment
+
+# Delete a comment (only by the comment author)
+@router.put("/comments/{comment_id}", response_model=CommentResponse)
+def update_comment(comment_id: int, 
+                  comment_update: dict,
+                  current_user: dict = Depends(verify_token), 
+                  db: Session = Depends(get_db)):
+    """
+    Update a comment by its ID.
+    Only the comment author can update their own comment.
+    Requires authentication (valid JWT token).
+    """
+    # Find the comment
+    comment = db.query(Comment).filter(Comment.id == comment_id).first()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    
+    # Check if the current user is the author of the comment
+    if comment.user_id != current_user["user_id"]:
+        raise HTTPException(status_code=403, detail="Not authorized to update this comment")
+    
+    # Update the comment content
+    comment.content = comment_update["content"]
+    comment.updated_at = datetime.utcnow()
+    
+    db.commit()
+    db.refresh(comment)
+    
+    return CommentResponse(
+        id=comment.id,
+        video_id=comment.video_id,
+        user_id=comment.user_id,
+        username=comment.username,
+        content=comment.content,
+        created_at=comment.created_at,
+        updated_at=comment.updated_at
+    )
+
+@router.delete("/comments/{comment_id}")
+def delete_comment(comment_id: int, 
+                  current_user: dict = Depends(verify_token), 
+                  db: Session = Depends(get_db)):
+    """
+    Delete a comment by its ID.
+    Only the comment author can delete their own comment.
+    Requires authentication (valid JWT token).
+    """
+    # Find the comment
+    comment = db.query(Comment).filter(Comment.id == comment_id).first()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    
+    # Check if the current user is the author of the comment
+    if comment.user_id != current_user["user_id"]:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this comment")
+    
+    # Delete the comment
+    db.delete(comment)
+    db.commit()
+    
+    return {"message": "Comment deleted successfully"}

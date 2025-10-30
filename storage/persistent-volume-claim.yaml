@@ -4,7 +4,7 @@ metadata:
   name: vod-storage-claim
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
