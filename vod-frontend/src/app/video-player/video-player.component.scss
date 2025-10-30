@@ -44,6 +44,7 @@ $error-color: rgb(148, 17, 17);
   background-color: var(--primary-color) !important;
   /* BORDER */
   border: 1px solid var(--secondary-color) !important;
+  border-radius: 8px !important;
 }
 
 /* VIDEO PLAYER SECTION */
@@ -94,4 +95,12 @@ mat-icon.home{
   color: var(--secondary-color);
   /* TRANSFORM */
   transform: scale(1.5);
+}
+
+/* COMMENTS CONTAINER */
+.comments-container {
+  /* MARGIN, PADDING */
+  margin-top: 30px;
+  margin-left: 220px;
+  margin-right: 220px;
 }

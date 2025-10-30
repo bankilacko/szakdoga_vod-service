@@ -197,6 +197,7 @@ export class VideoListComponent implements OnInit, OnDestroy{
         category: video.category, // Video's category
         createdAt: video.created_at, // Video's creation time
         duration: video.duration, // Video's duration
+        id: video.id, // Video's ID for comments
       } });
       this.analyticsService.trackEvent(this.userProfile.username, 'play-video', {video: video.title}); 
   }

@@ -25,7 +25,10 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private analyticsService: AnalyticsService,
-  ) { }
+  ) { 
+    // Load theme preference from localStorage on service initialization
+    this.loadThemePreference();
+  }
 
   // BACKEND USER-SERVICE API CALLS
 
@@ -114,12 +117,24 @@ export class UserService {
   }
 
   // Get user ID for current user
-  getUserID(): string | null {
+  getUserID(): number | null {
     // Check the token's existense
     if (!this.jwtToken) {
       this.jwtToken = sessionStorage.getItem('jwtToken'); // get token from sessionStorage
     }
-    return this.jwtToken; // return the token
+    
+    if (!this.jwtToken) {
+      return null;
+    }
+    
+    try {
+      // Decode JWT token (no verification needed on frontend)
+      const payload = JSON.parse(atob(this.jwtToken.split('.')[1]));
+      return payload.user_id || null;
+    } catch (e) {
+      console.error('Error decoding JWT token:', e);
+      return null;
+    }
   }
 
   getTheme(): boolean{
@@ -128,6 +143,29 @@ export class UserService {
 
   switchTheme(): void{
     this.isDarkTheme = !this.isDarkTheme;
+    // Save theme preference to localStorage
+    localStorage.setItem('darkTheme', this.isDarkTheme.toString());
+    // Apply theme to body
+    this.applyThemeToBody();
+  }
+
+  private loadThemePreference(): void {
+    // Load theme preference from localStorage
+    const savedTheme = localStorage.getItem('darkTheme');
+    if (savedTheme !== null) {
+      this.isDarkTheme = savedTheme === 'true';
+    }
+    // Apply theme to body
+    this.applyThemeToBody();
+  }
+
+  private applyThemeToBody(): void {
+    const body = document.body;
+    if (this.isDarkTheme) {
+      body.classList.add('dark-theme');
+    } else {
+      body.classList.remove('dark-theme');
+    }
   }
 
   // Logout logic

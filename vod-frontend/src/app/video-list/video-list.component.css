@@ -52,6 +52,7 @@ mat-form-field {
   background-color: rgb(97, 189, 220) !important;
   /* BORDER */
   border: 1px solid rgb(19, 19, 19) !important;
+  border-radius: 8px !important;
 }
 
 /*HOME (WELCOME) SECTION*/

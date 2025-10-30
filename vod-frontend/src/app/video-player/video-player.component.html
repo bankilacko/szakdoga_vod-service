@@ -50,5 +50,10 @@
         <span *ngIf="videoCreatedAt"><strong>Uploaded at:</strong> {{ videoCreatedAt | date:'yyyy-MM-dd' }}</span><br>
         <span *ngIf="videoDuration"><strong>Duration:</strong> {{ videoDuration }} minute(s)</span>
       </p>
+
+      <!-- COMMENT SECTION -->
+      <div class="comments-container" *ngIf="videoId > 0">
+        <app-comment-section [videoId]="videoId"></app-comment-section>
+      </div>
     </mat-card-content>
 </mat-card>  

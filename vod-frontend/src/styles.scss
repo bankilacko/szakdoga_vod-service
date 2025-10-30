@@ -16,6 +16,10 @@ $light-third-color: gray;
   --primary-color: #{$light-primary-color};
   --secondary-color: #{$light-secondary-color};
   --third-color: #{$light-third-color};
+  --primary-color-rgb: 97, 189, 220;
+  --secondary-color-rgb: 255, 255, 255;
+  --comment-background: #f8f9fa;
+  --comment-text-color: #000000;
 }
 
 // Apply the variables to root for dark theme
@@ -23,4 +27,46 @@ body.dark-theme {
   --primary-color: #{$dark-primary-color};
   --secondary-color: #{$dark-secondary-color};
   --third-color: #{$dark-third-color};
+  --primary-color-rgb: 97, 189, 220;
+  --secondary-color-rgb: 19, 19, 19;
+  --comment-background: rgba(30, 30, 30, 1);
+  --comment-text-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Search bar styling - theme-aware colors */
+.search-bar .mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__leading,
+.search-bar .mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__notch,
+.search-bar .mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: var(--secondary-color) !important;
+}
+
+.search-bar .mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__leading,
+.search-bar .mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__notch,
+.search-bar .mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: var(--secondary-color) !important;
+}
+
+.search-bar .mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-floating-label {
+  color: var(--secondary-color) !important;
+}
+
+.search-bar .mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-floating-label {
+  color: var(--secondary-color) !important;
+}
+
+.search-bar .mat-mdc-input-element {
+  color: var(--secondary-color) !important;
+}
+
+.search-bar .mat-mdc-input-element::placeholder {
+  color: var(--secondary-color) !important;
+  opacity: 0;
+}
+
+.search-bar .mat-mdc-form-field .mdc-notched-outline__notch {
+  border-left: none !important;
+}
+
+.search-bar .mat-mdc-icon-button .mat-icon {
+  color: var(--secondary-color) !important;
 }
