@@ -34,26 +34,64 @@
       <mat-card-title>{{ videoTitle }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <!-- Video player -->
-      <div class="video-card">
-        <video
-          #videoPlayer
-          controls
-          width="100%"
-          height="auto">
-        </video>
-      </div>
-      <!-- Video information -->
-      <p class="video-details">
-        <span *ngIf="videoDescription"><strong>Description:</strong> {{ videoDescription }}</span><br>
-        <span *ngIf="videoCategory"><strong>Category:</strong> {{ videoCategory }}</span><br>
-        <span *ngIf="videoCreatedAt"><strong>Uploaded at:</strong> {{ videoCreatedAt | date:'yyyy-MM-dd' }}</span><br>
-        <span *ngIf="videoDuration"><strong>Duration:</strong> {{ videoDuration }} minute(s)</span>
-      </p>
+      <div class="video-wrapper">
+        <!-- Video player -->
+        <div class="video-card">
+          <video
+            #videoPlayer
+            controls
+            width="100%"
+            height="auto">
+          </video>
+        </div>
 
-      <!-- COMMENT SECTION -->
-      <div class="comments-container" *ngIf="videoId > 0">
-        <app-comment-section [videoId]="videoId"></app-comment-section>
+        <!-- Quality selector -->
+        <div class="quality-controls" *ngIf="levels.length > 0">
+          <span class="quality-label">Quality:</span>
+          <div class="quality-buttons">
+            <button 
+              mat-raised-button 
+              [class.active]="selectedLevel === -1"
+              (click)="setLevel(-1)">
+              Auto
+            </button>
+            <button 
+              mat-raised-button 
+              *ngFor="let level of levels" 
+              [class.active]="selectedLevel === level.index"
+              (click)="setLevel(level.index)">
+              {{ level.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Video information -->
+        <div class="video-details">
+          <div class="detail-row" *ngIf="videoDescription">
+            <span class="detail-label">Description:</span>
+            <span class="detail-content">{{ videoDescription }}</span>
+          </div>
+
+          <div class="detail-row" *ngIf="videoCategory">
+            <span class="detail-label">Category:</span>
+            <span class="detail-content">{{ videoCategory }}</span>
+          </div>
+
+          <div class="detail-row" *ngIf="videoCreatedAt">
+            <span class="detail-label">Uploaded at:</span>
+            <span class="detail-content">{{ videoCreatedAt | date:'yyyy-MM-dd' }}</span>
+          </div>
+
+          <div class="detail-row" *ngIf="videoDuration">
+            <span class="detail-label">Duration:</span>
+            <span class="detail-content">{{ videoDuration }} minute(s)</span>
+          </div>
+        </div>
+
+        <!-- COMMENT SECTION -->
+        <div class="comments-container" *ngIf="videoId > 0">
+          <app-comment-section [videoId]="videoId"></app-comment-section>
+        </div>
       </div>
     </mat-card-content>
 </mat-card>  

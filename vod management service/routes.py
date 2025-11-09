@@ -7,6 +7,7 @@ from datetime import datetime
 from database import get_db
 from models import Video, Comment
 from typing import List
+from pathlib import Path
 import requests
 import time
 import os
@@ -51,7 +52,16 @@ def startup_sync_videos():
                     # Check if the video is already in the database
                     if not db.query(Video).filter(Video.path == f"/{file}").first():
                         # Build the corresponding metadata file path
-                        metadata_file = file.replace(".m3u8", "_info.txt")
+                        # New format: slug.m3u8 -> slug_info.txt (simple replacement)
+                        # Old nested format: <slug>/master.m3u8 -> <slug>/<slug>_info.txt
+                        path_obj = Path(file)
+                        if path_obj.name == "master.m3u8":
+                            # Old nested format: <slug>/master.m3u8 -> <slug>/<slug>_info.txt
+                            slug = path_obj.parent.name if path_obj.parent.name else path_obj.stem
+                            metadata_file = str(path_obj.parent / f"{slug}_info.txt")
+                        else:
+                            # Standard format: slug.m3u8 -> slug_info.txt
+                            metadata_file = file.replace(".m3u8", "_info.txt")
                         metadata_path = os.path.join(VOD_SERVER_URL, metadata_file)
 
                         # Read metadata (title, category, duration, description)
@@ -103,11 +113,18 @@ def extract_video_filenames(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
     video_files = []
 
-    # Search for all <a> tags and extract the hrefs that end with .m3u8 (HLS playlist files)
+    # Search for master playlists only (skip rendition playlists and subdirectory links)
     for link in soup.find_all('a'):
         href = link.get('href')
+        # Skip subdirectory links and rendition playlists
         if href and href.endswith(".m3u8"):
-            video_files.append(href)
+            # Skip rendition playlists (format: <slug>_0/index.m3u8 or index.m3u8 alone)
+            if "/" not in href and "index" not in href:
+                # Root-level master playlists: slug.m3u8
+                video_files.append(href)
+            elif href.endswith("master.m3u8"):
+                # Old nested format: <slug>/master.m3u8
+                video_files.append(href)
 
     # Log the extracted filenames for debugging purposes        
     print(f"Extracted filenames: {video_files}")

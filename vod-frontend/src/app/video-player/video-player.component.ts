@@ -25,6 +25,7 @@ import Hls from 'hls.js';
     MatCardModule,
     // ANGULAR METHODS
     NgIf,
+    NgForOf,
     // OTHER MODULES
     CommonModule,
     // COMMENT COMPONENT
@@ -36,6 +37,9 @@ import Hls from 'hls.js';
 export class VideoPlayerComponent implements AfterViewInit {
   // VIDEO PLAYER
   @ViewChild('videoPlayer', { static: false }) videoElement!: ElementRef;
+  hls?: Hls;
+  levels: { index: number; height?: number; bitrate?: number; label: string }[] = [];
+  selectedLevel: number = -1; // -1 = Auto
 
   // PROFILE
   userProfile: any = null; // User profile data
@@ -137,47 +141,99 @@ export class VideoPlayerComponent implements AfterViewInit {
     }
   }
 
-  // Initialize the video player with HLS support
+  // Initialize the video player with HLS support and ABR
   initVideoPlayer(): void {
     // Check if the video element exists and is properly initialized
     if (!this.videoElement || !this.videoElement.nativeElement) {
-        // Log an error if the video element is not available
-        console.error('Video player is not available');
-        return; // Exit the function early as the video player cannot be initialized
+        return;
     }
 
-    // Retrieve the native HTMLVideoElement from the Angular component's reference
     const video: HTMLVideoElement = this.videoElement.nativeElement;
 
     // Check if the video source URL is defined
     if (!this.videoSrc) {
-        // Log an error if no video source URL is provided
-        console.error('Video URL not defined');
-        return; // Exit the function early as there's no source to play
+        return;
     }
     
     // Check if HLS.js is supported in the current browser
     if (Hls.isSupported()) {
-        // Create an instance of HLS.js to handle HTTP Live Streaming (HLS)
-        const hls = new Hls();
+        // HLS.js config for ABR
+        const config = {
+          capLevelToPlayerSize: true,    // Limit quality to player size
+          startLevel: -1,                 // Auto quality at start
+          maxBufferLength: 30,            // Max buffer in seconds
+          maxMaxBufferLength: 120,        // Max max buffer
+          enableWorker: true,             // Use web worker
+          backBufferLength: 60            // Keep 60s of back buffer
+        };
+
+        // Destroy existing HLS instance if any
+        if (this.hls) {
+          this.hls.destroy();
+        }
+
+        // Create new HLS instance with config
+        this.hls = new Hls(config);
         
-        // Load the video source (HLS manifest) using HLS.js
-        hls.loadSource(this.videoSrc);
+        // Load the video source (HLS manifest)
+        this.hls.loadSource(this.videoSrc);
         
-        // Attach the HLS instance to the video element for playback
-        hls.attachMedia(video);
+        // Attach the HLS instance to the video element
+        this.hls.attachMedia(video);
         
-        // Add an event listener to handle when the HLS manifest is fully parsed
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            // Log a message indicating that the video can now start playing
+        // Handle manifest parsed event - populate quality levels
+        this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
             console.log('HLS manifest loaded, starting playback...');
+            // Build levels array for quality selector
+            this.levels = this.hls!.levels.map((l, i) => {
+              const roundedHeight = l.height ? Math.round(l.height / 10) * 10 : undefined;
+              return {
+                index: i,
+                height: l.height,
+                bitrate: l.bitrate,
+                label: roundedHeight ? `${roundedHeight}p` : `${Math.round((l.bitrate || 0) / 1000)} kbps`
+              };
+            });
+            this.selectedLevel = -1; // Auto by default
+            console.log('Available quality levels:', this.levels);
+        });
+
+        // Handle level switch event - track analytics
+        this.hls.on(Hls.Events.LEVEL_SWITCHED, (_, data: any) => {
+            this.selectedLevel = data.level;
+            const level = this.hls!.levels[data.level];
+            console.log('Switched to quality level', data.level, level);
+            // Optional: track quality changes with analytics
+            if (this.userProfile) {
+              this.analyticsService.trackEvent(
+                this.userProfile.username, 
+                'quality_switch', 
+                { level: data.level, height: level?.height, bitrate: level?.bitrate }
+              );
+            }
         });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        // Check if the browser natively supports HLS (usually Safari)
-        video.src = this.videoSrc; // Directly set the video source for playback
+        // Native HLS support (Safari)
+        video.src = this.videoSrc;
     } else {
-        // Log an error if neither HLS.js nor native HLS playback is supported
         console.error('HLS not supported in this browser.');
+    }
+  }
+
+  // Manual quality selection handler
+  setLevel(levelIndex: number): void {
+    if (!this.hls) return;
+    
+    if (levelIndex === -1) {
+      // Auto mode
+      this.hls.currentLevel = -1;
+      this.selectedLevel = -1;
+      console.log('Quality set to Auto');
+    } else {
+      // Manual quality selection
+      this.hls.currentLevel = levelIndex;
+      this.selectedLevel = levelIndex;
+      console.log('Quality set to', this.levels[levelIndex]?.label);
     }
   }
 

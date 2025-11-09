@@ -47,6 +47,15 @@ $error-color: rgb(148, 17, 17);
   border-radius: 8px !important;
 }
 
+mat-icon.home{
+  /* MARGIN, PADDING */
+  padding-bottom: 6px;
+  /* COLOR */ 
+  color: var(--secondary-color) !important;
+  /* TRANSFORM */
+  transform: scale(1.5);
+}
+
 /* VIDEO PLAYER SECTION */
 .video-container {
   /* COLOR */  
@@ -55,19 +64,24 @@ $error-color: rgb(148, 17, 17);
   border-radius: 0px; 
 }
   
-.video-card {
-  /* WIDTH, HEIGHT */  
+.video-wrapper {
   max-width: 800px;
-  /* MARGIN, PADDING */
-  margin: auto;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.video-card {
+  width: 100%;
   margin-top: 20px;
-  /* COLOR */ 
   background-color: var(--secondary-color);
 }
 
 mat-card-title{
   /* MARGIN, PADDING */
-  margin-left: 220px;
+  margin-left: 0;
+  text-align: center;
   /* COLOR */ 
   color: var(--primary-color);
   /* TEXT */
@@ -75,32 +89,132 @@ mat-card-title{
   font-weight: bold;
 }
 
-.video-details{
-  /* FLEXBOX */  
-  display: flex;
-  flex-direction: column;
-  /* MARGIN, PADDING */
-  margin-left: 220px;
-  margin-right: 220px;
-  /* COLOR */ 
-  color: var(--primary-color);
-  /* TEXT */  
-  font-size: 1.1rem;
+.mat-mdc-card-header {
+  width: 800px;
+  margin: auto;
+  padding-top: 2rem;
+  justify-content: start !important;
 }
 
-mat-icon.home{
-  /* MARGIN, PADDING */
-  padding-bottom: 6px;
-  /* COLOR */ 
+.video-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 22px;
+  background-color: rgba(97, 189, 220, 0.1);
+  border-radius: 12px;
+}
+
+.detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.detail-label {
+  min-width: 130px;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+}
+
+.detail-content {
+  flex: 1;
+  color: var(--primary-color);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* QUALITY CONTROLS */
+.quality-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background-color: rgba(97, 189, 220, 0.08);
+}
+
+.quality-label {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.quality-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quality-controls button {
+  min-width: 90px;
+  padding: 6px 12px;
+  border-radius: 8px !important;
+  border: 1px solid rgb(97, 189, 220) !important;
+  background-color: transparent !important;
+  color: var(--primary-color) !important;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.quality-controls button:hover {
+  background-color: rgba(205, 243, 255, 0.18) !important;
+  color: var(--primary-color) !important;
+  transform: translateY(-2px);
+}
+
+.quality-controls button.active {
+  background-color: rgb(97, 189, 220) !important;
+  color: var(--secondary-color) !important;
+  border-color: rgb(97, 189, 220) !important;
+}
+
+body.dark-theme .video-details {
+  background-color: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-theme .detail-label,
+body.dark-theme .detail-content {
   color: var(--secondary-color);
-  /* TRANSFORM */
-  transform: scale(1.5);
+}
+
+body.dark-theme .quality-controls {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+body.dark-theme .quality-label {
+  color: var(--secondary-color);
+}
+
+body.dark-theme .quality-controls button {
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  color: var(--secondary-color) !important;
+}
+
+body.dark-theme .quality-controls button:hover {
+  background-color: rgba(255, 255, 255, 0.18) !important;
+  color: var(--secondary-color) !important;
+  transform: translateY(-2px);
+}
+
+body.dark-theme .quality-controls button.active {
+  background-color: rgb(97, 189, 220) !important;
+  color: #101820 !important;
+  border-color: rgb(97, 189, 220) !important;
+}
+
+body.dark-theme .quality-controls button:disabled {
+  color: rgba(255, 255, 255, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 /* COMMENTS CONTAINER */
 .comments-container {
-  /* MARGIN, PADDING */
   margin-top: 30px;
-  margin-left: 220px;
-  margin-right: 220px;
+  width: 100%;
 }
