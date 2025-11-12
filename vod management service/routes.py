@@ -147,8 +147,8 @@ def get_video_by_filename(filename: str, db: Session = Depends(get_db)):
         print(f"Video not found: {filename}")
         raise HTTPException(status_code=404, detail="Video not found")
 
-    # Construct the full URL using the global VOD base path
-    video_url = f"{VOD_SERVER_URL_GLOBAL}{filename}"
+    # Construct the full URL using the VOD base path
+    video_url = f"{VOD_SERVER_URL}{filename}"
 
     # Log the generation of the video URL
     print(f"Video URL generated: {video_url}")
@@ -278,6 +278,23 @@ def get_video_comments(video_id: int, db: Session = Depends(get_db)):
     comments = db.query(Comment).filter(Comment.video_id == video_id).order_by(Comment.created_at.desc()).all()
     
     return comments
+
+# Get comment count for a specific video
+@router.get("/videos/{video_id}/comments/count")
+def get_video_comment_count(video_id: int, db: Session = Depends(get_db)):
+    """
+    Get the number of comments for a specific video.
+    Returns the count of comments for the video.
+    """
+    # Check if the video exists
+    video = db.query(Video).filter(Video.id == video_id).first()
+    if not video:
+        raise HTTPException(status_code=404, detail="Video not found")
+    
+    # Count comments for the video
+    comment_count = db.query(Comment).filter(Comment.video_id == video_id).count()
+    
+    return {"video_id": video_id, "comment_count": comment_count}
 
 # Create a new comment for a video
 @router.post("/videos/{video_id}/comments", response_model=CommentResponse)

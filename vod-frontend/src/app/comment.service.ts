@@ -24,6 +24,7 @@ export interface CommentCreate {
 })
 export class CommentService {
   // API URL for vod-management-service
+  //private apiUrl = 'http://152.66.245.139:22291/vod-management-service'; // VM with port forwarding
   private apiUrl = 'http://localhost:5000/vod-management-service';
 
   constructor(private http: HttpClient) {}

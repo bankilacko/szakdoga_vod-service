@@ -245,6 +245,82 @@ mat-card-title{
   opacity: 0.9;
 }
 
+.view-count-container {
+  /* POSITION */
+  position: absolute;
+  bottom: 25px;
+  left: 25px;
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  /* COLOR */
+  color: var(--secondary-color);
+  /* TEXT */
+  font-size: 0.875rem;
+  /* BACKGROUND */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* PADDING */
+  padding: 4px 8px;
+  /* BORDER */
+  border-radius: 4px;
+}
+
+.view-count-icon {
+  /* SIZE */
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  /* COLOR */
+  color: var(--secondary-color);
+}
+
+.view-count-number {
+  /* TEXT */
+  font-size: 0.875rem;
+  font-weight: 500;
+  /* COLOR */
+  color: var(--secondary-color);
+}
+
+.comment-count-container {
+  /* POSITION */
+  position: absolute;
+  bottom: 25px;
+  left: 80px;
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  /* COLOR */
+  color: var(--secondary-color);
+  /* TEXT */
+  font-size: 0.875rem;
+  /* BACKGROUND */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* PADDING */
+  padding: 4px 8px;
+  /* BORDER */
+  border-radius: 4px;
+}
+
+.comment-count-icon {
+  /* SIZE */
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  /* COLOR */
+  color: var(--secondary-color);
+}
+
+.comment-count-number {
+  /* TEXT */
+  font-size: 0.875rem;
+  font-weight: 500;
+  /* COLOR */
+  color: var(--secondary-color);
+}
+
 mat-card-content{
   /* FLEXBOX */
   flex-grow: 1;

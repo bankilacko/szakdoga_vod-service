@@ -9,6 +9,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class UserService {
   // API URL
+  //private apiUrl = 'http://152.66.245.139:22291/user-service'; // User-service URL (VM with port forwarding)
   private apiUrl = 'http://localhost:5000/user-service'; // User-service URL (test - frontend runs on kubernetes)
   //private apiUrl = 'http://api-gateway/user-service';
   //private apiUrl = 'http://api-gateway/user-service'; // User-service URL (test - frontend runs on host)

@@ -45,23 +45,31 @@
           </video>
         </div>
 
-        <!-- Quality selector -->
-        <div class="quality-controls" *ngIf="levels.length > 0">
-          <span class="quality-label">Quality:</span>
-          <div class="quality-buttons">
-            <button 
-              mat-raised-button 
-              [class.active]="selectedLevel === -1"
-              (click)="setLevel(-1)">
-              Auto
-            </button>
-            <button 
-              mat-raised-button 
-              *ngFor="let level of levels" 
-              [class.active]="selectedLevel === level.index"
-              (click)="setLevel(level.index)">
-              {{ level.label }}
-            </button>
+        <!-- Quality selector and view count row -->
+        <div class="quality-controls-row">
+          <!-- Quality selector -->
+          <div class="quality-controls" *ngIf="levels.length > 0">
+            <span class="quality-label">Quality:</span>
+            <div class="quality-buttons">
+              <button 
+                mat-raised-button 
+                [class.active]="selectedLevel === -1"
+                (click)="setLevel(-1)">
+                Auto
+              </button>
+              <button 
+                mat-raised-button 
+                *ngFor="let level of levels" 
+                [class.active]="selectedLevel === level.index"
+                (click)="setLevel(level.index)">
+                {{ level.label }}
+              </button>
+            </div>
+          </div>
+          <!-- View count -->
+          <div class="view-count-container">
+            <mat-icon class="view-count-icon">visibility</mat-icon>
+            <span class="view-count-number">{{ videoViewCount }}</span>
           </div>
         </div>
 

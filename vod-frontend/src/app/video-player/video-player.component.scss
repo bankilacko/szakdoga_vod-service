@@ -70,6 +70,7 @@ mat-icon.home{
   display: flex;
   flex-direction: column;
   gap: 18px;
+  padding-bottom: 1rem;
 }
 
 .video-card {
@@ -127,6 +128,16 @@ mat-card-title{
   line-height: 1.4;
 }
 
+/* QUALITY CONTROLS ROW */
+.quality-controls-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+
 /* QUALITY CONTROLS */
 .quality-controls {
   display: flex;
@@ -137,6 +148,8 @@ mat-card-title{
   padding: 10px 20px;
   border-radius: 8px;
   background-color: rgba(97, 189, 220, 0.08);
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .quality-label {
@@ -148,6 +161,7 @@ mat-card-title{
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  flex: 0 0 auto;
 }
 
 .quality-controls button {
@@ -213,8 +227,53 @@ body.dark-theme .quality-controls button:disabled {
   border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
+/* VIEW COUNT CONTAINER */
+.view-count-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background-color: rgba(97, 189, 220, 0.08);
+  min-width: fit-content;
+  flex: 0 0 auto;
+  align-self: stretch;
+  box-sizing: border-box;
+  height: auto;
+}
+
+.view-count-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--primary-color);
+}
+
+.view-count-number {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+body.dark-theme .view-count-container {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+body.dark-theme .view-count-icon,
+body.dark-theme .view-count-number {
+  color: var(--secondary-color);
+}
+
 /* COMMENTS CONTAINER */
 .comments-container {
   margin-top: 30px;
+  margin-bottom: 1rem;
   width: 100%;
+}
+
+/* Fix last comment border - override comment-section component style */
+.comments-container ::ng-deep .comment:last-child {
+  border-bottom: 1px solid rgba(var(--primary-color-rgb), 0.3) !important;
+  margin-bottom: 15px !important;
 }

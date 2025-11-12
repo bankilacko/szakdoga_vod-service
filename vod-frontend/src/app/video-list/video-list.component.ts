@@ -38,6 +38,7 @@ import { Subscription } from 'rxjs';
 })
 export class VideoListComponent implements OnInit, OnDestroy{
   // URL
+  //private baseUrl = 'http://152.66.245.139:22292/vod'; // Nginx server to get video to play (VM with port forwarding)
   private baseUrl = 'http://localhost:7000/vod'; // Nginx server to get video to play (test)
 
   // PROFILE
@@ -51,6 +52,8 @@ export class VideoListComponent implements OnInit, OnDestroy{
   searchedVideosByCategory: Record<string, any[]> = {}; // Videos array - store videos in categories (key-value), which were selected by search
   recentlyWatchedVideos: string[] = []; // The 3 recently watched videos' title by the current user, get from the analytics service
   recentlyWatchedVideoList: any[] = []; // The 3 recently watched video objects by the current user, get from the analytics service
+  recommendedVideos: string[] = []; // Recommended videos' titles for the current user
+  recommendedVideoList: any[] = []; // Recommended video objects for the current user
 
   // BOOLEAN 
   isLoggedIn = false; // Login state (wether the user is logged in)
@@ -88,6 +91,7 @@ export class VideoListComponent implements OnInit, OnDestroy{
       // If the user is logged in load the profile data
       await this.loadUserProfile();
       this.getRecentlyWatchedVideos();
+      this.getRecommendedVideos();
     }  
     // Clear the previous error message
     this.errorMessage = null;
@@ -132,6 +136,8 @@ export class VideoListComponent implements OnInit, OnDestroy{
             acc[category].push({
               ...video,
               fullUrl: `${this.baseUrl}${video.path}`, // Store full video URL
+              viewCount: 0, // Initialize view count
+              commentCount: 0, // Initialize comment count
             });
             return acc;
           }, {} as Record<string, any[]>);
@@ -139,6 +145,10 @@ export class VideoListComponent implements OnInit, OnDestroy{
           this.videosByCategory = groupedVideos; // Grouped videos by category
           this.categories = Object.keys(this.videosByCategory); // List of categories
           this.isLoading = false; // Loading finished
+  
+          // Load view counts and comment counts for all videos
+          this.loadViewCounts();
+          this.loadCommentCounts();
   
           console.log("Videos loaded successfully.");
           resolve(); // Resolve the Promise when loading is complete
@@ -169,10 +179,35 @@ export class VideoListComponent implements OnInit, OnDestroy{
           for (let video of this.videos) {
             if(video.title == videoTitle){
               console.log(`Match found: ${video.title}`);
-              this.recentlyWatchedVideoList.push({
+              const videoObj = {
                 ...video,
-                fullUrl: `${this.baseUrl}${video.path}`
+                fullUrl: `${this.baseUrl}${video.path}`,
+                viewCount: video.viewCount || 0,
+                commentCount: video.commentCount || 0
+              };
+              this.recentlyWatchedVideoList.push(videoObj);
+              // Load view count for this video
+              this.analyticsService.getVideoViewCount(videoTitle).subscribe({
+                next: (viewCountResponse: any) => {
+                  videoObj.viewCount = viewCountResponse.view_count || 0;
+                },
+                error: (err) => {
+                  console.error(`Error fetching view count for ${videoTitle}:`, err);
+                  videoObj.viewCount = 0;
+                },
               });
+              // Load comment count for this video
+              if (video.id) {
+                this.vodService.getVideoCommentCount(video.id).subscribe({
+                  next: (commentCountResponse: any) => {
+                    videoObj.commentCount = commentCountResponse.comment_count || 0;
+                  },
+                  error: (err) => {
+                    console.error(`Error fetching comment count for video ID ${video.id}:`, err);
+                    videoObj.commentCount = 0;
+                  },
+                });
+              }
             }
           }
         }
@@ -185,9 +220,130 @@ export class VideoListComponent implements OnInit, OnDestroy{
     });
   }
 
+  // Get recommended videos from the analytics service
+  getRecommendedVideos(): void {
+    this.recommendedVideoList = [];
+    this.analyticsService.getRecommendations(this.userProfile.username).subscribe({
+      next: (response: any) => {
+        console.log('Received recommended video titles:', response.recommendations);
+        this.recommendedVideos = response.recommendations || [];
+        
+        // Search the video object by title in the videos array
+        for (let videoTitle of this.recommendedVideos) {
+          for (let video of this.videos) {
+            if(video.title == videoTitle){
+              console.log(`Match found for recommended video: ${video.title}`);
+              const videoObj = {
+                ...video,
+                fullUrl: `${this.baseUrl}${video.path}`,
+                viewCount: video.viewCount || 0,
+                commentCount: video.commentCount || 0
+              };
+              this.recommendedVideoList.push(videoObj);
+              // Load view count for this video
+              this.analyticsService.getVideoViewCount(videoTitle).subscribe({
+                next: (viewCountResponse: any) => {
+                  videoObj.viewCount = viewCountResponse.view_count || 0;
+                },
+                error: (err) => {
+                  console.error(`Error fetching view count for ${videoTitle}:`, err);
+                  videoObj.viewCount = 0;
+                },
+              });
+              // Load comment count for this video
+              if (video.id) {
+                this.vodService.getVideoCommentCount(video.id).subscribe({
+                  next: (commentCountResponse: any) => {
+                    videoObj.commentCount = commentCountResponse.comment_count || 0;
+                  },
+                  error: (err) => {
+                    console.error(`Error fetching comment count for video ID ${video.id}:`, err);
+                    videoObj.commentCount = 0;
+                  },
+                });
+              }
+            }
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching recommended videos:', err);
+      },
+    });
+  }
+
+  // Load view counts for all videos
+  loadViewCounts(): void {
+    // Load view counts for all videos in all categories
+    // Note: videosByCategory contains the same video objects as videos array, so we only need to iterate once
+    const processedTitles = new Set<string>();
+    for (let category in this.videosByCategory) {
+      for (let video of this.videosByCategory[category]) {
+        if (processedTitles.has(video.title)) {
+          continue; // Skip if we already processed this video
+        }
+        processedTitles.add(video.title);
+        this.analyticsService.getVideoViewCount(video.title).subscribe({
+          next: (response: any) => {
+            video.viewCount = response.view_count || 0;
+            // Also update in main videos array if it exists
+            const mainVideo = this.videos.find(v => v.title === video.title);
+            if (mainVideo) {
+              mainVideo.viewCount = response.view_count || 0;
+            }
+          },
+          error: (err) => {
+            console.error(`Error fetching view count for ${video.title}:`, err);
+            video.viewCount = 0;
+            // Also update in main videos array if it exists
+            const mainVideo = this.videos.find(v => v.title === video.title);
+            if (mainVideo) {
+              mainVideo.viewCount = 0;
+            }
+          },
+        });
+      }
+    }
+  }
+
+  // Load comment counts for all videos
+  loadCommentCounts(): void {
+    // Load comment counts for all videos in all categories
+    const processedIds = new Set<number>();
+    for (let category in this.videosByCategory) {
+      for (let video of this.videosByCategory[category]) {
+        if (!video.id || processedIds.has(video.id)) {
+          continue; // Skip if no ID or already processed
+        }
+        processedIds.add(video.id);
+        this.vodService.getVideoCommentCount(video.id).subscribe({
+          next: (response: any) => {
+            video.commentCount = response.comment_count || 0;
+            // Also update in main videos array if it exists
+            const mainVideo = this.videos.find(v => v.id === video.id);
+            if (mainVideo) {
+              mainVideo.commentCount = response.comment_count || 0;
+            }
+          },
+          error: (err) => {
+            console.error(`Error fetching comment count for video ID ${video.id}:`, err);
+            video.commentCount = 0;
+            // Also update in main videos array if it exists
+            const mainVideo = this.videos.find(v => v.id === video.id);
+            if (mainVideo) {
+              mainVideo.commentCount = 0;
+            }
+          },
+        });
+      }
+    }
+  }
+
   // Play selected video
   onSelectVideo(video: any): void {
     console.log(video.fullUrl);
+    // Scroll to top before navigation
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     this.router.navigate(['/video-player'], // Navigate to the video-player page, pass the full URl and information about the video
       { queryParams: {
         url: video.fullUrl, // Full URL
@@ -197,8 +353,20 @@ export class VideoListComponent implements OnInit, OnDestroy{
         createdAt: video.created_at, // Video's creation time
         duration: video.duration, // Video's duration
         id: video.id, // Video's ID for comments
-      } });
-      this.analyticsService.trackEvent(this.userProfile.username, 'play-video', {video: video.title}); 
+      } }).then(() => {
+        // Scroll to top after navigation completes
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        }, 100);
+      });
+      // Track event with video_id, title, and category (only if user is logged in)
+      if (this.isLoggedIn && this.userProfile && this.userProfile.username) {
+        this.analyticsService.trackEvent(this.userProfile.username, 'play-video', {
+          video: video.title,
+          video_id: video.id,
+          category: video.category
+        });
+      }
   }
 
   // Load user data

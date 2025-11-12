@@ -59,7 +59,8 @@ export class VideoPlayerComponent implements AfterViewInit {
   @Input() videoSrc!: string;
 
   // NUMBER
-  videoDuration: number = 0; 
+  videoDuration: number = 0;
+  videoViewCount: number = 0; // View count for the current video 
 
   // SUBSCRIBTIONS
   private logoutSubscription!: Subscription; // Subscribtion to handle logout events
@@ -90,6 +91,9 @@ export class VideoPlayerComponent implements AfterViewInit {
     this.logoutSubscription = this.userService.onLogout().subscribe(() => {
       this.onLogout(); // Give the function to call when the event occurs
     });
+    // Scroll to top when component initializes
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    
     if (this.isLoggedIn) {
       this.route.queryParams.subscribe(params => {
         // Set video information
@@ -104,6 +108,14 @@ export class VideoPlayerComponent implements AfterViewInit {
   
         if (this.videoSrc) {
           this.initVideoPlayer(); // initialize video player based on URL
+          // Load view count for this video
+          if (this.videoTitle) {
+            this.getVideoViewCount();
+          }
+          // Scroll to top after video loads
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }, 100);
         } else {
           console.error('No video URL');
           this.errorMessage = "No video URL";
@@ -132,6 +144,22 @@ export class VideoPlayerComponent implements AfterViewInit {
         }
       });
     }
+  }
+
+  // Get video view count
+  getVideoViewCount(): void {
+    if (!this.videoTitle) {
+      return;
+    }
+    this.analyticsService.getVideoViewCount(this.videoTitle).subscribe({
+      next: (response: any) => {
+        this.videoViewCount = response.view_count || 0;
+      },
+      error: (err) => {
+        console.error('Error fetching view count:', err);
+        this.videoViewCount = 0;
+      },
+    });
   }
 
   // React to changes
@@ -183,7 +211,6 @@ export class VideoPlayerComponent implements AfterViewInit {
         
         // Handle manifest parsed event - populate quality levels
         this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            console.log('HLS manifest loaded, starting playback...');
             // Build levels array for quality selector
             this.levels = this.hls!.levels.map((l, i) => {
               const roundedHeight = l.height ? Math.round(l.height / 10) * 10 : undefined;
@@ -194,17 +221,24 @@ export class VideoPlayerComponent implements AfterViewInit {
                 label: roundedHeight ? `${roundedHeight}p` : `${Math.round((l.bitrate || 0) / 1000)} kbps`
               };
             });
-            this.selectedLevel = -1; // Auto by default
-            console.log('Available quality levels:', this.levels);
+            // Set to Auto mode (-1) and ensure HLS.js uses Auto
+            this.selectedLevel = -1;
+            if (this.hls) {
+                this.hls.currentLevel = -1; // Explicitly set to Auto
+            }
         });
 
         // Handle level switch event - track analytics
+        // Only update selectedLevel if we're in manual mode (not Auto)
+        // In Auto mode, HLS.js will automatically switch levels, but we want to keep selectedLevel = -1
         this.hls.on(Hls.Events.LEVEL_SWITCHED, (_, data: any) => {
-            this.selectedLevel = data.level;
+            // Only update if we're not in Auto mode (selectedLevel !== -1 means manual mode)
+            if (this.selectedLevel !== -1) {
+                this.selectedLevel = data.level;
+            }
             const level = this.hls!.levels[data.level];
-            console.log('Switched to quality level', data.level, level);
-            // Optional: track quality changes with analytics
-            if (this.userProfile) {
+            // Optional: track quality changes with analytics (only for manual switches)
+            if (this.userProfile && this.selectedLevel !== -1) {
               this.analyticsService.trackEvent(
                 this.userProfile.username, 
                 'quality_switch', 

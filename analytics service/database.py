@@ -16,7 +16,7 @@ Base = declarative_base()
 
 # Function to initialize the database (create tables based on models)
 def init_db():
-    from models import UserActivity, SystemMetric  # Import the models so metadata knows about them
+    from models import UserActivity, SystemMetric, UserRecentVideos, UserVideoHistory, VideoViewCount, UserCategoryPreference  # Import the models so metadata knows about them
     Base.metadata.create_all(bind=engine) # Create all tables defined with Base
 
 # Dependency to get a database session (used in routes)
