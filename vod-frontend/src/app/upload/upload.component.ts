@@ -109,7 +109,9 @@ export class UploadComponent {
     const input = event.target as HTMLInputElement; // Access the input element
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0]; // Store the selected file
+      this.errorMessage = null; // Clear any previous error
     } else {
+      this.selectedFile = null;
       this.errorMessage = "No file selected.";
     }
   }
@@ -193,6 +195,8 @@ export class UploadComponent {
   tryAgain(): void {
     this.successMessage = null;
     this.errorMessage = null;
+    this.selectedFile = null;
+    this.isLoading = false;
     this.uploadForm = this.fb.group({ // Recreate upload form
       file: ['', [Validators.required]],
       title: ['', [Validators.required]],

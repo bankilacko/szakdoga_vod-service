@@ -70,3 +70,69 @@ body.dark-theme {
 .search-bar .mat-mdc-icon-button .mat-icon {
   color: var(--secondary-color) !important;
 }
+
+/* Global form field styling - theme-aware border colors for all input fields */
+.mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__leading,
+.mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__notch,
+.mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: var(--secondary-color) !important;
+}
+
+.mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__leading,
+.mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__notch,
+.mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: var(--secondary-color) !important;
+}
+
+/* Also style when form field is hovered */
+.mat-mdc-form-field.mat-form-field-appearance-outline:hover .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__leading,
+.mat-mdc-form-field.mat-form-field-appearance-outline:hover .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__notch,
+.mat-mdc-form-field.mat-form-field-appearance-outline:hover .mat-mdc-text-field-wrapper .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: var(--secondary-color) !important;
+}
+
+/* Global floating label color - theme-aware (exclude search-bar which has its own styling) */
+.mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-floating-label {
+  color: var(--secondary-color) !important;
+}
+
+/* Floating label color when focused (exclude search-bar) */
+.mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-floating-label {
+  color: var(--secondary-color) !important;
+}
+
+/* Placeholder color - theme-aware (exclude search-bar which has its own styling) */
+.mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-input-element::placeholder {
+  color: var(--secondary-color) !important;
+  opacity: 0.7;
+}
+
+/* Placeholder color when focused */
+.mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mat-mdc-input-element::placeholder {
+  color: var(--secondary-color) !important;
+  opacity: 0.5;
+}
+
+/* Search-bar placeholder should remain hidden (override global styles) */
+.search-bar .mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-input-element::placeholder {
+  opacity: 0 !important;
+}
+
+/* Select arrow color - theme-aware */
+.mat-mdc-select-arrow svg {
+  fill: var(--secondary-color) !important;
+}
+
+.mat-mdc-select-arrow svg path {
+  fill: var(--secondary-color) !important;
+}
+
+/* Input text color - theme-aware (the text you type) */
+.mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-input-element {
+  color: var(--secondary-color) !important;
+}
+
+/* Select value text color - theme-aware */
+.mat-mdc-select-value-text {
+  color: var(--secondary-color) !important;
+}

@@ -4,7 +4,7 @@
 <mat-toolbar class="toolbar">
   <!-- Application title -->
   <button mat-icon-button matSuffix (click)="home()">
-    <mat-icon class="home" routerLink="/">home</mat-icon>
+    <mat-icon class="home" routerLink="/">ondemand_video</mat-icon>
   </button>
   <span class="app-title" routerLink="/" (click)="home()">VOD Application</span>
    
@@ -83,6 +83,9 @@
                     <mat-icon class="comment-count-icon">chat_bubble_outline</mat-icon>
                     <span class="comment-count-number">{{ video.commentCount || 0 }}</span>
                   </div>
+                  <div class="upload-time-container" *ngIf="video.created_at">
+                    <span class="upload-time-text">{{ getTimeAgo(video.created_at) }}</span>
+                  </div>
                 </mat-card-content>
               </mat-card>
             </div>
@@ -113,6 +116,9 @@
                     <mat-icon class="comment-count-icon">chat_bubble_outline</mat-icon>
                     <span class="comment-count-number">{{ video.commentCount || 0 }}</span>
                   </div>
+                  <div class="upload-time-container" *ngIf="video.created_at">
+                    <span class="upload-time-text">{{ getTimeAgo(video.created_at) }}</span>
+                  </div>
                 </mat-card-content>
               </mat-card>
             </div>
@@ -136,6 +142,9 @@
                   <div class="comment-count-container">
                     <mat-icon class="comment-count-icon">chat_bubble_outline</mat-icon>
                     <span class="comment-count-number">{{ video.commentCount || 0 }}</span>
+                  </div>
+                  <div class="upload-time-container" *ngIf="video.created_at">
+                    <span class="upload-time-text">{{ getTimeAgo(video.created_at) }}</span>
                   </div>
                 </mat-card-content>
               </mat-card>
@@ -162,6 +171,9 @@
                   <div class="comment-count-container">
                     <mat-icon class="comment-count-icon">chat_bubble_outline</mat-icon>
                     <span class="comment-count-number">{{ video.commentCount || 0 }}</span>
+                  </div>
+                  <div class="upload-time-container" *ngIf="video.created_at">
+                    <span class="upload-time-text">{{ getTimeAgo(video.created_at) }}</span>
                   </div>
                 </mat-card-content>
               </mat-card>

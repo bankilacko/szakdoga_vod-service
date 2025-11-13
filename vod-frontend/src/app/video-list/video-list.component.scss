@@ -204,7 +204,6 @@ mat-form-field {
 .video-card:hover {
   /* COLOR */
   //background-color: $third-color;
-  background-color: var(--third-color);
   /* TRANSFORM */
   transform: scale(1.08);
 }
@@ -234,7 +233,7 @@ mat-card-title{
   opacity: 0;
   /* POSITION */
   position: absolute;
-  bottom: 27px;
+  top: 27px;
   right: 26px;
   /* TRANSFORM */
   transform: scale(1.5);
@@ -314,6 +313,35 @@ mat-card-title{
 }
 
 .comment-count-number {
+  /* TEXT */
+  font-size: 0.875rem;
+  font-weight: 500;
+  /* COLOR */
+  color: var(--secondary-color);
+}
+
+.upload-time-container {
+  /* POSITION */
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  /* COLOR */
+  color: var(--secondary-color);
+  /* TEXT */
+  font-size: 0.875rem;
+  /* BACKGROUND */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* PADDING */
+  padding: 4px 8px;
+  /* BORDER */
+  border-radius: 4px;
+}
+
+.upload-time-text {
   /* TEXT */
   font-size: 0.875rem;
   font-weight: 500;

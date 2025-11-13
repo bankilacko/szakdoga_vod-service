@@ -2,7 +2,7 @@
 <mat-toolbar color="primary" class="toolbar">
   <!-- Application title -->
   <button mat-icon-button matSuffix>
-    <mat-icon class="home" routerLink="/">home</mat-icon>
+    <mat-icon class="home" routerLink="/">ondemand_video</mat-icon>
   </button>
   <span class="app-title" routerLink="/">VOD Application</span>
      
@@ -67,23 +67,46 @@
           <input matInput formControlName="description" type="text" required>
         </mat-form-field>
         <!-- File upload field -->
-        <div class="file-upload">
-          <label for="fileInput" class="file-label">Select MP4 File:</label>
-          <input formControlName="file" id="fileInput" type="file" (change)="onFileSelected($event)" accept="video/mp4" required/>
-          <div>
-            {{selectedFile?.name || "No file uploaded yet"}}
-         </div>
+        <div class="file-upload-container" [class.has-file]="selectedFile">
+          <!-- File name display -->
+          <div class="file-name-display" *ngIf="selectedFile">
+            <mat-icon class="file-icon">description</mat-icon>
+            <span class="file-name">{{ selectedFile.name }}</span>
+          </div>
+          
+          <!-- Upload/Change button -->
+          <button 
+            type="button" 
+            class="file-upload-button" 
+            mat-raised-button
+            (click)="fileInput.click()">
+            <mat-icon *ngIf="!selectedFile">description</mat-icon>
+            <mat-icon *ngIf="selectedFile">swap_horiz</mat-icon>
+            <span>{{ selectedFile ? 'Change File' : 'Select Video File' }}</span>
+          </button>
+          
+          <!-- Hidden file input -->
+          <input 
+            formControlName="file" 
+            #fileInput
+            id="fileInput" 
+            type="file" 
+            (change)="onFileSelected($event)" 
+            accept="video/mp4" 
+            required
+            style="display: none;"/>
         </div>
       </form>
 
-      <!-- LOADING SECTION -->
-      <div *ngIf="isLoading" class="loading-container">
-        <p>Uploading...</p>
-        <mat-spinner diameter="30"></mat-spinner>
-      </div>
-
       <!-- Upload button -->
-      <button class="custom-button" mat-raised-button (click)="onUpload()"><mat-icon>upload</mat-icon>Upload</button>
+      <button 
+        class="custom-button upload-button" 
+        mat-raised-button 
+        (click)="onUpload()"
+        [disabled]="isLoading || !selectedFile">
+        <mat-icon>upload</mat-icon>
+        <span>{{ isLoading ? 'Uploading...' : 'Upload' }}</span>
+      </button>
 
     </mat-card-content>
   </mat-card>

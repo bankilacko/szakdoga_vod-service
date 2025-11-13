@@ -143,33 +143,129 @@ mat-card-content{
   gap: 5px;
 }
 
-.file-upload{
+.file-upload-container {
   /* FLEXBOX */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
+  align-items: stretch;
+  gap: 12px;
+  /* WIDTH, HEIGHT */
+  width: 100%;
   /* MARGIN, PADDING */
   margin-bottom: 15px;
-  padding: 5px;
+}
+
+/* When file is selected, show file name and button in same row */
+.file-upload-container.has-file {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.file-name-display {
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* WIDTH, HEIGHT */
+  flex: 1;
+  /* MARGIN, PADDING */
+  padding: 12px 16px;
+  /* COLOR */
+  background-color: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  /* TEXT */
+  font-size: 0.95rem;
+  color: var(--secondary-color);
+}
+
+/* Dark theme support for file name display */
+:host-context(.dark-theme) .file-name-display {
+  /* COLOR */
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.file-icon {
+  /* COLOR */
+  color: var(--secondary-color);
+  /* TRANSFORM */
+  flex-shrink: 0;
+  /* SIZE */
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.file-name {
+  /* TEXT */
+  font-weight: 500;
+  /* OVERFLOW */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.file-upload-button {
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* WIDTH, HEIGHT */
+  width: 100%;
+  /* MARGIN, PADDING */
+  padding: 12px 24px;
+  /* COLOR */
+  background-color: var(--primary-color) !important;
+  color: var(--secondary-color) !important;
+  /* BORDER */
+  border: 1px solid var(--secondary-color) !important;
+  border-radius: 8px !important;
   /* TEXT */
   font-size: 1rem;
-  color: rgb(81, 78, 78);
-  /* BORDER */
-  border: 1px solid gray;
-  border-radius: 5px;
+  font-weight: 500;
+  /* CURSOR */
+  cursor: pointer;
+  /* TRANSITION */
+  transition: all 0.3s ease;
 }
 
-.file-upload:hover{
-  /* TEXT */
-  color: black;
-  /* BORDER */
-  border: 1px solid black;
-  border-radius: 5px;
+/* When file is selected, button takes 50% width and same height */
+.file-upload-container.has-file .file-upload-button {
+  /* WIDTH, HEIGHT */
+  width: 50%;
+  flex-shrink: 0;
+  /* Keep same height as file-name-display */
+  min-height: 48px;
 }
 
-#fileInput{
-  display: none;
+.file-upload-button:hover {
+  /* COLOR */
+  background-color: var(--secondary-color) !important;
+  color: var(--primary-color) !important;
+  /* BORDER */
+  border-color: var(--secondary-color) !important;
+  /* TRANSFORM */
+  transform: translateY(-2px);
+  /* SHADOW */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.file-upload-button:active {
+  /* TRANSFORM */
+  transform: translateY(0);
+}
+
+.file-upload-button mat-icon {
+  /* TRANSFORM */
+  flex-shrink: 0;
+  /* SIZE */
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
 }
 
 .button-container {
@@ -183,6 +279,16 @@ mat-card-content{
   gap: 18px;
 }
   
+/* Only apply flexbox changes to upload button, not toolbar buttons */
+.upload-button.custom-button,
+.custom-button:not(.toolbar .custom-button) {
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 .custom-button{
   /* COLOR */
   background-color: var(--primary-color) !important;
@@ -192,10 +298,30 @@ mat-card-content{
   border-radius: 8px !important;
 }
   
-.custom-button:hover{
+.custom-button:hover:not(:disabled){
   /* COLOR */
   color: var(--primary-color) !important;
   background-color: var(--secondary-color) !important;
+}
+
+.custom-button:disabled {
+  /* COLOR */
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.upload-button {
+  /* MARGIN, PADDING */
+  margin-top: 8px;
+  padding: 12px 24px;
+  /* TEXT */
+  font-size: 1rem;
+  font-weight: 500;
+  /* FLEXBOX - ensure content is centered */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px;
 }
 
 /* ERROR SECTION */
@@ -344,12 +470,6 @@ mat-card-content.success {
   font-size: 20px;
 }
 
-/* LOADING SECTION */
-.loading-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 /* ICONS */
 mat-icon.home{

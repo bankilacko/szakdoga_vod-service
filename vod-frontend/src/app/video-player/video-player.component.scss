@@ -77,6 +77,13 @@ mat-icon.home{
   width: 100%;
   margin-top: 20px;
   background-color: var(--secondary-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.video-card video {
+  border-radius: 8px;
+  display: block;
 }
 
 mat-card-title{
