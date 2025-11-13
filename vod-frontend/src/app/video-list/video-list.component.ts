@@ -518,11 +518,14 @@ export class VideoListComponent implements OnInit, OnDestroy{
     }
     
     const diffInWeeks = Math.floor(diffInDays / 7);
-    if (diffInWeeks < 4) {
+    const diffInMonths = Math.floor(diffInDays / 30);
+    
+    // If less than 1 month (30 days), always show weeks
+    if (diffInMonths === 0) {
       return diffInWeeks === 1 ? '1 week ago' : `${diffInWeeks} weeks ago`;
     }
     
-    const diffInMonths = Math.floor(diffInDays / 30);
+    // If 1 month or more, show months
     if (diffInMonths < 12) {
       return diffInMonths === 1 ? '1 month ago' : `${diffInMonths} months ago`;
     }

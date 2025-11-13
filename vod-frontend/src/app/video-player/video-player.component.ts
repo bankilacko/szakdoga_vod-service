@@ -214,11 +214,21 @@ export class VideoPlayerComponent implements AfterViewInit {
             // Build levels array for quality selector
             this.levels = this.hls!.levels.map((l, i) => {
               const roundedHeight = l.height ? Math.round(l.height / 10) * 10 : undefined;
+              // For old videos without quality info, default to 720p
+              let label: string;
+              if (roundedHeight) {
+                label = `${roundedHeight}p`;
+              } else if (l.bitrate && l.bitrate > 0) {
+                label = `${Math.round(l.bitrate / 1000)} kbps`;
+              } else {
+                // No height or bitrate info (old single-quality video), default to 720p
+                label = '720p';
+              }
               return {
                 index: i,
-                height: l.height,
-                bitrate: l.bitrate,
-                label: roundedHeight ? `${roundedHeight}p` : `${Math.round((l.bitrate || 0) / 1000)} kbps`
+                height: l.height || 720,
+                bitrate: l.bitrate || 0,
+                label: label
               };
             });
             // Set to Auto mode (-1) and ensure HLS.js uses Auto
