@@ -1,16 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnalyticsService {
-  // API URL
-  //private apiUrl = 'http://152.66.245.139:22291/analytics-service'; // Analytics-service URL (VM with port forwarding)
-  private apiUrl = 'http://localhost:5000/analytics-service'; // User-service URL (test - frontend runs on kubernetes)
-  //private apiUrl = 'http://api-gateway/analytics-service';
-  //private apiUrl = 'http://localhost:5000'; // User-service URL (test - frontend runs on host)
+  // API URL from environment - dynamically constructed with service name
+  private apiUrl = `${environment.apiBaseUrl}/analytics-service`;
 
   constructor(private http: HttpClient) {}
 
@@ -37,5 +35,9 @@ export class AnalyticsService {
 
   getVideoViewCount(videoTitle: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/video-view-count/${encodeURIComponent(videoTitle)}`);
+  }
+
+  getMostWatchedVideos(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/most-watched`);
   }
 }

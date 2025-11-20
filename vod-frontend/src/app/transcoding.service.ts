@@ -1,16 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranscodingService {
-  // API URL
-  //private apiUrl = 'http://152.66.245.139:22291/transcoding-service'; // Transcoding-service URL (VM with port forwarding)
-  private apiUrl = 'http://localhost:5000/transcoding-service'; // Transcoding-service URL (test - frontend runs on kubernetes)
-  //private apiUrl = 'http://api-gateway/transcoding-service';
-  //private apiUrl = 'http://localhost:5000'; // Transcoding-service URL (test - frontend runs on host)
+  // API URL from environment - dynamically constructed with service name
+  private apiUrl = `${environment.apiBaseUrl}/transcoding-service`;
 
   // CONSTRUCTOR
   constructor(private http: HttpClient) { }

@@ -257,4 +257,26 @@ def get_video_view_count(video_title: str, db: Session = Depends(get_db)):
     if not view_count:
         return {"video_title": video_title, "view_count": 0}
     
-    return {"video_title": video_title, "view_count": view_count.view_count}           
+    return {"video_title": video_title, "view_count": view_count.view_count}
+
+
+@app.get("/most-watched")
+def get_most_watched(db: Session = Depends(get_db)):
+    """
+    Get the top 3 most watched videos by view count.
+    Returns video titles, IDs, and view counts.
+    """
+    most_watched = db.query(VideoViewCount).order_by(
+        VideoViewCount.view_count.desc()
+    ).limit(3).all()
+    
+    result = [
+        {
+            "video_title": v.video_title,
+            "video_id": v.video_id,
+            "view_count": v.view_count
+        }
+        for v in most_watched
+    ]
+    
+    return {"most_watched": result}           

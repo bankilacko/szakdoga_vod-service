@@ -12,6 +12,7 @@ import { MatCardModule } from '@angular/material/card';
 import { UserService } from '../user.service';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-video-list',
@@ -37,9 +38,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./video-list.component.scss'] // SCSS FILE
 })
 export class VideoListComponent implements OnInit, OnDestroy{
-  // URL
-  //private baseUrl = 'http://152.66.245.139:22292/vod'; // Nginx server to get video to play (VM with port forwarding)
-  private baseUrl = 'http://localhost:7000/vod'; // Nginx server to get video to play (test)
+  // URL from environment
+  private baseUrl = environment.vodServerUrl;
 
   // PROFILE
   userProfile: any = null; // User profile data
@@ -54,6 +54,8 @@ export class VideoListComponent implements OnInit, OnDestroy{
   recentlyWatchedVideoList: any[] = []; // The 3 recently watched video objects by the current user, get from the analytics service
   recommendedVideos: string[] = []; // Recommended videos' titles for the current user
   recommendedVideoList: any[] = []; // Recommended video objects for the current user
+  mostWatchedVideos: string[] = []; // The 3 most watched videos' titles
+  mostWatchedVideoList: any[] = []; // The 3 most watched video objects
 
   // BOOLEAN 
   isLoggedIn = false; // Login state (wether the user is logged in)
@@ -92,6 +94,10 @@ export class VideoListComponent implements OnInit, OnDestroy{
       await this.loadUserProfile();
       this.getRecentlyWatchedVideos();
       this.getRecommendedVideos();
+    }
+    // Load most watched videos (available for all users, not just logged in)
+    if (this.videos.length > 0) {
+      this.getMostWatchedVideos();
     }  
     // Clear the previous error message
     this.errorMessage = null;
@@ -268,6 +274,48 @@ export class VideoListComponent implements OnInit, OnDestroy{
       },
       error: (err) => {
         console.error('Error fetching recommended videos:', err);
+      },
+    });
+  }
+
+  // Get the 3 most watched videos from the analytics service
+  getMostWatchedVideos(): void {
+    this.mostWatchedVideoList = [];
+    this.analyticsService.getMostWatchedVideos().subscribe({
+      next: (response: any) => {
+        console.log('Received most watched video titles:', response.most_watched);
+        this.mostWatchedVideos = response.most_watched?.map((v: any) => v.video_title) || [];
+        
+        // Search the video object by title in the videos array
+        for (let item of response.most_watched || []) {
+          for (let video of this.videos) {
+            if(video.title == item.video_title){
+              console.log(`Match found for most watched video: ${video.title}`);
+              const videoObj = {
+                ...video,
+                fullUrl: `${this.baseUrl}${video.path}`,
+                viewCount: item.view_count || 0,
+                commentCount: 0
+              };
+              this.mostWatchedVideoList.push(videoObj);
+              // Load comment count for this video
+              if (video.id) {
+                this.vodService.getVideoCommentCount(video.id).subscribe({
+                  next: (commentCountResponse: any) => {
+                    videoObj.commentCount = commentCountResponse.comment_count || 0;
+                  },
+                  error: (err) => {
+                    console.error(`Error fetching comment count for video ID ${video.id}:`, err);
+                    videoObj.commentCount = 0;
+                  },
+                });
+              }
+            }
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching most watched videos:', err);
       },
     });
   }

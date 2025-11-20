@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 // Comment interface for type safety
 export interface Comment {
@@ -23,9 +24,8 @@ export interface CommentCreate {
   providedIn: 'root'
 })
 export class CommentService {
-  // API URL for vod-management-service
-  //private apiUrl = 'http://152.66.245.139:22291/vod-management-service'; // VM with port forwarding
-  private apiUrl = 'http://localhost:5000/vod-management-service';
+  // API URL from environment - dynamically constructed with service name
+  private apiUrl = `${environment.apiBaseUrl}/vod-management-service`;
 
   constructor(private http: HttpClient) {}
 

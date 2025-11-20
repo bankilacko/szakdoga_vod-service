@@ -22,7 +22,3 @@ spec:
               value: "postgres://user:password@database-service:5432/vod-database"
             - name: VOD_SERVER_URL
               value: "http://nginx-vod-service:7000/vod/"
-      volumes:
-      - name: vod-storage
-        persistentVolumeClaim:
-          claimName: vod-storage-claim

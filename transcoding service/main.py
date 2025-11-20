@@ -43,7 +43,7 @@ def read_root():
 
 # Endpoint to handle video upload and multi-rendition HLS transcoding
 @app.post("/upload")
-async def upload_video(file: UploadFile = File(...), metadata: UploadFile | None = File(None)):
+async def transcode_video(file: UploadFile = File(...), metadata: UploadFile | None = File(None)):
     # Validate input
     if not file.filename.endswith(".mp4"):
         raise HTTPException(status_code=400, detail="Only .mp4 files are enabled.")

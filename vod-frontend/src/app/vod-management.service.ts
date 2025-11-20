@@ -2,17 +2,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserService } from './user.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VodManagementService {
-  // API URL
-  //private apiUrl = 'http://152.66.245.139:22291/vod-management-service'; // VM with port forwarding
-  private apiUrl = 'http://localhost:5000/vod-management-service'; // Vod-management-service URL (test - frontend runs on kubernetes)
-  //private apiUrl = 'http://api-gateway/vod-management-service';
-  //private apiUrl = 'http://vod-management-service.default.svc.cluster.local';
-  //private apiUrl = 'http://localhost:5000'; // Vod-management-service URL (test - frontend runs on host)
+  // API URL from environment - dynamically constructed with service name
+  private apiUrl = `${environment.apiBaseUrl}/vod-management-service`;
 
   // CONSTRUCTOR
   constructor(private http: HttpClient, private userService: UserService) {}

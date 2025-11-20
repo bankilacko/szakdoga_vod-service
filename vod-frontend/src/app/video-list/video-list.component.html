@@ -150,6 +150,33 @@
               </mat-card>
             </div>
           </div>
+          <!-- Most watched videos -->
+          <div *ngIf="mostWatchedVideos.length > 0">
+            <h2 class="video-category">Most Watched</h2>
+            <div class="video-card-container" #videoList>
+              <mat-card *ngFor="let video of mostWatchedVideoList" class="video-card" (click)="onSelectVideo(video)">
+                <mat-card-header>
+                  <mat-card-title>{{ video.title }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <p *ngIf="video.description && video.description.length > 50">{{ video.description | slice:0:60 }}...</p>
+                  <p *ngIf="video.description && video.description.length <= 50">{{ video.description }}</p>
+                  <mat-icon class="play">play_circle</mat-icon>
+                  <div class="view-count-container">
+                    <mat-icon class="view-count-icon">visibility</mat-icon>
+                    <span class="view-count-number">{{ video.viewCount || 0 }}</span>
+                  </div>
+                  <div class="comment-count-container">
+                    <mat-icon class="comment-count-icon">chat_bubble_outline</mat-icon>
+                    <span class="comment-count-number">{{ video.commentCount || 0 }}</span>
+                  </div>
+                  <div class="upload-time-container" *ngIf="video.created_at">
+                    <span class="upload-time-text">{{ getTimeAgo(video.created_at) }}</span>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
         </div>
         <div *ngFor="let category of categories" class="video-category-container">
           <!-- All available videos -->
