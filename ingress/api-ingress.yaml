@@ -1,0 +1,77 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
+    nginx.ingress.kubernetes.io/cors-max-age: "1728000"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      # User Service
+      - path: /user-service(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: user-service
+            port:
+              number: 80
+      
+      # VOD Management Service
+      - path: /vod-management-service(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: vod-management-service
+            port:
+              number: 80
+      
+      # Analytics Service
+      - path: /analytics-service(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: analytics-service
+            port:
+              number: 80
+
+---
+# Separate Ingress for transcoding service with longer timeouts
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: transcoding-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "800"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "800"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
+    nginx.ingress.kubernetes.io/cors-max-age: "1728000"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      # Transcoding Service - longer timeouts for video upload/processing
+      - path: /transcoding-service(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: transcoding-service
+            port:
+              number: 80
+
