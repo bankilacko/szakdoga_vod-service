@@ -13,7 +13,7 @@ COPY output0.ts /usr/share/nginx/html/vod
 COPY output1.ts /usr/share/nginx/html/vod
 
 # HTTP port exponálása
-EXPOSE 8080
+EXPOSE 7000
 
 # NGINX indítása
 CMD ["nginx", "-g", "daemon off;"]
