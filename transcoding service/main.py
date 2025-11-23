@@ -77,19 +77,33 @@ async def transcode_video(file: UploadFile = File(...), metadata: UploadFile | N
     # Check if audio stream exists
     has_audio = has_audio_stream(input_file_path)
 
+    # Build filter_complex based on whether audio exists
+    if has_audio:
+        # Video split and audio split
+        filter_complex = (
+            "[0:v]split=4[v1080][v720][v480][v360];"
+            "[0:a]asplit=4[a0][a1][a2][a3];"
+            "[v1080]scale=w=1920:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v1080out];"
+            "[v720]scale=w=1280:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v720out];"
+            "[v480]scale=w=848:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v480out];"
+            "[v360]scale=w=640:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v360out]"
+        )
+    else:
+        # Video split only
+        filter_complex = (
+            "[0:v]split=4[v1080][v720][v480][v360];"
+            "[v1080]scale=w=1920:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v1080out];"
+            "[v720]scale=w=1280:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v720out];"
+            "[v480]scale=w=848:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v480out];"
+            "[v360]scale=w=640:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v360out]"
+        )
+
     # FFmpeg command to generate 4 renditions + master.m3u8
     # Output structure: /vod/<slug>_master.m3u8, /vod/<slug>_0/index.m3u8, etc.
     ffmpeg_command = [
         "ffmpeg", "-y",
         "-i", str(input_file_path),
-
-        # Scale/filter graph: 1080p, 720p, 480p, 360p (force divisible by 2)
-        "-filter_complex",
-        "[0:v]split=4[v1080][v720][v480][v360];"
-        "[v1080]scale=w=1920:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v1080out];"
-        "[v720]scale=w=1280:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v720out];"
-        "[v480]scale=w=848:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v480out];"
-        "[v360]scale=w=640:h=-2:force_original_aspect_ratio=decrease:force_divisible_by=2[v360out]",
+        "-filter_complex", filter_complex,
 
         # 1080p
         "-map", "[v1080out]",
@@ -116,13 +130,16 @@ async def transcode_video(file: UploadFile = File(...), metadata: UploadFile | N
         "-g:v:3", "48", "-keyint_min:v:3", "48", "-sc_threshold:v:3", "0",
     ]
 
-    # Add audio mapping if audio exists
+    # Add audio mapping if audio exists - explicit mapping for each rendition
     if has_audio:
         ffmpeg_command.extend([
-            "-map", "0:a?",
+            "-map", "[a0]",
             "-c:a:0", "aac", "-b:a:0", "192k", "-ac:a:0", "2",
+            "-map", "[a1]",
             "-c:a:1", "aac", "-b:a:1", "128k", "-ac:a:1", "2",
+            "-map", "[a2]",
             "-c:a:2", "aac", "-b:a:2", "96k", "-ac:a:2", "2",
+            "-map", "[a3]",
             "-c:a:3", "aac", "-b:a:3", "64k", "-ac:a:3", "2",
         ])
 
