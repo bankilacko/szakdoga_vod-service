@@ -1,0 +1,107 @@
+name: Auto deploy VoD platform
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Analytics
+      - name: Build and push analytics-service
+        run: |
+          docker build -t "${{ secrets.DOCKER_USERNAME }}/analytics-service:latest" "./analytics service"
+          docker push "${{ secrets.DOCKER_USERNAME }}/analytics-service:latest"
+
+      # User Service
+      - name: Build and push user-service
+        run: |
+          docker build -t "${{ secrets.DOCKER_USERNAME }}/user-service:latest" "./user service"
+          docker push "${{ secrets.DOCKER_USERNAME }}/user-service:latest"
+
+      # VOD Management
+      - name: Build and push vod-management-service
+        run: |
+          docker build -t "${{ secrets.DOCKER_USERNAME }}/vod-management-service:latest" "./vod management service"
+          docker push "${{ secrets.DOCKER_USERNAME }}/vod-management-service:latest"
+
+      # Transcoding
+      - name: Build and push transcoding-service
+        run: |
+          docker build -t "${{ secrets.DOCKER_USERNAME }}/transcoding-service:latest" "./transcoding service"
+          docker push "${{ secrets.DOCKER_USERNAME }}/transcoding-service:latest"
+
+      # NGINX VOD Server
+      - name: Build and push nginx-vod
+        run: |
+          docker build -t "${{ secrets.DOCKER_USERNAME }}/nginx-vod:latest" "./nginx vod server"
+          docker push "${{ secrets.DOCKER_USERNAME }}/nginx-vod:latest"
+
+      # Frontend
+      - name: Build and push vod-frontend
+        run: |
+          docker build -t "${{ secrets.DOCKER_USERNAME }}/vod-frontend:latest" ./vod-frontend
+          docker push "${{ secrets.DOCKER_USERNAME }}/vod-frontend:latest"
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Kubernetes via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          port: ${{ secrets.VM_PORT }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            cd ~/szakdoga_vod-service
+            git pull
+
+            # --- Storage (PV+PVC) ---
+            kubectl apply -f storage/persistent-volume.yaml \
+                          -f storage/persistent-volume-claim.yaml
+
+            # --- Database (apply idempotens, NEM restartoljuk) ---
+            kubectl apply -f database/deployment.yaml \
+                          -f database/service.yaml
+
+            # --- HPA-k ---
+            kubectl apply -f "transcoding service"/transcoding-service-hpa.yaml
+            kubectl apply -f "analytics service"/analytics-service-hpa.yaml
+
+            # --- Ingress Controller (namespace: ingress-nginx) ---
+            kubectl apply -f ingress/ingress-controller-deployment.yaml \
+                          -f ingress/ingress-controller-service.yaml \
+                          -f ingress/api-ingress.yaml
+
+            # --- Backend szolgáltatások ---
+            kubectl apply -f "user service"/deployment.yaml -f "user service"/service.yaml
+            kubectl apply -f "vod management service"/deployment.yaml -f "vod management service"/service.yaml
+            kubectl apply -f "analytics service"/deployment.yaml -f "analytics service"/service.yaml
+            kubectl apply -f "transcoding service"/deployment.yaml -f "transcoding service"/service.yaml
+
+            # --- NGINX VOD Server ---
+            kubectl apply -f "nginx vod server"/deployment.yaml -f "nginx vod server"/service.yaml
+
+            # --- Frontend ---
+            kubectl apply -f vod-frontend/deployment.yaml -f vod-frontend/service.yaml
+
+            # --- Restart minden szolgáltatásra (kivéve DB + ingress-controller) ---
+            kubectl rollout restart deployment analytics-service
+            kubectl rollout restart deployment user-service
+            kubectl rollout restart deployment vod-management-service
+            kubectl rollout restart deployment transcoding-service
+            kubectl rollout restart deployment nginx-vod-deployment
+            kubectl rollout restart deployment vod-frontend

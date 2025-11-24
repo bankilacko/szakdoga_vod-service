@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nginx-vod
-        image: bankilacko11/nginx-vod
+        image: bankilacko11/nginx-vod:latest
         ports:
         - containerPort: 7000
         volumeMounts:
