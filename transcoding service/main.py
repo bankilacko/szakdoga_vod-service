@@ -1,6 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
+from prometheus_fastapi_instrumentator import Instrumentator
 import subprocess
 import os 
 
@@ -175,3 +176,7 @@ async def transcode_video(file: UploadFile = File(...), metadata: UploadFile | N
             {"name": "360p",  "url": f"/vod/{slug}_3/index.m3u8"},
         ],
     }
+
+# Prometheus metrics instrumentation
+instrumentator = Instrumentator()
+instrumentator.instrument(app).expose(app, endpoint="/internal/metrics")

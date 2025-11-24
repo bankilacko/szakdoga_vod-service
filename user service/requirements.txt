@@ -7,3 +7,4 @@ bcrypt>=4.0.0
 pyjwt
 flask
 flask-cors
+prometheus-fastapi-instrumentator>=6.1.0

@@ -10,6 +10,7 @@ from datetime import datetime
 from typing import Dict, List
 from time import time
 from collections import defaultdict
+from prometheus_fastapi_instrumentator import Instrumentator
   
 # Create the FastAPI app instance
 app = FastAPI()
@@ -279,4 +280,8 @@ def get_most_watched(db: Session = Depends(get_db)):
         for v in most_watched
     ]
     
-    return {"most_watched": result}           
+    return {"most_watched": result}
+
+# Prometheus metrics instrumentation
+instrumentator = Instrumentator()
+instrumentator.instrument(app).expose(app, endpoint="/internal/metrics")

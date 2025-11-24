@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vod-management-service-monitor
+  namespace: default
+  labels:
+    app: vod-management-service
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: vod-management-service
+  endpoints:
+    - port: http
+      path: /internal/metrics
+      interval: 30s
+

@@ -2,6 +2,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import init_db
 from fastapi import FastAPI
 from routes import router
+from prometheus_fastapi_instrumentator import Instrumentator
 
 # Create a new FastAPI application instance
 app = FastAPI()
@@ -34,3 +35,7 @@ def startup():
 @app.get("/")
 def read_root():
     return {"message": "VOD Management Service is up and running!"}
+
+# Prometheus metrics instrumentation
+instrumentator = Instrumentator()
+instrumentator.instrument(app).expose(app, endpoint="/internal/metrics")

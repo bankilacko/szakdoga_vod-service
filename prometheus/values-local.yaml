@@ -1,0 +1,36 @@
+# Prometheus Stack Values - Lokális környezet
+# Egyszerű konfiguráció teszteléshez
+
+prometheus:
+  prometheusSpec:
+    # 1 nap adatmegtartás teszteléshez
+    retention: 1d
+    # emptyDir storage (átmeneti tárolás)
+    storageSpec:
+      emptyDir: {}
+
+  # NodePort szolgáltatás lokális eléréshez
+  service:
+    type: NodePort
+    nodePort: 30090
+
+grafana:
+  # NodePort szolgáltatás lokális eléréshez
+  service:
+    type: NodePort
+    nodePort: 30080
+  
+  # Admin jelszó (lokális környezethez)
+  adminPassword: prom-operator
+
+# Alertmanager letiltása lokális környezetben (nem szükséges)
+alertmanager:
+  enabled: false
+
+# Node Exporter és kube-state-metrics engedélyezve
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
+

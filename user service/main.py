@@ -2,6 +2,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import init_db
 from fastapi import FastAPI
 from routes import router
+from prometheus_fastapi_instrumentator import Instrumentator
 #import ssl
 
 # Create the FastAPI app instance
@@ -38,4 +39,8 @@ def startup():
 @app.get("/")
 def read_root():
     return {"message": "User Service is up and running!"}
+
+# Prometheus metrics instrumentation
+instrumentator = Instrumentator()
+instrumentator.instrument(app).expose(app, endpoint="/internal/metrics")
 

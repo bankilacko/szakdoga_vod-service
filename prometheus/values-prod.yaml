@@ -1,0 +1,42 @@
+# Prometheus Stack Values - Éles környezet
+# Production-ready konfiguráció
+
+prometheus:
+  prometheusSpec:
+    # 15 nap adatmegtartás videóplatformhoz
+    retention: 15d
+    
+    # PVC storage konfiguráció
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 20Gi
+
+  # NodePort szolgáltatás éles környezethez
+  service:
+    type: NodePort
+    nodePort: 30901
+
+grafana:
+  # NodePort szolgáltatás éles környezethez
+  service:
+    type: NodePort
+    nodePort: 30900
+  
+  # Admin jelszó (élesben érdemes módosítani vagy Secret-ből olvasni)
+  adminPassword: prom-operator
+
+# Alertmanager engedélyezve éles környezetben
+alertmanager:
+  enabled: true
+
+# Node Exporter és kube-state-metrics engedélyezve
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
+

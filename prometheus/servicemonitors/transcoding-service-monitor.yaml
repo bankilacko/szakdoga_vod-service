@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: transcoding-service-monitor
+  namespace: default
+  labels:
+    app: transcoding-service
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: transcoding-service
+  endpoints:
+    - port: http
+      path: /internal/metrics
+      interval: 30s
+

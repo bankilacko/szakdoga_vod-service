@@ -9,3 +9,4 @@ requests
 beautifulsoup4
 flask
 flask-cors
+prometheus-fastapi-instrumentator>=6.1.0
